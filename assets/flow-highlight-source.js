@@ -51,7 +51,6 @@ $(function() {
 
     if (count > 0) {
       var el = document.createElement("div");
-      //el.setAttribute("class", "cm-flow-uncovered");
       el.textContent =  count + "x";
       el.style.textAlign = "center";
       el.style.fontSize = "0.6em";

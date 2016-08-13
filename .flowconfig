@@ -1,0 +1,11 @@
+[ignore]
+.*/node_modules/fbjs/.*
+.*/lib/.*
+
+[include]
+
+[libs]
+
+[options]
+suppress_comment= \\(.\\|\n\\)*\\$FLOW_FIXME
+suppress_comment= \\(.\\|\n\\)*\\$FLOW_IGNORE

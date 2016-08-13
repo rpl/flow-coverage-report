@@ -1,1 +1,10 @@
+## Generated ES5 sources.
+lib/
+
+## Dependencies.
 node_modules/
+
+## Coverage dirs.
+.nyc_output
+coverage/
+flow-coverage/
