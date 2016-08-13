@@ -1,0 +1,8 @@
+.cm-flow-uncovered {
+  background: rgba(255,0,0,0.3);
+}
+
+.Flow-lineuncovered {
+  background: rgba(255,255,255,0.3);
+  width: 24px;
+}

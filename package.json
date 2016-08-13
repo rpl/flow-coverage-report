@@ -1,0 +1,24 @@
+{
+  "name": "flow-coverage-report",
+  "version": "0.0.0",
+  "description": "Generate an HTML report of the flow coverage data",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "flow",
+    "coverage"
+  ],
+  "author": "Luca Greco <lgreco@mozilla.com>",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "glob": "^7.0.5",
+    "mkdirp": "^0.5.1",
+    "preact": "^5.6.0",
+    "preact-render-to-string": "^3.0.7",
+    "react": "^15.3.0",
+    "react-dom": "^15.3.0",
+    "semantic-ui-css": "^2.2.2"
+  }
+}
