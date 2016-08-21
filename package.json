@@ -14,7 +14,7 @@
     "assets/**/*"
   ],
   "scripts": {
-    "prepublish": "npm run build && npm run test",
+    "prepublish": "npm run build",
     "build": "babel -d lib src",
     "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run ava && npm run flow-coverage",
     "flow-coverage": "bin/flow-coverage-report.js -i 'src/**/*.js' -i 'src/**/*.jsx' -t html -t json -t text",
