@@ -74,7 +74,7 @@ function renderHTMLReport(opt/* : Object */) {
   }
 
   function relativeToFilename(prefixDir, dest) {
-    return path.relative(path.join(prefixDir, path.dirname(opt.filename)), dest);
+    return path.relative(path.join(prefixDir, path.dirname(opt.filename || '')), dest);
   }
 
   function prefixAssets(filePath) {
