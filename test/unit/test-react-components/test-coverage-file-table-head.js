@@ -5,7 +5,7 @@
 import {test} from 'ava';
 
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import {shallow} from 'enzyme';
 
 const BASE_DIR = '../../../src/components/flow-coverage-html-report';
 
@@ -13,7 +13,7 @@ const REACT_COMPONENT = `${BASE_DIR}/coverage-file-table-head`;
 
 test('<FlowCoverageFileTableHead />', t => {
   const FlowCoverageFileTableHead = require(REACT_COMPONENT);
-  const wrapper = render(<FlowCoverageFileTableHead/>);
+  const wrapper = shallow(<FlowCoverageFileTableHead/>);
 
   const expectedKeys = [
     'filename', 'percent', 'total', 'covered', 'uncovered'

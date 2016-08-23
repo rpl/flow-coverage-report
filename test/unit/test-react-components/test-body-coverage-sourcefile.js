@@ -5,7 +5,7 @@
 import {test} from 'ava';
 
 import React from 'react';
-import {render} from 'enzyme';
+import {shallow} from 'enzyme';
 
 import {FLOW_COVERAGE_SUMMARY_DATA} from '../fixtures';
 
@@ -22,7 +22,7 @@ test('<HTMLReportBodySourceFile />', t => {
     fileName
   };
 
-  const wrapper = render(<HTMLReportBodySourceFile {...props}/>);
+  const wrapper = shallow(<HTMLReportBodySourceFile {...props}/>);
 
   t.is(wrapper.find('body').length, 1);
 });

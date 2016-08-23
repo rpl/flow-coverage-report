@@ -5,7 +5,7 @@
 import {test} from 'ava';
 
 import React from 'react';
-import {shallow, render} from 'enzyme';
+import {shallow} from 'enzyme';
 
 const BASE_DIR = '../../../src/components/flow-coverage-html-report';
 
@@ -21,7 +21,7 @@ test('<FlowCoverageFileTableRow />', t => {
     disableLink: false
     /* eslint-enable camelcase */
   };
-  const wrapper = render(<FlowCoverageFileTableRow {...props}/>);
+  const wrapper = shallow(<FlowCoverageFileTableRow {...props}/>);
 
   const expectedKeys = [
     'filename', 'percent', 'total', 'covered', 'uncovered'

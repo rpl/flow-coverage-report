@@ -5,7 +5,7 @@
 import {test} from 'ava';
 
 import React from 'react';
-import {render} from 'enzyme';
+import {shallow} from 'enzyme';
 
 const BASE_DIR = '../../../src/components/flow-coverage-html-report';
 
@@ -17,7 +17,7 @@ test('<FlowCoverageMeterBar />', t => {
     percent: 20,
     threshold: 80
   };
-  const wrapper = render(<FlowCoverageMeterBar {...props}/>);
+  const wrapper = shallow(<FlowCoverageMeterBar {...props}/>);
 
   t.is(wrapper.find('div.row.red').length, 1);
 });
