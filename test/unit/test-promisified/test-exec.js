@@ -12,24 +12,12 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-function mockChildProcessExec(exec) {
-  const childProcessMock = {exec};
-  const execSpy = sinon.spy(childProcessMock, 'exec');
-
-  mockRequire('child_process', childProcessMock);
-
-  return {
-    childProcessMock,
-    execSpy
-  };
-}
-
 test('promisified exec resolved', async function(t) {
-  const {
-    execSpy: exec
-  } = mockChildProcessExec((command, options, cb) => {
-    cb(null, new Buffer('stdout'), new Buffer('stderr'));
-  });
+  const exec = sinon.stub();
+  mockRequire('child_process', {exec});
+
+  exec.onFirstCall()
+      .callsArgWith(2, null, new Buffer('stdout'), new Buffer('stderr'));
 
   const promisified = mockRequire.reRequire(LIB_PROMISIFIED);
 
@@ -50,11 +38,12 @@ test('promisified exec resolved', async function(t) {
 });
 
 test('promisified exec throws', async function(t) {
-  const fakeErrorMessage = 'Fake Unknown Error';
-  mockChildProcessExec((command, options, cb) => {
-    return cb(Error(fakeErrorMessage));
-  });
+  const exec = sinon.stub();
+  mockRequire('child_process', {exec});
 
+  const fakeErrorMessage = 'Fake Unknown Error';
+  exec.onFirstCall()
+      .callsArgWith(2, new Error(fakeErrorMessage));
   const promisified = mockRequire.reRequire(LIB_PROMISIFIED);
 
   await t.throws(
@@ -64,12 +53,14 @@ test('promisified exec throws', async function(t) {
 });
 
 test('promisified exec doNotReject', async function(t) {
+  const exec = sinon.stub();
+  mockRequire('child_process', {exec});
+
+  const fakeStdout = new Buffer('stdout');
+  const fakeStderr = new Buffer('stderr');
   const fakeErrorMessage = 'Fake Unknown Error';
-  mockChildProcessExec((command, options, cb) => {
-    const fakeStdout = new Buffer('stdout');
-    const fakeStderr = new Buffer('stderr');
-    return cb(Error(fakeErrorMessage), fakeStdout, fakeStderr);
-  });
+  exec.onFirstCall()
+    .callsArgWith(2, new Error(fakeErrorMessage), fakeStdout, fakeStderr);
 
   const promisified = mockRequire.reRequire(LIB_PROMISIFIED);
 
