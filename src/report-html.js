@@ -66,7 +66,7 @@ function copyAssets(outputDir/* : string */) {
 
 function renderHTMLReport(opt/* : Object */) {
   if (opt.filename &&
-      opt.filename.includes('..')) {
+      opt.filename.indexOf('..') >= 0) {
     return Promise.reject(new Error(
       'filename is not relative to the projectDir: ' +
         [opt.projectDir, opt.filename].join(' - ')

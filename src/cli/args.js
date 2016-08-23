@@ -33,7 +33,7 @@ module.exports = {
         alias: 'f',
         type: 'string',
         default: 'flow',
-        coerce: value => value.startsWith('./') ? path.resolve(value) : value
+        coerce: value => value.slice(0, 2) === './' ? path.resolve(value) : value
       })
       // --type text
       .option('type', {
