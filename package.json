@@ -18,7 +18,7 @@
     "build": "babel -d lib src",
     "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run ava && npm run flow-coverage",
     "flow-coverage": "bin/flow-coverage-report.js -i 'src/**/*.js' -i 'src/**/*.jsx' -t html -t json -t text",
-    "ava": "nyc ava",
+    "ava": "nyc ava --verbose",
     "lint": "xo && flow check"
   },
   "keywords": [
