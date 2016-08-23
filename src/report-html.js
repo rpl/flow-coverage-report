@@ -11,7 +11,7 @@ var mkdirp = require('./promisified').mkdirp;
 var readFile = require('./promisified').readFile;
 var writeFile = require('./promisified').writeFile;
 
-var FlowCoverageHTMLReport = require('./components/flow-coverage-html-report');
+var FlowCoverageHTMLReport = require('./components/html-report-page');
 
 var baseSemanticAssets = ['themes', 'default', 'assets'];
 var assetsList = [

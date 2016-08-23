@@ -7,7 +7,7 @@ import {test} from 'ava';
 import React from 'react';
 import {shallow} from 'enzyme';
 
-const BASE_DIR = '../../../src/components/flow-coverage-html-report';
+const BASE_DIR = '../../../src/components';
 
 const REACT_COMPONENT = `${BASE_DIR}/coverage-file-table-head`;
 

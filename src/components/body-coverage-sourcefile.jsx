@@ -12,7 +12,7 @@ import FlowCoverageMeterBar from './coverage-meter-bar';
 import type {
   FlowCoverageReportProps,
   FlowUncoveredLocsProps
-} from './index';
+} from './html-report-page';
 
 function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
   var uncovered_locs = props.uncovered_locs; // eslint-disable-line camelcase

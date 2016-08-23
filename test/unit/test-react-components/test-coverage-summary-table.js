@@ -9,7 +9,7 @@ import {shallow} from 'enzyme';
 
 import {FLOW_COVERAGE_SUMMARY_DATA} from '../fixtures';
 
-const BASE_DIR = '../../../src/components/flow-coverage-html-report';
+const BASE_DIR = '../../../src/components';
 
 const REACT_COMPONENT = `${BASE_DIR}/coverage-summary-table`;
 

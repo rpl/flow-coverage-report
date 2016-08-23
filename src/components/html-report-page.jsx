@@ -8,7 +8,7 @@ import type {
   FlowCoverageSummaryData,
   FlowCoverageJSONData,
   FlowUncoveredLoc
-} from '../../flow';
+} from '../flow';
 
 import HTMLReportHead from './head';
 import HTMLReportBodySummary from './body-coverage-summary';

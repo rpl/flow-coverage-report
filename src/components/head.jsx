@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import type {FlowCoverageReportProps} from './index';
+import type {FlowCoverageReportProps} from './html-report-page';
 
 module.exports = function HTMLReportHead(props: FlowCoverageReportProps) {
   var links = !props.assets || !props.assets.css ? [] :

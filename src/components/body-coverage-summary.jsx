@@ -10,7 +10,7 @@ import FlowCoverageFileTableHead from './coverage-file-table-head';
 import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
-import type {FlowCoverageReportProps} from './index';
+import type {FlowCoverageReportProps} from './html-report-page';
 
 module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) {
   const summary = props.coverageSummaryData;
