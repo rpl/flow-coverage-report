@@ -5,11 +5,11 @@ import sinon from 'sinon';
 
 import {test} from 'ava';
 
-const LIB_INDEX = '../../src/index';
-const LIB_FLOW = '../../src/flow';
-const LIB_REPORT_HTML = '../../src/report-html';
-const LIB_REPORT_JSON = '../../src/report-json';
-const LIB_REPORT_TEXT = '../../src/report-text';
+const LIB_INDEX = '../../lib/index';
+const LIB_FLOW = '../../lib/flow';
+const LIB_REPORT_HTML = '../../lib/report-html';
+const LIB_REPORT_JSON = '../../lib/report-json';
+const LIB_REPORT_TEXT = '../../lib/report-text';
 
 test.afterEach(() => {
   mockRequire.stopAll();

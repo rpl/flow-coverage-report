@@ -2,22 +2,21 @@
   "name": "flow-coverage-report",
   "version": "0.0.0",
   "description": "Generate an HTML report of the flow coverage data",
-  "main": "lib/index.js",
+  "main": "dist/lib/index.js",
   "bin": {
     "flow-coverage-report": "./bin/flow-coverage-report.js"
   },
   "files": [
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "lib/**/*.js",
-    "bin/*.js",
+    "src/**/*",
+    "dist/**/*",
+    "bin/*",
     "assets/**/*"
   ],
   "scripts": {
     "prepublish": "npm run build",
-    "build": "babel -d lib src",
+    "build": "babel -d dist src --source-maps",
     "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run ava && npm run flow-coverage",
-    "flow-coverage": "bin/flow-coverage-report.js -i 'src/**/*.js' -i 'src/**/*.jsx' -t html -t json -t text",
+    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
     "ava": "nyc ava --verbose",
     "lint": "xo && flow check"
   },
@@ -42,6 +41,7 @@
     "ava": "0.16.0",
     "babel-cli": "6.11.4",
     "babel-core": "6.13.2",
+    "babel-plugin-istanbul": "2.0.0",
     "babel-plugin-transform-flow-strip-types": "6.8.0",
     "babel-preset-es2015": "6.13.2",
     "babel-preset-react": "6.11.1",
@@ -65,7 +65,7 @@
       "node"
     ],
     "ignores": [
-      "lib/**/*",
+      "dist/**/*",
       "assets/**/*",
       "node_modules/**/*",
       "coverage/**/*",
@@ -94,25 +94,24 @@
       "transform-flow-strip-types"
     ],
     "ignore": [
-      "assets/**/*"
-    ]
+      "assets/"
+    ],
+    "env": {
+      "test": {
+        "plugins": [
+          ["istanbul", {
+            "include": ["src/lib/**/*.js", "src/lib/**/*.jsx"]
+          }]
+        ]
+      }
+    }
   },
   "ava": {
-    "babel": "inherit",
-    "require": [
-      "babel-core/register"
-    ],
     "files": [
-      "test/**/test-*.js"
-    ],
-    "exclude": [
-      "assets/**/*"
+      "dist/test/**/test-*.js"
     ]
   },
   "nyc": {
-    "require": [
-      "babel-core/register"
-    ],
     "reporter": [
       "lcov",
       "html",
@@ -123,12 +122,11 @@
       ".jsx"
     ],
     "include": [
-      "src/**/*.js",
-      "src/**/*.jsx"
+      "dist/lib/**/*.js",
+      "dist/lib/**/*.jsx"
     ],
-    "exclude": [
-      "assets/**/*"
-    ],
+    "sourceMap": false,
+    "instrument": false,
     "all": true
   }
 }

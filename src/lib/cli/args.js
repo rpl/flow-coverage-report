@@ -1,7 +1,7 @@
 import path from 'path';
 import yargs from 'yargs';
 
-import npm from '../../package';
+import npm from '../../../package';
 
 const examples = appName => `
 Examples:

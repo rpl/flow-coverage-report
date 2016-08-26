@@ -9,9 +9,9 @@ import {
   FLOW_COVERAGE_SUMMARY_DATA
 } from './fixtures';
 
-const LIB_REPORT_HTML = '../../src/report-html';
-const LIB_PROMISIFIED = '../../src/promisified';
-const LIB_REACT_COMPONENT = '../../src/components/flow-coverage-html-report';
+const LIB_REPORT_HTML = '../../lib/report-html';
+const LIB_PROMISIFIED = '../../lib/promisified';
+const LIB_REACT_COMPONENT = '../../lib/components/flow-coverage-html-report';
 const NPM_REACT = 'react-dom/server';
 
 test.afterEach(() => {

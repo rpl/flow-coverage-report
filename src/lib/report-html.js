@@ -44,7 +44,7 @@ var assetsList = [
 );
 
 function copyAsset(outputDir, assetName) {
-  var srcfileReady = readFile(path.join(__dirname, '..', 'assets', assetName));
+  var srcfileReady = readFile(path.join(__dirname, '..', '..', 'assets', assetName));
   var createDestDir = mkdirp(path.join(outputDir, 'assets', path.dirname(assetName)));
 
   function destFileWritten(data) {
@@ -213,11 +213,12 @@ function generateFlowCoverageReportHTML(
             projectDir, filename, data, outputDir
           });
         });
-  return Promise.all([
-    waitForCopyAssets,
-    generateSourceFiles,
-    generateSummary
-  ]);
+  return Promise.all(
+    [
+      waitForCopyAssets,
+      generateSummary
+    ].concat(generateSourceFiles)
+  );
 }
 
 module.exports = {

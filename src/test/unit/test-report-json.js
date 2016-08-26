@@ -5,8 +5,8 @@ import sinon from 'sinon';
 
 import {test} from 'ava';
 
-const LIB_REPORT_JSON = '../../src/report-json';
-const LIB_PROMISIFIED = '../../src/promisified';
+const LIB_REPORT_JSON = '../../lib/report-json';
+const LIB_PROMISIFIED = '../../lib/promisified';
 
 test.afterEach(() => {
   mockRequire.stopAll();

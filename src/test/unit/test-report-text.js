@@ -9,7 +9,7 @@ import {
   FLOW_COVERAGE_SUMMARY_DATA
 } from './fixtures';
 
-const LIB_REPORT_TEXT = '../../src/report-text';
+const LIB_REPORT_TEXT = '../../lib/report-text';
 const NPM_TABLE = 'terminal-table';
 
 test.afterEach(() => {

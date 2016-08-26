@@ -7,7 +7,7 @@ import {test} from 'ava';
 import React from 'react';
 import {shallow} from 'enzyme';
 
-const BASE_DIR = '../../../src/components';
+import {BASE_DIR} from './common';
 
 const REACT_COMPONENT = `${BASE_DIR}/coverage-file-table-row`;
 

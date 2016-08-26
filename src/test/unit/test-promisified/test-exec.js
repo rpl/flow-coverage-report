@@ -6,7 +6,7 @@ import sinon from 'sinon';
 
 import {test} from 'ava';
 
-const LIB_PROMISIFIED = '../../../src/promisified';
+const LIB_PROMISIFIED = '../../../lib/promisified';
 
 test.afterEach(() => {
   mockRequire.stopAll();
