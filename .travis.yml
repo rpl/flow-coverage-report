@@ -6,3 +6,12 @@ node_js:
 - '6'
 script:
 - npm test
+
+branches:
+  only:
+  - master
+
+### cache node_modules/ dir between builds on travis
+cache:
+  directories:
+    - node_modules
