@@ -1,6 +1,6 @@
 {
   "name": "flow-coverage-report",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Generate an HTML report of the flow coverage data",
   "main": "dist/lib/index.js",
   "bin": {
@@ -99,9 +99,15 @@
     "env": {
       "test": {
         "plugins": [
-          ["istanbul", {
-            "include": ["src/lib/**/*.js", "src/lib/**/*.jsx"]
-          }]
+          [
+            "istanbul",
+            {
+              "include": [
+                "src/lib/**/*.js",
+                "src/lib/**/*.jsx"
+              ]
+            }
+          ]
         ]
       }
     }
