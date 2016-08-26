@@ -1,5 +1,5 @@
 ## Generated ES5 sources.
-lib/
+dist/
 
 ## Dependencies.
 node_modules/
@@ -8,3 +8,6 @@ node_modules/
 .nyc_output
 coverage/
 flow-coverage/
+
+## Various generated files
+npm-debug.log
