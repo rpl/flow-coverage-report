@@ -6,6 +6,8 @@
 using [flow types][flow] in their JavaScript code to keep track and visualize
 the coverage of the flow types checks.
 
+![Screenshot flow coverage report summary in the console][screenshot-text]
+
 ![Screenshot flow coverage report summary][screenshot-summary]
 
 ![Screenshot flow coverage report sourcefile][screenshot-sourcefile]
@@ -61,5 +63,6 @@ uncoverage parts of our sources for our entire project?
 You have just found it ;-)
 
 [flow]: https://flowtypes.org
+[screenshot-text]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-text.png
 [screenshot-summary]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-summary.png
 [screenshot-sourcefile]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-sourcefile.png
