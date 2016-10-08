@@ -3,7 +3,9 @@
 // @flow
 
 import path from 'path';
+
 import {collectFlowCoverage} from './flow';
+import {withTmpDir} from './promisified';
 import reportHTML from './report-html';
 import reportJSON from './report-json';
 import reportText from './report-text';
@@ -34,46 +36,50 @@ function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   // Apply defaults to options.
   var projectDir = opts.projectDir;
 
-  opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
-  opts.globIncludePatterns = opts.globIncludePatterns || [];
+  return withTmpDir('flow-coverage-report')
+    .then(dirPath => {
+      opts.flowCommandPath = opts.flowCommandPath || 'flow';
+      opts.outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+      opts.globIncludePatterns = opts.globIncludePatterns || [];
 
-  // Apply validation checks.
-  if (!projectDir) {
-    return Promise.reject(new Error('projectDir option is mandatory'));
-  }
+      // Apply validation checks.
+      if (!projectDir) {
+        return Promise.reject(new Error('projectDir option is mandatory'));
+      }
 
-  if (opts.globIncludePatterns.length === 0) {
-    return Promise.reject(new Error('empty globIncludePatterns option'));
-  }
+      if (opts.globIncludePatterns.length === 0) {
+        return Promise.reject(new Error('empty globIncludePatterns option'));
+      }
 
-  if (!opts.threshold) {
-    return Promise.reject(new Error('threshold option is mandatory'));
-  }
+      if (!opts.threshold) {
+        return Promise.reject(new Error('threshold option is mandatory'));
+      }
 
-  return collectFlowCoverage(
-    opts.flowCommandPath, opts.projectDir, opts.globIncludePatterns,
-    opts.threshold
-  ).then((coverageData: FlowCoverageSummaryData) => {
-    var reportResults = [];
-    const reportTypes = opts.reportTypes || ['text'];
+      return collectFlowCoverage(
+        opts.flowCommandPath, opts.projectDir, opts.globIncludePatterns,
+        opts.threshold, dirPath,
+      );
+    })
+    .then((coverageData: FlowCoverageSummaryData) => {
+      var reportResults = [];
+      const reportTypes = opts.reportTypes || ['text'];
 
-    if (reportTypes.indexOf('json') >= 0) {
-      reportResults.push(reportJSON.generate(coverageData, opts));
-    }
+      if (reportTypes.indexOf('json') >= 0) {
+        reportResults.push(reportJSON.generate(coverageData, opts));
+      }
 
-    if (reportTypes.indexOf('text') >= 0) {
-      reportResults.push(reportText.generate(coverageData, opts));
-    }
+      if (reportTypes.indexOf('text') >= 0) {
+        reportResults.push(reportText.generate(coverageData, opts));
+      }
 
-    if (reportTypes.indexOf('html') >= 0) {
-      reportResults.push(reportHTML.generate(coverageData, opts));
-    }
+      if (reportTypes.indexOf('html') >= 0) {
+        reportResults.push(reportHTML.generate(coverageData, opts));
+      }
 
-    return Promise.all(reportResults).then(() => {
-      return [coverageData, opts];
+      return Promise.all(reportResults).then(() => {
+        return [coverageData, opts];
+      });
     });
-  });
 }
 
 module.exports = {

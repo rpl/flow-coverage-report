@@ -6,6 +6,10 @@ import {exec} from 'child_process';
 import fs from 'fs';
 import glob from 'glob';
 import mkdirp from 'mkdirp';
+import temp from 'temp';
+
+// Automatically cleanup temp file on process.exit
+temp.track();
 
 export type ExecResult = {err?: Error, stdout?: Buffer, stderr?: Buffer};
 export type ExecOptions = child_process$execOpts; // eslint-disable-line camelcase
@@ -80,6 +84,18 @@ exports.glob = function (pattern: string, options: GlobOptions): Promise<GlobFil
         reject(err);
       } else {
         resolve(files);
+      }
+    });
+  });
+};
+
+exports.withTmpDir = function (tempFileId: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    temp.mkdir(tempFileId, (err, dirPath) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(dirPath);
       }
     });
   });

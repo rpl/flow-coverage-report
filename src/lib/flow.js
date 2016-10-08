@@ -2,7 +2,8 @@
 
 // @flow
 
-import {exec, glob} from './promisified';
+import temp from 'temp';
+import {exec, glob, readFile} from './promisified';
 
 // getCoveredPercent helper.
 
@@ -64,27 +65,40 @@ export type FlowStatus = {
 
 function checkFlowStatus(
   flowCommandPath: string,
-  projectDir: string
+  projectDir: string,
+  tmpDirPath: string
 ): Promise<FlowStatus> {
+  const tmpFilePath: string = temp.path({suffix: '.json', dir: tmpDirPath});
+
   return exec(
-    flowCommandPath + ' status --json', {cwd: projectDir}, {dontReject: true}
+    `${flowCommandPath} status --json > ${tmpFilePath}`,
+    {cwd: projectDir}, {dontReject: true}
   ).then(res => {
     // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
     if (res.err && res.err.code !== 2) {
       throw res.err;
     }
-    if (res.stdout) {
-      const statusData = JSON.parse(String(res.stdout));
+
+    return readFile(tmpFilePath).then(rawData => [res.stderr, rawData]);
+  }).then(([, rawData]) => {
+    let statusData: ?FlowStatus;
+
+    try {
+      statusData = JSON.parse(String(rawData));
+    } catch (err) {
+      let unexpectedException: ?SyntaxError = err;
 
       // Verify the integrity of the format of the JSON status result.
-      if (!statusData.flowVersion) {
-        throw new Error('Invalid Flow status JSON format');
+      if (unexpectedException) {
+        throw new Error(`Parsing error on Flow status JSON result: ${err}`);
       }
+    }
 
+    if (statusData && statusData.flowVersion) {
       return statusData;
     }
 
-    throw res.err;
+    throw new Error('Invalid Flow status JSON format');
   });
 }
 
@@ -113,21 +127,64 @@ export type FlowCoverageJSONData = {
   percent?: number
 }
 
-function collectFlowCoverageForFile(
+async function collectFlowCoverageForFile(
   flowCommandPath: string,
   projectDir: string,
-  filename: string
+  filename: string,
+  tmpDirPath: string,
 ): Promise<FlowCoverageJSONData> {
-  return exec(
-    flowCommandPath + ' coverage --json ' + filename, {cwd: projectDir}
-  ).then(res => {
-    if (!res.stdout || res.stdout.length === 0 || res.err) {
-      throw new Error(
-        `Unexpected error collected flow coverage data on '${filename}'`
-      );
+  const tmpFilePath: string = temp.path({suffix: '.json', dir: tmpDirPath});
+
+  const emptyCoverageData = {
+    expressions: {
+      covered_count: 0,
+      uncovered_count: 0,
+      uncovered_locs: []
     }
-    return JSON.parse(String(res.stdout));
-  });
+  };
+
+  const res = await exec(
+    `${flowCommandPath} coverage --json ${filename} > ${tmpFilePath}`,
+    {cwd: projectDir}, {dontReject: true});
+
+  if (res.err) {
+    // TODO: collect errors and put them in a visible place in the
+    // generated report.
+    return {
+      ...emptyCoverageData,
+      flowCoverageException: res.err.message,
+      flowCoverageStderr: res.stderr,
+      flowCoverageParsingError: undefined
+    };
+  }
+
+  const rawData = await readFile(tmpFilePath);
+
+  let parsedData: ?FlowCoverageJSONData;
+  let flowCoverageParsingError: string;
+
+  if (rawData) {
+    try {
+      parsedData = JSON.parse(String(rawData));
+    } catch (err) {
+      flowCoverageParsingError = err.message;
+    }
+  }
+
+  if (parsedData) {
+    return parsedData;
+  }
+
+  return {
+    expressions: {
+      covered_count: 0,
+      uncovered_count: 0,
+      uncovered_locs: []
+    },
+    flowCoverageException: undefined,
+    flowCoverageStderr: undefined,
+    flowCoverageParsingError
+  };
 }
 
 exports.collectFlowCoverageForFile = collectFlowCoverageForFile;
@@ -151,9 +208,10 @@ exports.collectFlowCoverage = function (
   flowCommandPath: string,
   projectDir: string,
   globIncludePatterns: Array<string>,
-  threshold: number
+  threshold: number,
+  tmpDirPath: string,
 ): Promise<FlowCoverageSummaryData> {
-  return checkFlowStatus(flowCommandPath, projectDir).then(flowStatus => {
+  return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     var now = new Date();
     var coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
 
@@ -176,26 +234,25 @@ exports.collectFlowCoverage = function (
 
     function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
       return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
-        .then(files => {
-          return Promise.all(
-            files.map(filename =>
-              collectFlowCoverageForFile(
-                flowCommandPath, projectDir, filename
-              ).then((data: FlowCoverageJSONData) => {
-                /* eslint-disable camelcase */
-                coverageSummaryData.covered_count += data.expressions.covered_count;
-                coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-                data.percent = getCoveredPercent(data.expressions);
-                coverageSummaryData.files[filename] = data;
+        .then(async files => {
+          for (const filename of files) {
+            const data: FlowCoverageJSONData = await collectFlowCoverageForFile(
+              flowCommandPath, projectDir, filename, tmpDirPath
+            );
 
-                data.expressions.uncovered_locs =
-                  data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
-                /* eslint-enable camelcase */
-              })
-            )
-          ).then(() => {
-            return files;
-          });
+            /* eslint-disable camelcase */
+            coverageSummaryData.covered_count += data.expressions.covered_count;
+            coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
+            data.percent = getCoveredPercent(data.expressions);
+
+            coverageSummaryData.files[filename] = data;
+
+            data.expressions.uncovered_locs =
+              data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
+            /* eslint-enable camelcase */
+          }
+
+          return files;
         });
     }
 
