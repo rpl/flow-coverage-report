@@ -13,12 +13,13 @@
     "assets/**/*"
   ],
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "babel -d dist src --source-maps",
-    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run ava && npm run flow-coverage",
-    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
     "ava": "nyc ava --verbose",
-    "lint": "xo && flow check"
+    "build": "babel -d dist src --source-maps",
+    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
+    "flow-check": "flow check",
+    "lint": "xo --reporter=compact",
+    "prepublish": "npm run build",
+    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run ava && npm run flow-coverage"
   },
   "keywords": [
     "flowtype",
