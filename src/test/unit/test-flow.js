@@ -78,7 +78,7 @@ test('checkFlowStatus resolves to flow types errors in json format',
 
     await t.throws(
       flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath),
-      'Invalid Flow status JSON format'
+      'Parsing error on Flow status JSON result: SyntaxError: Unexpected end of input'
     );
   }
 );
