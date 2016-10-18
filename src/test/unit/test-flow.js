@@ -264,3 +264,13 @@ test('collectFlowCoverage', async function (t) {
   t.is(exec.callCount, 5);
   t.is(glob.callCount, 2);
 });
+
+test('getCoveredPercent', function (t) {
+  const flow = mockRequire.reRequire(LIB_FLOW);
+
+  /* eslint-disable camelcase */
+  t.is(flow.getCoveredPercent({covered_count: 0, uncovered_count: 0}), 100);
+  t.is(flow.getCoveredPercent({covered_count: 0, uncovered_count: 10}), 0);
+  t.is(flow.getCoveredPercent({covered_count: 3, uncovered_count: 11}), 21);
+  /* eslint-enable camelcase */
+});
