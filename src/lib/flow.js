@@ -2,6 +2,7 @@
 
 // @flow
 
+import sequential from 'promise-sequential';
 import {exec, glob} from './promisified';
 
 // getCoveredPercent helper.
@@ -177,8 +178,8 @@ exports.collectFlowCoverage = function (
     function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
       return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
         .then(files => {
-          return Promise.all(
-            files.map(filename =>
+          return sequential(
+            files.map(filename => () =>
               collectFlowCoverageForFile(
                 flowCommandPath, projectDir, filename
               ).then((data: FlowCoverageJSONData) => {
@@ -199,8 +200,7 @@ exports.collectFlowCoverage = function (
         });
     }
 
-    return Promise
-      .all(globIncludePatterns.map(collectCoverageAndGenerateReportForGlob))
+    return sequential(globIncludePatterns.map(pattern => () => collectCoverageAndGenerateReportForGlob(pattern)))
       .then(() => {
         coverageSummaryData.percent = getCoveredPercent(coverageSummaryData);
 
