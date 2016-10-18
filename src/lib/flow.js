@@ -15,10 +15,12 @@ function getCoveredPercent(
   }
 ) {
   const total = covered_count + uncovered_count;
-  let percent = Math.floor(covered_count / total * 100);
-  percent = isNaN(percent) ? 0 : percent;
 
-  return percent;
+  if (total === 0) {
+    return 100;
+  }
+
+  return Math.floor(covered_count / total * 100);
 }
 /* eslint-disable-line camelcase */
 exports.getCoveredPercent = getCoveredPercent;
