@@ -63,6 +63,13 @@ module.exports = {
         describe: 'the minimum coverage percent requested.',
         default: 80
       })
+      // --output-dir "/var/public_html/flow-coverage"
+      .option('output-dir', {
+        alias: 'o',
+        type: 'string',
+        describe: 'output html or json files to this folder relative to project-dir',
+        default: './flow-coverage'
+      })
       .check(argv => {
         argv.includeGlob = toArray(argv.includeGlob);
 
