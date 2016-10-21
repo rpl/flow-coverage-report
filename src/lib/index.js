@@ -14,7 +14,7 @@ export type FlowCoverageReportType = 'json' | 'text' | 'html';
 
 export type FlowCoverageReportOptions = {
   projectDir: string,
-  flowCommandPath?: string,
+  flowCommandPath: string,
   globIncludePatterns: Array<string>,
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
