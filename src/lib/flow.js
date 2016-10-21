@@ -174,28 +174,41 @@ exports.collectFlowCoverage = function (
       return loc;
     }
 
+    const CHUNK_SIZE = 5;
+
     function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
       return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
         .then(files => {
-          return Promise.all(
-            files.map(filename =>
-              collectFlowCoverageForFile(
-                flowCommandPath, projectDir, filename
-              ).then((data: FlowCoverageJSONData) => {
-                /* eslint-disable camelcase */
-                coverageSummaryData.covered_count += data.expressions.covered_count;
-                coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-                data.percent = getCoveredPercent(data.expressions);
-                coverageSummaryData.files[filename] = data;
+          let chunkStart = 0;
 
-                data.expressions.uncovered_locs =
-                  data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
-                /* eslint-enable camelcase */
+          const doNextFileChunk = () => {
+            if (chunkStart >= files.length) {
+              return files;
+            }
+
+            const nextFiles = files.slice(chunkStart, chunkStart + CHUNK_SIZE);
+            chunkStart += CHUNK_SIZE;
+
+            return Promise.all(
+              nextFiles.map(filename => {
+                return collectFlowCoverageForFile(
+                  flowCommandPath, projectDir, filename
+                ).then((data: FlowCoverageJSONData) => {
+                  /* eslint-disable camelcase */
+                  coverageSummaryData.covered_count += data.expressions.covered_count;
+                  coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
+                  data.percent = getCoveredPercent(data.expressions);
+                  coverageSummaryData.files[filename] = data;
+
+                  data.expressions.uncovered_locs =
+                    data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
+                  /* eslint-enable camelcase */
+                });
               })
-            )
-          ).then(() => {
-            return files;
-          });
+            ).then(doNextFileChunk);
+          };
+
+          return Promise.resolve().then(doNextFileChunk);
         });
     }
 
