@@ -14,9 +14,9 @@ export type FlowCoverageReportType = 'json' | 'text' | 'html';
 
 export type FlowCoverageReportOptions = {
   projectDir: string,
-  flowCommandPath?: string,
+  flowCommandPath: string,
   globIncludePatterns: Array<string>,
-  outputDir?: string,
+  outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
   threshold?: number
 };
@@ -35,7 +35,10 @@ function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   var projectDir = opts.projectDir;
 
   opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+  opts.outputDir = opts.outputDir || './flow-coverage';
+  opts.outputDir = opts.outputDir.slice(0, 2) === './' ?
+    path.resolve(path.join(projectDir, opts.outputDir)) :
+    opts.outputDir;
   opts.globIncludePatterns = opts.globIncludePatterns || [];
 
   // Apply validation checks.
