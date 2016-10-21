@@ -13,10 +13,10 @@ test.afterEach(() => {
 });
 
 test('checkFlowStatus does not catch arbitrary errors', async function (t) {
-  const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const spawn = sinon.stub();
+  mockRequire(LIB_PROMISIFIED, {spawn});
 
-  exec.onFirstCall()
+  spawn.onFirstCall()
       .returns(Promise.resolve({
         err: new Error('Fake flow status error')
       }));
@@ -28,16 +28,17 @@ test('checkFlowStatus does not catch arbitrary errors', async function (t) {
     'Fake flow status error'
   );
 
-  t.true(exec.calledOnce);
-  t.is(exec.firstCall.args[0], 'flow status --json');
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir/'});
-  t.deepEqual(exec.firstCall.args[2], {dontReject: true});
+  t.true(spawn.calledOnce);
+  t.is(spawn.firstCall.args[0], 'flow');
+  t.deepEqual(spawn.firstCall.args[1], ['status', '--json']);
+  t.deepEqual(spawn.firstCall.args[2], {cwd: '/fake/projectDir/'});
+  t.deepEqual(spawn.firstCall.args[3], {dontReject: true});
 });
 
 test('checkFlowStatus resolves to flow types errors in json format',
   async function (t) {
-    const exec = sinon.stub();
-    mockRequire(LIB_PROMISIFIED, {exec});
+    const spawn = sinon.stub();
+    mockRequire(LIB_PROMISIFIED, {spawn});
 
     const fakeJSONStatusReply = {
       passed: false,
@@ -51,8 +52,8 @@ test('checkFlowStatus resolves to flow types errors in json format',
       stdout: new Buffer(JSON.stringify(fakeJSONStatusReply))
     };
 
-    exec.onFirstCall().returns(Promise.resolve(fakeFlowCheckError));
-    exec.onSecondCall().returns(Promise.resolve({
+    spawn.onFirstCall().returns(Promise.resolve(fakeFlowCheckError));
+    spawn.onSecondCall().returns(Promise.resolve({
       err: {
         message: 'Fake flow error without stdout',
         code: 2
@@ -74,8 +75,8 @@ test('checkFlowStatus resolves to flow types errors in json format',
 
 test('checkFlowStatus rejects on invalid flow status json format',
   async function (t) {
-    const exec = sinon.stub();
-    mockRequire(LIB_PROMISIFIED, {exec});
+    const spawn = sinon.stub();
+    mockRequire(LIB_PROMISIFIED, {spawn});
 
     const fakeJSONStatusReply = {
       notFlowStatusJSON: true
@@ -84,7 +85,7 @@ test('checkFlowStatus rejects on invalid flow status json format',
       stdout: new Buffer(JSON.stringify(fakeJSONStatusReply))
     };
 
-    exec.onFirstCall().returns(Promise.resolve(fakeFlowStatusResult));
+    spawn.onFirstCall().returns(Promise.resolve(fakeFlowStatusResult));
 
     const flow = mockRequire.reRequire(LIB_FLOW);
     await t.throws(
@@ -95,10 +96,10 @@ test('checkFlowStatus rejects on invalid flow status json format',
 );
 
 test('collectFlowCoverageForFile rejects', async function (t) {
-  const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const spawn = sinon.stub();
+  mockRequire(LIB_PROMISIFIED, {spawn});
 
-  exec.onFirstCall().returns(Promise.resolve({stdout: new Buffer('')}))
+  spawn.onFirstCall().returns(Promise.resolve({stdout: new Buffer('')}))
       .onSecondCall().returns(Promise.resolve({
         stdout: new Buffer('fake flow output with errors'),
         err: {
@@ -117,7 +118,7 @@ test('collectFlowCoverageForFile rejects', async function (t) {
     `Unexpected error collected flow coverage data on '${filename}'`
   );
 
-  t.true(exec.calledOnce);
+  t.true(spawn.calledOnce);
 
   await t.throws(
     flow.collectFlowCoverageForFile(
@@ -126,19 +127,19 @@ test('collectFlowCoverageForFile rejects', async function (t) {
     `Unexpected error collected flow coverage data on '${filename}'`
   );
 
-  t.true(exec.calledTwice);
+  t.true(spawn.calledTwice);
 });
 
 test('collectFlowCoverageForFile resolve coverage data', async function (t) {
-  const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const spawn = sinon.stub();
+  mockRequire(LIB_PROMISIFIED, {spawn});
 
   const fakeFlowCoverageData = {
     fakeCoverageData: {
       ok: true
     }
   };
-  exec.onFirstCall().returns(Promise.resolve({
+  spawn.onFirstCall().returns(Promise.resolve({
     stdout: new Buffer(JSON.stringify(fakeFlowCoverageData))
   }));
 
@@ -149,16 +150,17 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
     'flow', '/fake/projectDir', filename
   );
 
-  t.true(exec.calledOnce);
-  t.is(exec.firstCall.args[0], `flow coverage --json ${filename}`);
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir'});
+  t.true(spawn.calledOnce);
+  t.is(spawn.firstCall.args[0], 'flow');
+  t.deepEqual(spawn.firstCall.args[1], ['coverage', '--json', filename]);
+  t.deepEqual(spawn.firstCall.args[2], {cwd: '/fake/projectDir'});
   t.deepEqual(res, fakeFlowCoverageData);
 });
 
 test('collectFlowCoverage', async function (t) {
-  const exec = sinon.stub();
+  const spawn = sinon.stub();
   const glob = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec, glob});
+  mockRequire(LIB_PROMISIFIED, {spawn, glob});
 
   const fakeFlowStatus = {
     passed: true,
@@ -169,7 +171,7 @@ test('collectFlowCoverage', async function (t) {
   const firstGlobResults = ['src/a.js', 'src/b.js'];
   const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js'];
   // Fake reply to flow status command.
-  exec.onCall(0).returns(Promise.resolve({
+  spawn.onCall(0).returns(Promise.resolve({
     stdout: JSON.stringify(fakeFlowStatus)
   }));
 
@@ -181,7 +183,7 @@ test('collectFlowCoverage', async function (t) {
 
   // Fake the flow coverage commands results.
   for (var i = 1; i <= allFiles.length; i++) {
-    exec.onCall(i).returns(Promise.resolve({
+    spawn.onCall(i).returns(Promise.resolve({
       stdout: JSON.stringify({
         /* eslint-disable camelcase */
         expressions: {
@@ -261,7 +263,7 @@ test('collectFlowCoverage', async function (t) {
     });
   }
 
-  t.is(exec.callCount, 5);
+  t.is(spawn.callCount, 5);
   t.is(glob.callCount, 2);
 });
 

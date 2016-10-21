@@ -2,7 +2,7 @@
 
 // @flow
 
-import {exec, glob} from './promisified';
+import {spawn, glob} from './promisified';
 
 // getCoveredPercent helper.
 
@@ -66,8 +66,8 @@ function checkFlowStatus(
   flowCommandPath: string,
   projectDir: string
 ): Promise<FlowStatus> {
-  return exec(
-    flowCommandPath + ' status --json', {cwd: projectDir}, {dontReject: true}
+  return spawn(
+    flowCommandPath, ['status', '--json'], {cwd: projectDir}, {dontReject: true}
   ).then(res => {
     // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
     if (res.err && res.err.code !== 2) {
@@ -118,8 +118,8 @@ function collectFlowCoverageForFile(
   projectDir: string,
   filename: string
 ): Promise<FlowCoverageJSONData> {
-  return exec(
-    flowCommandPath + ' coverage --json ' + filename, {cwd: projectDir}
+  return spawn(
+    flowCommandPath, ['coverage', '--json', filename], {cwd: projectDir}
   ).then(res => {
     if (!res.stdout || res.stdout.length === 0 || res.err) {
       throw new Error(

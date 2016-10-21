@@ -2,29 +2,46 @@
 
 // @flow
 
-import {exec} from 'child_process';
+import {spawn} from 'child_process';
 import fs from 'fs';
 import glob from 'glob';
 import mkdirp from 'mkdirp';
 
 export type ExecResult = {err?: Error, stdout?: Buffer, stderr?: Buffer};
-export type ExecOptions = child_process$execOpts; // eslint-disable-line camelcase
+export type ExecOptions = child_process$spawnOpts; // eslint-disable-line camelcase
 export type ExecExtras = {dontReject?: boolean};
 
-exports.exec = function (
-  command: string, options: ExecOptions,
+exports.spawn = function (
+  command: string,
+  args: Array<string>,
+  options: ExecOptions,
   extra: ?ExecExtras
 ): Promise<ExecResult> {
   return new Promise((resolve, reject) => {
-    exec(command, options, (err, stdout, stderr) => {
-      if (err) {
-        if (extra && extra.dontReject) {
-          resolve({err, stdout, stderr});
-        } else {
-          reject(err);
-        }
+    let stdout = [];
+    let stderr = [];
+
+    const child = spawn(command, args, options);
+    child.stdout.on('data', data => {
+      stdout.push(data);
+    });
+    child.stderr.on('data', data => {
+      stderr.push(data);
+    });
+    child.on('close', err => {
+      if (!err) {
+        resolve({stdout: Buffer.concat(stdout), stderr: Buffer.concat(stderr)});
+      } else if (extra && extra.dontReject) {
+        resolve({err, stdout: Buffer.concat(stdout), stderr: Buffer.concat(stderr)});
       } else {
-        resolve({stdout, stderr});
+        reject(err);
+      }
+    });
+    child.on('error', err => {
+      if (extra && extra.dontReject) {
+        resolve({err, stdout: Buffer.concat(stdout), stderr: Buffer.concat(stderr)});
+      } else {
+        reject(err);
       }
     });
   });
