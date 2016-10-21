@@ -14,7 +14,7 @@
   ],
   "scripts": {
     "ava": "nyc ava --verbose",
-    "build": "babel -d dist src --source-maps",
+    "build": "rm -Rf dist && babel -d dist src --source-maps",
     "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
     "flow-check": "flow check",
     "lint": "xo --reporter=compact",
