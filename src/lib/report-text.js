@@ -25,6 +25,12 @@ function renderTextReport(
   for (const filename of Object.keys(coverageData.files).sort()) {
     row += 1;
     const data = coverageData.files[filename];
+
+    if (data.isError) {
+      // Skip files without coverage data.
+      continue;
+    }
+
     const covered = data.expressions.covered_count;
     const uncovered = data.expressions.uncovered_count;
     let percent = data.percent || NaN;

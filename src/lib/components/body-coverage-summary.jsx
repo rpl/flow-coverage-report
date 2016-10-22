@@ -37,7 +37,8 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
             /* eslint-disable camelcase */
             covered_count: fileSummary.expressions.covered_count,
             uncovered_count: fileSummary.expressions.uncovered_count,
-            percent: fileSummary.percent
+            percent: fileSummary.percent,
+            isError: fileSummary.isError
             /* eslint-enable camelcase */
           };
           return <FlowCoverageFileTableRow key={key} {...fileRowProps}/>;

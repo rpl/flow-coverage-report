@@ -3,7 +3,7 @@
 // @flow
 
 import temp from 'temp';
-import {exec, glob, readFile} from './promisified';
+import {exec, glob, writeFile} from './promisified';
 
 // getCoveredPercent helper.
 
@@ -63,43 +63,53 @@ export type FlowStatus = {
   errors: Array<FlowTypeError>
 }
 
-function checkFlowStatus(
+async function checkFlowStatus(
   flowCommandPath: string,
   projectDir: string,
-  tmpDirPath: string
+  tmpDirPath: ?string
 ): Promise<FlowStatus> {
-  const tmpFilePath: string = temp.path({suffix: '.json', dir: tmpDirPath});
+  let tmpFilePath: ?string;
 
-  return exec(
-    `${flowCommandPath} status --json > ${tmpFilePath}`,
-    {cwd: projectDir}, {dontReject: true}
-  ).then(res => {
-    // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
-    if (res.err && res.err.code !== 2) {
-      throw res.err;
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+  }
+
+  const res = await exec(`${flowCommandPath} status --json`,
+                         {cwd: projectDir, maxBuffer: Infinity},
+                         {dontReject: true});
+
+  // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
+  if (res.err && res.err.code !== 2) {
+    if (process.env.VERBOSE) {
+      console.error('Flow status error', res.err, res.stderr, res.stdout);
     }
 
-    return readFile(tmpFilePath).then(rawData => [res.stderr, rawData]);
-  }).then(([, rawData]) => {
-    let statusData: ?FlowStatus;
+    throw res.err;
+  }
 
-    try {
-      statusData = JSON.parse(String(rawData));
-    } catch (err) {
-      let unexpectedException: ?SyntaxError = err;
+  let statusData: ?FlowStatus;
 
-      // Verify the integrity of the format of the JSON status result.
-      if (unexpectedException) {
-        throw new Error(`Parsing error on Flow status JSON result: ${err}`);
-      }
+  if (tmpFilePath) {
+    await writeFile(tmpFilePath, res.stdout || '');
+    console.log('Flow status result saved to', tmpFilePath);
+  }
+
+  try {
+    statusData = JSON.parse(String(res.stdout));
+  } catch (err) {
+    let unexpectedException: ?SyntaxError = err;
+
+    // Verify the integrity of the format of the JSON status result.
+    if (unexpectedException) {
+      throw new Error(`Parsing error on Flow status JSON result: ${err}`);
     }
+  }
 
-    if (statusData && statusData.flowVersion) {
-      return statusData;
-    }
+  if (statusData && statusData.flowVersion) {
+    return statusData;
+  }
 
-    throw new Error('Invalid Flow status JSON format');
-  });
+  throw new Error('Invalid Flow status JSON format');
 }
 
 exports.checkFlowStatus = checkFlowStatus;
@@ -124,16 +134,22 @@ export type FlowCoverageJSONData = {
     uncovered_count: number,
     uncovered_locs: Array<FlowUncoveredLoc>
   },
-  percent?: number
+  percent?: number,
+  isError?: boolean
 }
 
 async function collectFlowCoverageForFile(
   flowCommandPath: string,
+  flowCommandTimeout: number,
   projectDir: string,
   filename: string,
-  tmpDirPath: string,
+  tmpDirPath: ?string,
 ): Promise<FlowCoverageJSONData> {
-  const tmpFilePath: string = temp.path({suffix: '.json', dir: tmpDirPath});
+  let tmpFilePath: ?string;
+
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+  }
 
   const emptyCoverageData = {
     expressions: {
@@ -143,29 +159,54 @@ async function collectFlowCoverageForFile(
     }
   };
 
+  if (process.env.VERBOSE) {
+    console.log(`Collecting coverage data from ${filename} (timeouts in ${flowCommandTimeout})...`);
+  }
+
   const res = await exec(
-    `${flowCommandPath} coverage --json ${filename} > ${tmpFilePath}`,
-    {cwd: projectDir}, {dontReject: true});
+    `${flowCommandPath} coverage --json ${filename}`,
+    // NOTE: set a default timeouts and maxButter to Infinity to prevent,
+    // misconfigured projects and source files that should raises errors
+    // or hangs the flow daemon to prevent the coverage reporter to complete
+    // the data collection. (See https://github.com/rpl/flow-coverage-report/pull/4
+    // and https://github.com/rpl/flow-coverage-report/pull/5 for rationale,
+    // thanks to to @mynameiswhm and @ryan953  for their help on hunting down this issue)
+    {cwd: projectDir, timeout: flowCommandTimeout, maxBuffer: Infinity},
+    {dontReject: true});
 
   if (res.err) {
+    console.error(`ERROR Collecting coverage data from ${filename} `, filename, res.err, res.stderr);
+
+    if (process.env.VERBOSE) {
+      if (tmpFilePath) {
+        await writeFile(tmpFilePath, res.stdout || '');
+      }
+    }
+
     // TODO: collect errors and put them in a visible place in the
     // generated report.
     return {
       ...emptyCoverageData,
-      flowCoverageException: res.err.message,
+      isError: true,
+      flowCoverageException: res.err && res.err.message,
       flowCoverageStderr: res.stderr,
       flowCoverageParsingError: undefined
     };
   }
 
-  const rawData = await readFile(tmpFilePath);
+  if (process.env.VERBOSE) {
+    console.log(`Collecting coverage data from ${filename} completed.`);
+    if (tmpFilePath) {
+      await writeFile(tmpFilePath, res.stdout || '');
+    }
+  }
 
   let parsedData: ?FlowCoverageJSONData;
   let flowCoverageParsingError: string;
 
-  if (rawData) {
+  if (res.stdout) {
     try {
-      parsedData = JSON.parse(String(rawData));
+      parsedData = JSON.parse(String(res.stdout));
     } catch (err) {
       flowCoverageParsingError = err.message;
     }
@@ -181,6 +222,7 @@ async function collectFlowCoverageForFile(
       uncovered_count: 0,
       uncovered_locs: []
     },
+    isError: true,
     flowCoverageException: undefined,
     flowCoverageStderr: undefined,
     flowCoverageParsingError
@@ -206,10 +248,11 @@ export type FlowCoverageSummaryData = {
 
 exports.collectFlowCoverage = function (
   flowCommandPath: string,
+  flowCommandTimeout: number,
   projectDir: string,
   globIncludePatterns: Array<string>,
   threshold: number,
-  tmpDirPath: string,
+  tmpDirPath: ?string,
 ): Promise<FlowCoverageSummaryData> {
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     var now = new Date();
@@ -237,7 +280,7 @@ exports.collectFlowCoverage = function (
         .then(async files => {
           for (const filename of files) {
             const data: FlowCoverageJSONData = await collectFlowCoverageForFile(
-              flowCommandPath, projectDir, filename, tmpDirPath
+              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
             );
 
             /* eslint-disable camelcase */

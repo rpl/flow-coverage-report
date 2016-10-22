@@ -5,6 +5,8 @@ import sinon from 'sinon';
 
 import {test} from 'ava';
 
+import {DEFAULT_FLOW_TIMEOUT} from '../../lib/index';
+
 const LIB_FLOW = '../../lib/flow';
 const LIB_PROMISIFIED = '../../lib/promisified';
 const NPM_TEMP = 'temp';
@@ -18,11 +20,11 @@ test.afterEach(() => {
 
 test('checkFlowStatus does not catch arbitrary errors', async function (t) {
   const exec = sinon.stub();
-  const readFile = sinon.stub();
+  const writeFile = sinon.stub();
   const tempPath = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
-  mockRequire(LIB_PROMISIFIED, {exec, readFile});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
   tempPath.onFirstCall()
           .returns(tmpFilePath);
@@ -41,22 +43,27 @@ test('checkFlowStatus does not catch arbitrary errors', async function (t) {
   );
 
   t.true(exec.calledOnce);
-  t.is(exec.firstCall.args[0], `flow status --json > ${tmpFilePath}`);
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir/'});
+  t.is(exec.firstCall.args[0], `flow status --json`);
+  t.deepEqual(exec.firstCall.args[1], {
+    cwd: '/fake/projectDir/',
+    maxBuffer: Infinity
+  });
   t.deepEqual(exec.firstCall.args[2], {dontReject: true});
 
-  t.is(tempPath.callCount, 1);
-  t.deepEqual(tempPath.firstCall.args[0], {suffix: '.json', dir: tmpDirPath});
+  // No file should be created if the VERBOSE and
+  // DEBUG_DUMP_JSON env var are not set
+  t.is(tempPath.callCount, 0);
+  t.is(writeFile.callCount, 0);
 });
 
 test('checkFlowStatus resolves to flow types errors in json format',
   async function (t) {
     const exec = sinon.stub();
-    const readFile = sinon.stub();
+    const writeFile = sinon.stub();
     const tempPath = sinon.stub();
 
     mockRequire(NPM_TEMP, {path: tempPath});
-    mockRequire(LIB_PROMISIFIED, {exec, readFile});
+    mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
     const fakeJSONStatusReply = {
       passed: false,
@@ -65,10 +72,11 @@ test('checkFlowStatus resolves to flow types errors in json format',
     };
 
     tempPath.onCall().returns(tmpFilePath);
-    exec.onFirstCall().returns(Promise.resolve({err: {code: 2}}));
-    exec.onSecondCall().returns(Promise.resolve({err: {code: 2}}));
-    readFile.onFirstCall().returns(Promise.resolve(JSON.stringify(fakeJSONStatusReply)));
-    readFile.onSecondCall().returns(Promise.resolve('')); // empty flow output
+    exec.onFirstCall().returns(Promise.resolve({
+      err: {code: 2},
+      stdout: JSON.stringify(fakeJSONStatusReply)
+    }));
+    exec.onSecondCall().returns(Promise.resolve({err: {code: 2}, stdout: ''}));
 
     const flow = mockRequire.reRequire(LIB_FLOW);
 
@@ -86,18 +94,18 @@ test('checkFlowStatus resolves to flow types errors in json format',
 test('checkFlowStatus rejects on invalid flow status json format',
   async function (t) {
     const exec = sinon.stub();
-    const readFile = sinon.stub();
     const tempPath = sinon.stub();
 
     mockRequire(NPM_TEMP, {path: tempPath});
-    mockRequire(LIB_PROMISIFIED, {exec, readFile});
+    mockRequire(LIB_PROMISIFIED, {exec});
 
     const fakeJSONStatusReply = {
       notFlowStatusJSON: true
     };
 
-    exec.onFirstCall().returns(Promise.resolve({}));
-    readFile.onFirstCall().returns(Promise.resolve(JSON.stringify(fakeJSONStatusReply)));
+    exec.onFirstCall().returns(Promise.resolve({
+      stdout: JSON.stringify(fakeJSONStatusReply)
+    }));
 
     const flow = mockRequire.reRequire(LIB_FLOW);
     await t.throws(
@@ -109,11 +117,11 @@ test('checkFlowStatus rejects on invalid flow status json format',
 
 test('collectFlowCoverageForFile collects unexpected errors', async function (t) {
   const exec = sinon.stub();
-  const readFile = sinon.stub();
   const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
-  mockRequire(LIB_PROMISIFIED, {exec, readFile});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
   const fakeExecError = {
     err: {
@@ -144,16 +152,16 @@ test('collectFlowCoverageForFile collects unexpected errors', async function (t)
   });
 
   t.true(exec.calledOnce);
-  t.is(readFile.callCount, 0);
+  t.is(writeFile.callCount, 0);
 });
 
 test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   const exec = sinon.stub();
-  const readFile = sinon.stub();
+  const writeFile = sinon.stub();
   const tempPath = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
-  mockRequire(LIB_PROMISIFIED, {exec, readFile});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
   const fakeFlowCoverageData = {
     fakeCoverageData: {
@@ -162,34 +170,34 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   };
 
   tempPath.onFirstCall().returns(tmpFilePath);
-  exec.onFirstCall().returns(Promise.resolve({}));
-  readFile.onFirstCall().returns(Promise.resolve(
-    new Buffer(JSON.stringify(fakeFlowCoverageData))
-  ));
+  exec.onFirstCall().returns(Promise.resolve({
+    stdout: new Buffer(JSON.stringify(fakeFlowCoverageData))
+  }));
 
   const flow = mockRequire.reRequire(LIB_FLOW);
   const filename = 'src/fakeFilename.js';
 
   const res = await flow.collectFlowCoverageForFile(
-    'flow', '/fake/projectDir', filename
+    'flow', DEFAULT_FLOW_TIMEOUT, '/fake/projectDir', filename
   );
 
-  t.true(readFile.calledOnce);
-  t.is(readFile.firstCall.args[0], tmpFilePath);
+  t.is(writeFile.callCount, 0);
   t.true(exec.calledOnce);
-  t.is(exec.firstCall.args[0], `flow coverage --json ${filename} > ${tmpFilePath}`);
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir'});
+  t.is(exec.firstCall.args[0], `flow coverage --json ${filename}`);
+  t.deepEqual(exec.firstCall.args[1], {
+    cwd: '/fake/projectDir', maxBuffer: Infinity, timeout: DEFAULT_FLOW_TIMEOUT
+  });
   t.deepEqual(res, fakeFlowCoverageData);
 });
 
 test('collectFlowCoverage', async function (t) {
   const exec = sinon.stub();
-  const readFile = sinon.stub();
+  const writeFile = sinon.stub();
   const tempPath = sinon.stub();
   const glob = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
-  mockRequire(LIB_PROMISIFIED, {exec, glob, readFile});
+  mockRequire(LIB_PROMISIFIED, {exec, glob, writeFile});
 
   const fakeFlowStatus = {
     passed: true,
@@ -201,10 +209,9 @@ test('collectFlowCoverage', async function (t) {
   const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js'];
 
   // Fake reply to flow status command.
-  exec.onCall(0).returns(Promise.resolve({}));
-  readFile.onCall(0).returns(Promise.resolve(
-    JSON.stringify(fakeFlowStatus)
-  ));
+  exec.onCall(0).returns(Promise.resolve({
+    stdout: JSON.stringify(fakeFlowStatus)
+  }));
 
   // Fake the glob results.
   glob.onCall(0).returns(Promise.resolve(firstGlobResults));
@@ -214,9 +221,8 @@ test('collectFlowCoverage', async function (t) {
 
   // Fake the flow coverage commands results.
   for (var i = 1; i <= allFiles.length; i++) {
-    exec.onCall(i).returns(Promise.resolve({}));
-    readFile.onCall(i).returns(Promise.resolve(
-      JSON.stringify({
+    exec.onCall(i).returns(Promise.resolve({
+      stdout: JSON.stringify({
         /* eslint-disable camelcase */
         expressions: {
           covered_count: 1,
@@ -238,7 +244,7 @@ test('collectFlowCoverage', async function (t) {
         }
         /* eslint-enable camelcase */
       })
-    ));
+    }));
   }
 
   const flow = mockRequire.reRequire(LIB_FLOW);
@@ -248,7 +254,7 @@ test('collectFlowCoverage', async function (t) {
   ];
 
   const res = await flow.collectFlowCoverage(
-    'flow', '/projectDir', globIncludePatterns
+    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir', globIncludePatterns
   );
 
   t.is(typeof res.generatedAt, 'string');
@@ -295,6 +301,7 @@ test('collectFlowCoverage', async function (t) {
     });
   }
 
+  t.is(writeFile.callCount, 0);
   t.is(exec.callCount, 5);
   t.is(glob.callCount, 2);
 });

@@ -17,11 +17,15 @@ export type FlowCoverageReportType = 'json' | 'text' | 'html';
 export type FlowCoverageReportOptions = {
   projectDir: string,
   flowCommandPath: string,
+  flowCommandTimeout: number,
   globIncludePatterns: Array<string>,
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
   threshold?: number
 };
+
+// Default timeout for flow coverage commands.
+const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
 // User Scenarios
 // 1. generate text report from a project dir
@@ -32,57 +36,62 @@ export type FlowCoverageReportOptions = {
 // 6. set a custom output dir
 // 7. usa a saved json file to compute coverage trend (and fail on negative trends)
 
-function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
+async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   // Apply defaults to options.
   var projectDir = opts.projectDir;
 
-  return withTmpDir('flow-coverage-report')
-    .then(dirPath => {
-      opts.flowCommandPath = opts.flowCommandPath || 'flow';
-      opts.outputDir = opts.outputDir || './flow-coverage';
-      opts.outputDir = opts.outputDir.slice(0, 2) === './' ?
-        path.resolve(path.join(projectDir, opts.outputDir)) :
-        opts.outputDir;
-      opts.globIncludePatterns = opts.globIncludePatterns || [];
+  let tmpDirPath: ?string;
 
-      // Apply validation checks.
-      if (!projectDir) {
-        return Promise.reject(new Error('projectDir option is mandatory'));
-      }
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpDirPath = await withTmpDir('flow-coverage-report');
+    console.log(`Verbose DUMP_JSON mode enabled (${tmpDirPath})`);
+  }
 
-      if (opts.globIncludePatterns.length === 0) {
-        return Promise.reject(new Error('empty globIncludePatterns option'));
-      }
+  opts.flowCommandPath = opts.flowCommandPath || 'flow';
+  opts.flowCommandTimeout = opts.glowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
+  opts.outputDir = opts.outputDir || './flow-coverage';
+  opts.outputDir = opts.outputDir.slice(0, 2) === './' ?
+    path.resolve(path.join(projectDir, opts.outputDir)) :
+    opts.outputDir;
+  opts.globIncludePatterns = opts.globIncludePatterns || [];
 
-      if (!opts.threshold) {
-        return Promise.reject(new Error('threshold option is mandatory'));
-      }
+  // Apply validation checks.
+  if (!projectDir) {
+    return Promise.reject(new Error('projectDir option is mandatory'));
+  }
 
-      return collectFlowCoverage(
-        opts.flowCommandPath, opts.projectDir, opts.globIncludePatterns,
-        opts.threshold, dirPath,
-      );
-    })
-    .then((coverageData: FlowCoverageSummaryData) => {
-      var reportResults = [];
-      const reportTypes = opts.reportTypes || ['text'];
+  if (opts.globIncludePatterns.length === 0) {
+    return Promise.reject(new Error('empty globIncludePatterns option'));
+  }
 
-      if (reportTypes.indexOf('json') >= 0) {
-        reportResults.push(reportJSON.generate(coverageData, opts));
-      }
+  if (!opts.threshold) {
+    return Promise.reject(new Error('threshold option is mandatory'));
+  }
 
-      if (reportTypes.indexOf('text') >= 0) {
-        reportResults.push(reportText.generate(coverageData, opts));
-      }
+  let coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
+    opts.flowCommandPath, opts.flowCommandTimeout,
+    opts.projectDir, opts.globIncludePatterns,
+    opts.threshold, tmpDirPath
+  );
 
-      if (reportTypes.indexOf('html') >= 0) {
-        reportResults.push(reportHTML.generate(coverageData, opts));
-      }
+  var reportResults = [];
+  const reportTypes = opts.reportTypes || ['text'];
 
-      return Promise.all(reportResults).then(() => {
-        return [coverageData, opts];
-      });
-    });
+  if (reportTypes.indexOf('json') >= 0) {
+    reportResults.push(reportJSON.generate(coverageData, opts));
+  }
+
+  if (reportTypes.indexOf('text') >= 0) {
+    reportResults.push(reportText.generate(coverageData, opts));
+  }
+
+  if (reportTypes.indexOf('html') >= 0) {
+    reportResults.push(reportHTML.generate(coverageData, opts));
+  }
+
+  return Promise.all(reportResults).then(() => {
+    return [coverageData, opts];
+  });
 }
 
 module.exports = {
