@@ -6,6 +6,11 @@ import minimatch from 'minimatch';
 import temp from 'temp';
 import {exec, glob, writeFile} from './promisified';
 
+// Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
+if (!Array.prototype.find) {
+  require('array.prototype.find').shim();
+}
+
 // getCoveredPercent helper.
 
 /* eslint-disable camelcase */
