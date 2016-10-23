@@ -116,7 +116,7 @@ test('checkFlowStatus rejects on invalid flow status json format',
   }
 );
 
-test('collectFlowCoverageForFile collects unexpected errors', async function (t) {
+test('collectFlowCoverageForFile collects flow command exit errors', async function (t) {
   const exec = sinon.stub();
   const tempPath = sinon.stub();
   const writeFile = sinon.stub();
@@ -141,7 +141,87 @@ test('collectFlowCoverageForFile collects unexpected errors', async function (t)
     );
 
   // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
   t.is(collectData.flowCoverageException, fakeExecError.err.message);
+
+  // Expect empty flow coverage data when a coverage exception has been collected.
+  t.deepEqual(collectData.expressions, {
+    /* eslint-disable camelcase */
+    covered_count: 0,
+    uncovered_count: 0,
+    uncovered_locs: []
+    /* eslint-enable camelcase */
+  });
+
+  t.true(exec.calledOnce);
+  t.is(writeFile.callCount, 0);
+});
+
+test('collectFlowCoverageForFile collects parsing errors', async function (t) {
+  const exec = sinon.stub();
+  const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
+
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  exec.onFirstCall().returns(Promise.resolve({
+    stdout: '{'
+  }));
+
+  const flow = mockRequire.reRequire(LIB_FLOW);
+  const filename = 'src/fakeFilename.js';
+
+  const collectData = await flow.collectFlowCoverageForFile(
+      'flow', '/fake/projectDir/', filename, tmpDirPath
+    );
+
+  let expectedParsingError;
+  try {
+    JSON.parse('{');
+  } catch (err) {
+    expectedParsingError = err;
+  }
+
+  // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
+  t.is(collectData.flowCoverageParsingError, expectedParsingError.message);
+
+  // Expect empty flow coverage data when a coverage exception has been collected.
+  t.deepEqual(collectData.expressions, {
+    /* eslint-disable camelcase */
+    covered_count: 0,
+    uncovered_count: 0,
+    uncovered_locs: []
+    /* eslint-enable camelcase */
+  });
+
+  t.true(exec.calledOnce);
+  t.is(writeFile.callCount, 0);
+});
+
+test('collectFlowCoverageForFile collects coverage errors', async function (t) {
+  const exec = sinon.stub();
+  const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
+
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  exec.onFirstCall().returns(Promise.resolve({
+    stderr: '{"error": "Fake flow coverage message"}'
+  }));
+
+  const flow = mockRequire.reRequire(LIB_FLOW);
+  const filename = 'src/fakeFilename.js';
+
+  const collectData = await flow.collectFlowCoverageForFile(
+      'flow', '/fake/projectDir/', filename, tmpDirPath
+    );
+
+  // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
+  t.is(collectData.flowCoverageError, 'Fake flow coverage message');
 
   // Expect empty flow coverage data when a coverage exception has been collected.
   t.deepEqual(collectData.expressions, {
