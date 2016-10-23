@@ -26,23 +26,24 @@ function renderTextReport(
     row += 1;
     const data = coverageData.files[filename];
 
-    if (data.isError) {
-      // Skip files without coverage data.
-      continue;
-    }
-
     const covered = data.expressions.covered_count;
     const uncovered = data.expressions.uncovered_count;
     let percent = data.percent || NaN;
 
     filesTable.push([
-      filename, percent + ' %', covered + uncovered, covered, uncovered
+      filename,
+      data.isError ? '\u26A0 Error' : percent + ' %',
+      covered + uncovered, covered, uncovered
     ]);
 
     let rowColor;
     if (percent >= (opts.threshold || 80)) {
       rowColor = 'green';
     } else {
+      rowColor = 'red';
+    }
+
+    if (data.isError) {
       rowColor = 'red';
     }
 

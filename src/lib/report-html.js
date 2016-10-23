@@ -149,7 +149,8 @@ function renderHTMLReport(opt/* : Object */) {
                       'codemirror-javascript-mode.js',
                       'codemirror-annotatescrollbar-addon.js',
                       'codemirror-simplescrollbars-addon.js',
-                      'flow-highlight-source.js'
+                      'flow-highlight-source.js',
+                      'index.js'
                     ].map(prefixAssets).map(toRelative)
                   }
                 }));

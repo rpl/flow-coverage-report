@@ -136,7 +136,12 @@ export type FlowCoverageJSONData = {
     uncovered_locs: Array<FlowUncoveredLoc>
   },
   percent?: number,
-  isError?: boolean
+  error?: string,
+  isError?: boolean,
+  flowCoverageError?: ?string,
+  flowCoverageException?: ?string,
+  flowCoverageParsingError?: ?string,
+  flowCoverageStderr?: string|Buffer
 }
 
 async function collectFlowCoverageForFile(
@@ -189,6 +194,7 @@ async function collectFlowCoverageForFile(
     return {
       ...emptyCoverageData,
       isError: true,
+      flowCoverageError: undefined,
       flowCoverageException: res.err && res.err.message,
       flowCoverageStderr: res.stderr,
       flowCoverageParsingError: undefined
@@ -199,6 +205,7 @@ async function collectFlowCoverageForFile(
     console.log(`Collecting coverage data from ${filename} completed.`);
     if (tmpFilePath) {
       await writeFile(tmpFilePath, res.stdout || '');
+      console.log(`Saved json dump of collected coverage data from ${filename} to ${tmpFilePath}.`);
     }
   }
 
@@ -213,7 +220,15 @@ async function collectFlowCoverageForFile(
     }
   }
 
-  if (parsedData) {
+  if (res.stderr) {
+    try {
+      parsedData = JSON.parse(String(res.stderr));
+      delete res.stderr;
+    } catch (err) {
+    }
+  }
+
+  if (parsedData && !parsedData.error) {
     return parsedData;
   }
 
@@ -224,9 +239,10 @@ async function collectFlowCoverageForFile(
       uncovered_locs: []
     },
     isError: true,
+    flowCoverageError: parsedData && parsedData.error,
     flowCoverageException: undefined,
-    flowCoverageStderr: undefined,
-    flowCoverageParsingError
+    flowCoverageParsingError,
+    flowCoverageStderr: res.stderr
   };
 }
 
