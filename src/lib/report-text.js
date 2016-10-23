@@ -11,7 +11,7 @@ import type {FlowCoverageReportOptions} from './index';
 function renderTextReport(
   coverageData: FlowCoverageSummaryData,
   opts: FlowCoverageReportOptions
-) {
+): Promise<void> {
   const print = opts.log || console.log.bind(console);
 
   const filesTable = new Table({
@@ -94,7 +94,7 @@ function renderTextReport(
 
   summaryTable.push(['project', 'percent', 'total', 'covered', 'uncovered']);
   const summaryTotal = coverageData.covered_count + coverageData.uncovered_count;
-  let summaryPercent = coverageData.percent || NaN;
+  let summaryPercent = coverageData.percent || 0;
 
   let summaryColor;
   if (summaryPercent >= (opts.threshold || 80)) {
@@ -117,17 +117,26 @@ function renderTextReport(
     align: 'right'
   });
 
+  const waitForDrain = new Promise(resolve => {
+    if (opts.log) {
+      resolve();
+    } else {
+      process.stdout.on('drain', resolve);
+    }
+  });
+
   print(String(filesTable));
   print(String(summaryTablePre));
   print(String(summaryTable));
+
+  return waitForDrain;
 }
 
 function generateFlowCoverageReportText(
   coverageData: FlowCoverageSummaryData,
   opts: Object
-) {
-  renderTextReport(coverageData, opts);
-  return Promise.resolve([coverageData, opts]);
+): Promise<void> {
+  return renderTextReport(coverageData, opts);
 }
 
 module.exports = {
