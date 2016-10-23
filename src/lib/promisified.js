@@ -11,7 +11,7 @@ import temp from 'temp';
 // Automatically cleanup temp file on process.exit
 temp.track();
 
-export type ExecResult = {err?: Error, stdout?: Buffer, stderr?: Buffer};
+export type ExecResult = {err?: Error, stdout?: string|Buffer, stderr?: string|Buffer};
 export type ExecOptions = child_process$execOpts; // eslint-disable-line camelcase
 export type ExecExtras = {dontReject?: boolean};
 

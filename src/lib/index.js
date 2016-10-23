@@ -22,7 +22,8 @@ export type FlowCoverageReportOptions = {
   globExcludePatterns: Array<string>,
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
-  threshold?: number
+  threshold?: number,
+  log: Function
 };
 
 // Default timeout for flow coverage commands.
@@ -49,7 +50,7 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   }
 
   opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.flowCommandTimeout = opts.glowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
+  opts.flowCommandTimeout = opts.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
   opts.outputDir = opts.outputDir || './flow-coverage';
   opts.outputDir = path.isAbsolute(opts.outputDir) ?
     opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
