@@ -51,9 +51,8 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   opts.flowCommandPath = opts.flowCommandPath || 'flow';
   opts.flowCommandTimeout = opts.glowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
   opts.outputDir = opts.outputDir || './flow-coverage';
-  opts.outputDir = opts.outputDir.slice(0, 2) === './' ?
-    path.resolve(path.join(projectDir, opts.outputDir)) :
-    opts.outputDir;
+  opts.outputDir = path.isAbsolute(opts.outputDir) ?
+    opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
   opts.globIncludePatterns = opts.globIncludePatterns || [];
   opts.globExcludePatterns = opts.globExcludePatterns || [];
 
