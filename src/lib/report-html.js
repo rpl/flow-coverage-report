@@ -200,6 +200,8 @@ function generateFlowCoverageReportHTML(
     coverageGeneratedAt, projectDir, data: coverageSummaryData, outputDir
   });
 
+  const print = opts.log || console.log.bind(console);
+
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
   }
@@ -218,7 +220,10 @@ function generateFlowCoverageReportHTML(
       waitForCopyAssets,
       generateSummary
     ].concat(generateSourceFiles)
-  );
+  ).then(() => {
+    const cwd = process.cwd();
+    print(`View report at file:///${cwd}/flow-coverage/index.html`);
+  });
 }
 
 module.exports = {
