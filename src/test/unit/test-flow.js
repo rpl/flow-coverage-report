@@ -1,5 +1,6 @@
 'use babel';
 
+import minimatch from 'minimatch';
 import mockRequire from 'mock-require';
 import sinon from 'sinon';
 
@@ -205,8 +206,8 @@ test('collectFlowCoverage', async function (t) {
     flowVersion: '0.30.0'
   };
 
-  const firstGlobResults = ['src/a.js', 'src/b.js'];
-  const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js'];
+  const firstGlobResults = ['src/a.js', 'src/b.js', 'test/test-a.js'];
+  const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js', 'test/subdir/test-d.js'];
 
   // Fake reply to flow status command.
   exec.onCall(0).returns(Promise.resolve({
@@ -253,8 +254,12 @@ test('collectFlowCoverage', async function (t) {
     'src/*.js', 'src/*/*.js'
   ];
 
+  const globExcludePatterns = [
+    'test/**'
+  ];
+
   const res = await flow.collectFlowCoverage(
-    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir', globIncludePatterns
+    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir', globIncludePatterns, globExcludePatterns,
   );
 
   t.is(typeof res.generatedAt, 'string');
@@ -264,19 +269,24 @@ test('collectFlowCoverage', async function (t) {
   delete res.files;
 
   t.deepEqual(res, {
-    /* eslint-disable camelcase */
+    flowStatus: {...fakeFlowStatus},
+    globIncludePatterns,
+    globExcludePatterns,
     percent: 50,
     threshold: undefined,
+    /* eslint-disable camelcase */
     covered_count: 4,
-    uncovered_count: 4,
-    flowStatus: {...fakeFlowStatus},
-    globIncludePatterns
+    uncovered_count: 4
     /* eslint-enable camelcase */
   });
 
-  t.deepEqual(Object.keys(resFiles).sort(), allFiles.sort());
+  const filteredFiles = allFiles.filter(
+    file => !minimatch(file, globExcludePatterns[0])
+  ).sort();
 
-  for (const filename of allFiles) {
+  t.deepEqual(Object.keys(resFiles).sort(), filteredFiles);
+
+  for (const filename of filteredFiles) {
     t.deepEqual(resFiles[filename].expressions.uncovered_locs, [{
       start: {
         line: 1,

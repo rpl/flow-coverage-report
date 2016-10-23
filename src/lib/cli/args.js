@@ -58,6 +58,12 @@ module.exports = {
         describe: 'include the files selected by the specified glob',
         default: '**/*.js'
       })
+      .option('exclude-glob', {
+        alias: 'x',
+        type: 'string',
+        describe: 'exclude the files selected by the specified glob',
+        default: 'node_modules/**'
+      })
       .options('threshold', {
         type: 'number',
         describe: 'the minimum coverage percent requested.',

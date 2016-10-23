@@ -19,6 +19,7 @@ export type FlowCoverageReportOptions = {
   flowCommandPath: string,
   flowCommandTimeout: number,
   globIncludePatterns: Array<string>,
+  globExcludePatterns: Array<string>,
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
   threshold?: number
@@ -54,6 +55,11 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
     path.resolve(path.join(projectDir, opts.outputDir)) :
     opts.outputDir;
   opts.globIncludePatterns = opts.globIncludePatterns || [];
+  opts.globExcludePatterns = opts.globExcludePatterns || [];
+
+  if (!Array.isArray(opts.globExcludePatterns)) {
+    opts.globExcludePatterns = [opts.globExcludePatterns];
+  }
 
   // Apply validation checks.
   if (!projectDir) {
@@ -70,7 +76,7 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
 
   let coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
     opts.flowCommandPath, opts.flowCommandTimeout,
-    opts.projectDir, opts.globIncludePatterns,
+    opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
     opts.threshold, tmpDirPath
   );
 

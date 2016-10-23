@@ -2,6 +2,7 @@
 
 // @flow
 
+import minimatch from 'minimatch';
 import temp from 'temp';
 import {exec, glob, writeFile} from './promisified';
 
@@ -251,6 +252,7 @@ exports.collectFlowCoverage = function (
   flowCommandTimeout: number,
   projectDir: string,
   globIncludePatterns: Array<string>,
+  globExcludePatterns: Array<string>,
   threshold: number,
   tmpDirPath: ?string,
 ): Promise<FlowCoverageSummaryData> {
@@ -265,7 +267,8 @@ exports.collectFlowCoverage = function (
       generatedAt: coverageGeneratedAt,
       flowStatus: flowStatus,
       files: {},
-      globIncludePatterns: globIncludePatterns
+      globIncludePatterns: globIncludePatterns,
+      globExcludePatterns: globExcludePatterns
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -279,6 +282,15 @@ exports.collectFlowCoverage = function (
       return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
         .then(async files => {
           for (const filename of files) {
+            // Skip files that match any of the exclude patterns.
+            if (globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
+              if (process.env.VERBOSE) {
+                console.log(`Skip ${filename}, matched excluded pattern.`);
+              }
+
+              continue;
+            }
+
             const data: FlowCoverageJSONData = await collectFlowCoverageForFile(
               flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
             );
