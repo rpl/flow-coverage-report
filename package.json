@@ -31,6 +31,7 @@
   "author": "Luca Greco <lgreco@mozilla.com>",
   "license": "MPL-2.0",
   "dependencies": {
+    "babel-runtime": "6.11.6",
     "glob": "7.0.5",
     "minimatch": "3.0.3",
     "mkdirp": "0.5.1",
