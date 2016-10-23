@@ -263,6 +263,7 @@ export type FlowCoverageSummaryData = {
   generatedAt: string,
   flowStatus: FlowStatus,
   globIncludePatterns: Array<string>,
+  globExcludePatterns: Array<string>,
   files: {
     [key: string]: FlowCoverageJSONData
   }

@@ -67,6 +67,10 @@ function renderTextReport(
     coverageData.globIncludePatterns.join(', ')
   ]);
   summaryTablePre.push([
+    'excluded glob patterns:',
+    (coverageData.globExcludePatterns || []).join(', ')
+  ]);
+  summaryTablePre.push([
     'threshold:',
     coverageData.threshold
   ]);
