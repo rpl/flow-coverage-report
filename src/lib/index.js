@@ -92,7 +92,9 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   }
 
   if (reportTypes.indexOf('html') >= 0) {
-    reportResults.push(reportHTML.generate(coverageData, opts));
+    reportResults.push(reportHTML.generate(coverageData, opts).then(() => {
+      console.log(`View generated HTML Report at file://${opts.outputDir}/index.html`);
+    }));
   }
 
   return Promise.all(reportResults).then(() => {
