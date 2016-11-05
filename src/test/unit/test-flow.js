@@ -1,12 +1,19 @@
 'use babel';
 
+import minimatch from 'minimatch';
 import mockRequire from 'mock-require';
 import sinon from 'sinon';
 
 import {test} from 'ava';
 
+import {DEFAULT_FLOW_TIMEOUT} from '../../lib/index';
+
 const LIB_FLOW = '../../lib/flow';
 const LIB_PROMISIFIED = '../../lib/promisified';
+const NPM_TEMP = 'temp';
+
+const tmpDirPath = '/tmp/fake-tmp-path';
+const tmpFilePath = `${tmpDirPath}/fake-tmp-file.json`;
 
 test.afterEach(() => {
   mockRequire.stopAll();
@@ -14,8 +21,14 @@ test.afterEach(() => {
 
 test('checkFlowStatus does not catch arbitrary errors', async function (t) {
   const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const writeFile = sinon.stub();
+  const tempPath = sinon.stub();
 
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  tempPath.onFirstCall()
+          .returns(tmpFilePath);
   exec.onFirstCall()
       .returns(Promise.resolve({
         err: new Error('Fake flow status error')
@@ -23,51 +36,58 @@ test('checkFlowStatus does not catch arbitrary errors', async function (t) {
 
   const flow = mockRequire.reRequire(LIB_FLOW);
 
+  t.is(tempPath.callCount, 0);
+
   await t.throws(
-    flow.checkFlowStatus('flow', '/fake/projectDir/'),
+    flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath),
     'Fake flow status error'
   );
 
   t.true(exec.calledOnce);
-  t.is(exec.firstCall.args[0], 'flow status --json');
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir/'});
+  t.is(exec.firstCall.args[0], `flow status --json`);
+  t.deepEqual(exec.firstCall.args[1], {
+    cwd: '/fake/projectDir/',
+    maxBuffer: Infinity
+  });
   t.deepEqual(exec.firstCall.args[2], {dontReject: true});
+
+  // No file should be created if the VERBOSE and
+  // DEBUG_DUMP_JSON env var are not set
+  t.is(tempPath.callCount, 0);
+  t.is(writeFile.callCount, 0);
 });
 
 test('checkFlowStatus resolves to flow types errors in json format',
   async function (t) {
     const exec = sinon.stub();
-    mockRequire(LIB_PROMISIFIED, {exec});
+    const writeFile = sinon.stub();
+    const tempPath = sinon.stub();
+
+    mockRequire(NPM_TEMP, {path: tempPath});
+    mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
     const fakeJSONStatusReply = {
       passed: false,
       flowVersion: '0.30.0',
       errors: []
     };
-    const fakeFlowCheckError = {
-      err: {
-        code: 2
-      },
-      stdout: new Buffer(JSON.stringify(fakeJSONStatusReply))
-    };
 
-    exec.onFirstCall().returns(Promise.resolve(fakeFlowCheckError));
-    exec.onSecondCall().returns(Promise.resolve({
-      err: {
-        message: 'Fake flow error without stdout',
-        code: 2
-      }
+    tempPath.onCall().returns(tmpFilePath);
+    exec.onFirstCall().returns(Promise.resolve({
+      err: {code: 2},
+      stdout: JSON.stringify(fakeJSONStatusReply)
     }));
+    exec.onSecondCall().returns(Promise.resolve({err: {code: 2}, stdout: ''}));
 
     const flow = mockRequire.reRequire(LIB_FLOW);
 
-    const res = await flow.checkFlowStatus('flow', '/fake/projectDir/');
+    const res = await flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath);
 
     t.deepEqual(res, fakeJSONStatusReply);
 
     await t.throws(
-      flow.checkFlowStatus('flow', '/fake/projectDir/'),
-      'Fake flow error without stdout'
+      flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath),
+      /Parsing error on Flow status JSON result: SyntaxError: Unexpected end/
     );
   }
 );
@@ -75,16 +95,18 @@ test('checkFlowStatus resolves to flow types errors in json format',
 test('checkFlowStatus rejects on invalid flow status json format',
   async function (t) {
     const exec = sinon.stub();
+    const tempPath = sinon.stub();
+
+    mockRequire(NPM_TEMP, {path: tempPath});
     mockRequire(LIB_PROMISIFIED, {exec});
 
     const fakeJSONStatusReply = {
       notFlowStatusJSON: true
     };
-    const fakeFlowStatusResult = {
-      stdout: new Buffer(JSON.stringify(fakeJSONStatusReply))
-    };
 
-    exec.onFirstCall().returns(Promise.resolve(fakeFlowStatusResult));
+    exec.onFirstCall().returns(Promise.resolve({
+      stdout: JSON.stringify(fakeJSONStatusReply)
+    }));
 
     const flow = mockRequire.reRequire(LIB_FLOW);
     await t.throws(
@@ -94,50 +116,141 @@ test('checkFlowStatus rejects on invalid flow status json format',
   }
 );
 
-test('collectFlowCoverageForFile rejects', async function (t) {
+test('collectFlowCoverageForFile collects flow command exit errors', async function (t) {
   const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
 
-  exec.onFirstCall().returns(Promise.resolve({stdout: new Buffer('')}))
-      .onSecondCall().returns(Promise.resolve({
-        stdout: new Buffer('fake flow output with errors'),
-        err: {
-          message: 'Fake flow error without stdout',
-          code: 2
-        }
-      }));
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  const fakeExecError = {
+    err: {
+      message: 'Fake flow error without stdout',
+      code: 2
+    }
+  };
+
+  exec.onFirstCall().returns(Promise.resolve(fakeExecError));
 
   const flow = mockRequire.reRequire(LIB_FLOW);
   const filename = 'src/fakeFilename.js';
 
-  await t.throws(
-    flow.collectFlowCoverageForFile(
-      'flow', '/fake/projectDir/', filename
-    ),
-    `Unexpected error collected flow coverage data on '${filename}'`
-  );
+  const collectData = await flow.collectFlowCoverageForFile(
+      'flow', '/fake/projectDir/', filename, tmpDirPath
+    );
+
+  // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
+  t.is(collectData.flowCoverageException, fakeExecError.err.message);
+
+  // Expect empty flow coverage data when a coverage exception has been collected.
+  t.deepEqual(collectData.expressions, {
+    /* eslint-disable camelcase */
+    covered_count: 0,
+    uncovered_count: 0,
+    uncovered_locs: []
+    /* eslint-enable camelcase */
+  });
 
   t.true(exec.calledOnce);
+  t.is(writeFile.callCount, 0);
+});
 
-  await t.throws(
-    flow.collectFlowCoverageForFile(
-      'flow', '/fake/projectDir/', filename
-    ),
-    `Unexpected error collected flow coverage data on '${filename}'`
-  );
+test('collectFlowCoverageForFile collects parsing errors', async function (t) {
+  const exec = sinon.stub();
+  const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
 
-  t.true(exec.calledTwice);
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  exec.onFirstCall().returns(Promise.resolve({
+    stdout: '{'
+  }));
+
+  const flow = mockRequire.reRequire(LIB_FLOW);
+  const filename = 'src/fakeFilename.js';
+
+  const collectData = await flow.collectFlowCoverageForFile(
+      'flow', '/fake/projectDir/', filename, tmpDirPath
+    );
+
+  let expectedParsingError;
+  try {
+    JSON.parse('{');
+  } catch (err) {
+    expectedParsingError = err;
+  }
+
+  // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
+  t.is(collectData.flowCoverageParsingError, expectedParsingError.message);
+
+  // Expect empty flow coverage data when a coverage exception has been collected.
+  t.deepEqual(collectData.expressions, {
+    /* eslint-disable camelcase */
+    covered_count: 0,
+    uncovered_count: 0,
+    uncovered_locs: []
+    /* eslint-enable camelcase */
+  });
+
+  t.true(exec.calledOnce);
+  t.is(writeFile.callCount, 0);
+});
+
+test('collectFlowCoverageForFile collects coverage errors', async function (t) {
+  const exec = sinon.stub();
+  const tempPath = sinon.stub();
+  const writeFile = sinon.stub();
+
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+
+  exec.onFirstCall().returns(Promise.resolve({
+    stderr: '{"error": "Fake flow coverage message"}'
+  }));
+
+  const flow = mockRequire.reRequire(LIB_FLOW);
+  const filename = 'src/fakeFilename.js';
+
+  const collectData = await flow.collectFlowCoverageForFile(
+      'flow', '/fake/projectDir/', filename, tmpDirPath
+    );
+
+  // Expect a flow coverage exception in the collected data.
+  t.true(collectData.isError);
+  t.is(collectData.flowCoverageError, 'Fake flow coverage message');
+
+  // Expect empty flow coverage data when a coverage exception has been collected.
+  t.deepEqual(collectData.expressions, {
+    /* eslint-disable camelcase */
+    covered_count: 0,
+    uncovered_count: 0,
+    uncovered_locs: []
+    /* eslint-enable camelcase */
+  });
+
+  t.true(exec.calledOnce);
+  t.is(writeFile.callCount, 0);
 });
 
 test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   const exec = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec});
+  const writeFile = sinon.stub();
+  const tempPath = sinon.stub();
+
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
   const fakeFlowCoverageData = {
     fakeCoverageData: {
       ok: true
     }
   };
+
+  tempPath.onFirstCall().returns(tmpFilePath);
   exec.onFirstCall().returns(Promise.resolve({
     stdout: new Buffer(JSON.stringify(fakeFlowCoverageData))
   }));
@@ -146,19 +259,26 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   const filename = 'src/fakeFilename.js';
 
   const res = await flow.collectFlowCoverageForFile(
-    'flow', '/fake/projectDir', filename
+    'flow', DEFAULT_FLOW_TIMEOUT, '/fake/projectDir', filename
   );
 
+  t.is(writeFile.callCount, 0);
   t.true(exec.calledOnce);
   t.is(exec.firstCall.args[0], `flow coverage --json ${filename}`);
-  t.deepEqual(exec.firstCall.args[1], {cwd: '/fake/projectDir'});
+  t.deepEqual(exec.firstCall.args[1], {
+    cwd: '/fake/projectDir', maxBuffer: Infinity, timeout: DEFAULT_FLOW_TIMEOUT
+  });
   t.deepEqual(res, fakeFlowCoverageData);
 });
 
 test('collectFlowCoverage', async function (t) {
   const exec = sinon.stub();
+  const writeFile = sinon.stub();
+  const tempPath = sinon.stub();
   const glob = sinon.stub();
-  mockRequire(LIB_PROMISIFIED, {exec, glob});
+
+  mockRequire(NPM_TEMP, {path: tempPath});
+  mockRequire(LIB_PROMISIFIED, {exec, glob, writeFile});
 
   const fakeFlowStatus = {
     passed: true,
@@ -166,8 +286,9 @@ test('collectFlowCoverage', async function (t) {
     flowVersion: '0.30.0'
   };
 
-  const firstGlobResults = ['src/a.js', 'src/b.js'];
-  const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js'];
+  const firstGlobResults = ['src/a.js', 'src/b.js', 'test/test-a.js'];
+  const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js', 'test/subdir/test-d.js'];
+
   // Fake reply to flow status command.
   exec.onCall(0).returns(Promise.resolve({
     stdout: JSON.stringify(fakeFlowStatus)
@@ -213,8 +334,12 @@ test('collectFlowCoverage', async function (t) {
     'src/*.js', 'src/*/*.js'
   ];
 
+  const globExcludePatterns = [
+    'test/**'
+  ];
+
   const res = await flow.collectFlowCoverage(
-    'flow', '/projectDir', globIncludePatterns
+    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir', globIncludePatterns, globExcludePatterns,
   );
 
   t.is(typeof res.generatedAt, 'string');
@@ -224,19 +349,24 @@ test('collectFlowCoverage', async function (t) {
   delete res.files;
 
   t.deepEqual(res, {
-    /* eslint-disable camelcase */
+    flowStatus: {...fakeFlowStatus},
+    globIncludePatterns,
+    globExcludePatterns,
     percent: 50,
     threshold: undefined,
+    /* eslint-disable camelcase */
     covered_count: 4,
-    uncovered_count: 4,
-    flowStatus: {...fakeFlowStatus},
-    globIncludePatterns
+    uncovered_count: 4
     /* eslint-enable camelcase */
   });
 
-  t.deepEqual(Object.keys(resFiles), allFiles);
+  const filteredFiles = allFiles.filter(
+    file => !minimatch(file, globExcludePatterns[0])
+  ).sort();
 
-  for (const filename of allFiles) {
+  t.deepEqual(Object.keys(resFiles).sort(), filteredFiles);
+
+  for (const filename of filteredFiles) {
     t.deepEqual(resFiles[filename].expressions.uncovered_locs, [{
       start: {
         line: 1,
@@ -261,6 +391,7 @@ test('collectFlowCoverage', async function (t) {
     });
   }
 
+  t.is(writeFile.callCount, 0);
   t.is(exec.callCount, 5);
   t.is(glob.callCount, 2);
 });

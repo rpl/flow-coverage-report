@@ -2,7 +2,14 @@
 
 // @flow
 
-import {exec, glob} from './promisified';
+import minimatch from 'minimatch';
+import temp from 'temp';
+import {exec, glob, writeFile} from './promisified';
+
+// Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
+if (!Array.prototype.find) {
+  require('array.prototype.find').shim();
+}
 
 // getCoveredPercent helper.
 
@@ -62,30 +69,53 @@ export type FlowStatus = {
   errors: Array<FlowTypeError>
 }
 
-function checkFlowStatus(
+async function checkFlowStatus(
   flowCommandPath: string,
-  projectDir: string
+  projectDir: string,
+  tmpDirPath: ?string
 ): Promise<FlowStatus> {
-  return exec(
-    flowCommandPath + ' status --json', {cwd: projectDir}, {dontReject: true}
-  ).then(res => {
-    // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
-    if (res.err && res.err.code !== 2) {
-      throw res.err;
-    }
-    if (res.stdout) {
-      const statusData = JSON.parse(String(res.stdout));
+  let tmpFilePath: ?string;
 
-      // Verify the integrity of the format of the JSON status result.
-      if (!statusData.flowVersion) {
-        throw new Error('Invalid Flow status JSON format');
-      }
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+  }
 
-      return statusData;
+  const res = await exec(`${flowCommandPath} status --json`,
+                         {cwd: projectDir, maxBuffer: Infinity},
+                         {dontReject: true});
+
+  // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
+  if (res.err && res.err.code !== 2) {
+    if (process.env.VERBOSE) {
+      console.error('Flow status error', res.err, res.stderr, res.stdout);
     }
 
     throw res.err;
-  });
+  }
+
+  let statusData: ?FlowStatus;
+
+  if (tmpFilePath) {
+    await writeFile(tmpFilePath, res.stdout || '');
+    console.log('Flow status result saved to', tmpFilePath);
+  }
+
+  try {
+    statusData = JSON.parse(String(res.stdout));
+  } catch (err) {
+    let unexpectedException: ?SyntaxError = err;
+
+    // Verify the integrity of the format of the JSON status result.
+    if (unexpectedException) {
+      throw new Error(`Parsing error on Flow status JSON result: ${err}`);
+    }
+  }
+
+  if (statusData && statusData.flowVersion) {
+    return statusData;
+  }
+
+  throw new Error('Invalid Flow status JSON format');
 }
 
 exports.checkFlowStatus = checkFlowStatus;
@@ -110,24 +140,115 @@ export type FlowCoverageJSONData = {
     uncovered_count: number,
     uncovered_locs: Array<FlowUncoveredLoc>
   },
-  percent?: number
+  percent?: number,
+  error?: string,
+  isError?: boolean,
+  flowCoverageError?: ?string,
+  flowCoverageException?: ?string,
+  flowCoverageParsingError?: ?string,
+  flowCoverageStderr?: string|Buffer
 }
 
-function collectFlowCoverageForFile(
+async function collectFlowCoverageForFile(
   flowCommandPath: string,
+  flowCommandTimeout: number,
   projectDir: string,
-  filename: string
+  filename: string,
+  tmpDirPath: ?string,
 ): Promise<FlowCoverageJSONData> {
-  return exec(
-    flowCommandPath + ' coverage --json ' + filename, {cwd: projectDir}
-  ).then(res => {
-    if (!res.stdout || res.stdout.length === 0 || res.err) {
-      throw new Error(
-        `Unexpected error collected flow coverage data on '${filename}'`
-      );
+  let tmpFilePath: ?string;
+
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+  }
+
+  const emptyCoverageData = {
+    expressions: {
+      covered_count: 0,
+      uncovered_count: 0,
+      uncovered_locs: []
     }
-    return JSON.parse(String(res.stdout));
-  });
+  };
+
+  if (process.env.VERBOSE) {
+    console.log(`Collecting coverage data from ${filename} (timeouts in ${flowCommandTimeout})...`);
+  }
+
+  const res = await exec(
+    `${flowCommandPath} coverage --json ${filename}`,
+    // NOTE: set a default timeouts and maxButter to Infinity to prevent,
+    // misconfigured projects and source files that should raises errors
+    // or hangs the flow daemon to prevent the coverage reporter to complete
+    // the data collection. (See https://github.com/rpl/flow-coverage-report/pull/4
+    // and https://github.com/rpl/flow-coverage-report/pull/5 for rationale,
+    // thanks to to @mynameiswhm and @ryan953  for their help on hunting down this issue)
+    {cwd: projectDir, timeout: flowCommandTimeout, maxBuffer: Infinity},
+    {dontReject: true});
+
+  if (res.err) {
+    console.error(`ERROR Collecting coverage data from ${filename} `, filename, res.err, res.stderr);
+
+    if (process.env.VERBOSE) {
+      if (tmpFilePath) {
+        await writeFile(tmpFilePath, res.stdout || '');
+      }
+    }
+
+    // TODO: collect errors and put them in a visible place in the
+    // generated report.
+    return {
+      ...emptyCoverageData,
+      isError: true,
+      flowCoverageError: undefined,
+      flowCoverageException: res.err && res.err.message,
+      flowCoverageStderr: res.stderr,
+      flowCoverageParsingError: undefined
+    };
+  }
+
+  if (process.env.VERBOSE) {
+    console.log(`Collecting coverage data from ${filename} completed.`);
+    if (tmpFilePath) {
+      await writeFile(tmpFilePath, res.stdout || '');
+      console.log(`Saved json dump of collected coverage data from ${filename} to ${tmpFilePath}.`);
+    }
+  }
+
+  let parsedData: ?FlowCoverageJSONData;
+  let flowCoverageParsingError: string;
+
+  if (res.stdout) {
+    try {
+      parsedData = JSON.parse(String(res.stdout));
+    } catch (err) {
+      flowCoverageParsingError = err.message;
+    }
+  }
+
+  if (res.stderr) {
+    try {
+      parsedData = JSON.parse(String(res.stderr));
+      delete res.stderr;
+    } catch (err) {
+    }
+  }
+
+  if (parsedData && !parsedData.error) {
+    return parsedData;
+  }
+
+  return {
+    expressions: {
+      covered_count: 0,
+      uncovered_count: 0,
+      uncovered_locs: []
+    },
+    isError: true,
+    flowCoverageError: parsedData && parsedData.error,
+    flowCoverageException: undefined,
+    flowCoverageParsingError,
+    flowCoverageStderr: res.stderr
+  };
 }
 
 exports.collectFlowCoverageForFile = collectFlowCoverageForFile;
@@ -142,6 +263,7 @@ export type FlowCoverageSummaryData = {
   generatedAt: string,
   flowStatus: FlowStatus,
   globIncludePatterns: Array<string>,
+  globExcludePatterns: Array<string>,
   files: {
     [key: string]: FlowCoverageJSONData
   }
@@ -149,11 +271,14 @@ export type FlowCoverageSummaryData = {
 
 exports.collectFlowCoverage = function (
   flowCommandPath: string,
+  flowCommandTimeout: number,
   projectDir: string,
   globIncludePatterns: Array<string>,
-  threshold: number
+  globExcludePatterns: Array<string>,
+  threshold: number,
+  tmpDirPath: ?string,
 ): Promise<FlowCoverageSummaryData> {
-  return checkFlowStatus(flowCommandPath, projectDir).then(flowStatus => {
+  return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     var now = new Date();
     var coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
 
@@ -164,7 +289,8 @@ exports.collectFlowCoverage = function (
       generatedAt: coverageGeneratedAt,
       flowStatus: flowStatus,
       files: {},
-      globIncludePatterns: globIncludePatterns
+      globIncludePatterns: globIncludePatterns,
+      globExcludePatterns: globExcludePatterns
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -176,26 +302,34 @@ exports.collectFlowCoverage = function (
 
     function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
       return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
-        .then(files => {
-          return Promise.all(
-            files.map(filename =>
-              collectFlowCoverageForFile(
-                flowCommandPath, projectDir, filename
-              ).then((data: FlowCoverageJSONData) => {
-                /* eslint-disable camelcase */
-                coverageSummaryData.covered_count += data.expressions.covered_count;
-                coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-                data.percent = getCoveredPercent(data.expressions);
-                coverageSummaryData.files[filename] = data;
+        .then(async files => {
+          for (const filename of files) {
+            // Skip files that match any of the exclude patterns.
+            if (globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
+              if (process.env.VERBOSE) {
+                console.log(`Skip ${filename}, matched excluded pattern.`);
+              }
 
-                data.expressions.uncovered_locs =
-                  data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
-                /* eslint-enable camelcase */
-              })
-            )
-          ).then(() => {
-            return files;
-          });
+              continue;
+            }
+
+            const data: FlowCoverageJSONData = await collectFlowCoverageForFile(
+              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
+            );
+
+            /* eslint-disable camelcase */
+            coverageSummaryData.covered_count += data.expressions.covered_count;
+            coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
+            data.percent = getCoveredPercent(data.expressions);
+
+            coverageSummaryData.files[filename] = data;
+
+            data.expressions.uncovered_locs =
+              data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
+            /* eslint-enable camelcase */
+          }
+
+          return files;
         });
     }
 

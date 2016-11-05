@@ -25,10 +25,11 @@ or
 $ npm install --save-dev flow-coverage-report
 ```
 
-Run the flow reporter
+Run the flow reporter (`-i` configures the include globs, `-x` the exclude patterns,
+and `-t` the report types enabled):
 
 ```
-flow-coverage-report -i 'src/**/*.js' -i 'src/**/*.jsx' -t html -t json -t text
+flow-coverage-report -i 'src/**/*.js' -i 'src/**/*.jsx' -x 'src/test/**' -t html -t json -t text
 ```
 
 If the **flow** executable is not in your PATH, you can specified it using the
@@ -36,6 +37,12 @@ If the **flow** executable is not in your PATH, you can specified it using the
 
 ```
 flow-coverage-report -f /path/to/flow ...
+```
+
+To customize the output dir (which defaults to `flow-coverage/`). you can use the `-o` option:
+
+```
+flow-coverage-report -o my-custom-flow-coverage-dir/
 ```
 
 ## Background
@@ -66,3 +73,30 @@ You have just found it ;-)
 [screenshot-text]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-text.png
 [screenshot-summary]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-summary.png
 [screenshot-sourcefile]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-sourcefile.png
+
+## Changelog
+
+### 0.2.0
+
+Fixes needed to be able to generate flow coverage reports on larger projects (and projects with flow issues) and new configuration options:
+
+- fix: fixed NaN percent and React false-positive mutation warning (thanks to Ilia Saulenko)
+- feat: new -o cli option to customize the output dir (thanks to Ryan Albrecht)
+- fix: cleanup old dirs before a new babel build (thanks to Ryan Albrecht)
+- fix: fixed issues with larger projects and projects with flow issues (thanks to Ilia Saulenko and Ryan Albrecht for the help hunting this issue down)
+- feat: new -x cli option to exclude files from the coverage report
+- fix: fixed report-text rendering issues on larger number of files
+- feat: highlight files with errors and no coverage data in the reports
+- feat: included URL to the generated HTML report in the console output (thanks to Jason Laster)
+
+Thanks to Ilia Saulenko, Ryan Albrecht and Jason Laster for their help on this new release.
+
+### 0.1.0
+
+Initial prototype release:
+
+- collect and report coverage data as json, text and html
+- navigable sourcefile coverage html view based on CodeMirror
+- run unit tests on travis
+
+Thanks to Kumar McMillan and Andy MacKay for their advice and support, this project and its github repo wouldn't exist without you.

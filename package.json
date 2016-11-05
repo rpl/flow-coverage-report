@@ -1,6 +1,6 @@
 {
   "name": "flow-coverage-report",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Generate an HTML report of the flow coverage data",
   "main": "dist/lib/index.js",
   "bin": {
@@ -13,12 +13,13 @@
     "assets/**/*"
   ],
   "scripts": {
-    "prepublish": "npm run build",
-    "build": "babel -d dist src --source-maps",
-    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run ava && npm run flow-coverage",
-    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
     "ava": "nyc ava --verbose",
-    "lint": "xo && flow check"
+    "build": "rm -Rf dist && babel -d dist src --source-maps",
+    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
+    "flow-check": "flow check",
+    "lint": "xo --reporter=compact",
+    "prepublish": "npm run build",
+    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run ava && npm run flow-coverage"
   },
   "keywords": [
     "flowtype",
@@ -30,10 +31,14 @@
   "author": "Luca Greco <lgreco@mozilla.com>",
   "license": "MPL-2.0",
   "dependencies": {
+    "array.prototype.find": "2.0.0",
+    "babel-runtime": "6.11.6",
     "glob": "7.0.5",
+    "minimatch": "3.0.3",
     "mkdirp": "0.5.1",
     "react": "15.3.1",
     "react-dom": "15.3.1",
+    "temp": "0.8.3",
     "terminal-table": "0.0.12",
     "yargs": "5.0.0"
   },
@@ -43,6 +48,7 @@
     "babel-core": "6.13.2",
     "babel-plugin-istanbul": "2.0.0",
     "babel-plugin-transform-flow-strip-types": "6.8.0",
+    "babel-plugin-transform-runtime": "6.15.0",
     "babel-preset-es2015": "6.13.2",
     "babel-preset-react": "6.11.1",
     "babel-preset-stage-2": "6.13.0",
@@ -51,7 +57,7 @@
     "eslint-config-xo-react": "0.9.0",
     "eslint-plugin-flowtype": "2.11.0",
     "eslint-plugin-react": "6.1.2",
-    "flow-bin": "0.30.0",
+    "flow-bin": "0.33.0",
     "mock-require": "1.3.0",
     "nyc": "8.0.0",
     "react-addons-test-utils": "15.3.1",
@@ -91,7 +97,14 @@
       "react"
     ],
     "plugins": [
-      "transform-flow-strip-types"
+      "transform-flow-strip-types",
+      [
+        "transform-runtime",
+        {
+          "polyfill": false,
+          "regenerator": true
+        }
+      ]
     ],
     "ignore": [
       "assets/"

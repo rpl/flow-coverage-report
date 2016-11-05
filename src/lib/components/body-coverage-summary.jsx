@@ -34,10 +34,16 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
           const key = filename;
           const fileRowProps = {
             filename: filename,
+            isError: fileSummary.isError,
+            flowCoverageParsingError: fileSummary.flowCoverageParsingError,
+            flowCoverageError: fileSummary.flowCoverageError,
+            flowCoverageException: fileSummary.flowCoverageException,
+            flowCoverageStderr: fileSummary.flowCoverageStderr,
+
+            percent: fileSummary.percent,
             /* eslint-disable camelcase */
             covered_count: fileSummary.expressions.covered_count,
-            uncovered_count: fileSummary.expressions.uncovered_count,
-            percent: fileSummary.percent
+            uncovered_count: fileSummary.expressions.uncovered_count
             /* eslint-enable camelcase */
           };
           return <FlowCoverageFileTableRow key={key} {...fileRowProps}/>;

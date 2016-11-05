@@ -11,7 +11,7 @@ import type {FlowCoverageReportOptions} from './index';
 function renderTextReport(
   coverageData: FlowCoverageSummaryData,
   opts: FlowCoverageReportOptions
-) {
+): Promise<void> {
   const print = opts.log || console.log.bind(console);
 
   const filesTable = new Table({
@@ -25,18 +25,25 @@ function renderTextReport(
   for (const filename of Object.keys(coverageData.files).sort()) {
     row += 1;
     const data = coverageData.files[filename];
+
     const covered = data.expressions.covered_count;
     const uncovered = data.expressions.uncovered_count;
     let percent = data.percent || NaN;
 
     filesTable.push([
-      filename, percent + ' %', covered + uncovered, covered, uncovered
+      filename,
+      data.isError ? '\u26A0 Error' : percent + ' %',
+      covered + uncovered, covered, uncovered
     ]);
 
     let rowColor;
     if (percent >= (opts.threshold || 80)) {
       rowColor = 'green';
     } else {
+      rowColor = 'red';
+    }
+
+    if (data.isError) {
       rowColor = 'red';
     }
 
@@ -58,6 +65,10 @@ function renderTextReport(
   summaryTablePre.push([
     'included glob patterns:',
     coverageData.globIncludePatterns.join(', ')
+  ]);
+  summaryTablePre.push([
+    'excluded glob patterns:',
+    (coverageData.globExcludePatterns || []).join(', ')
   ]);
   summaryTablePre.push([
     'threshold:',
@@ -88,7 +99,7 @@ function renderTextReport(
 
   summaryTable.push(['project', 'percent', 'total', 'covered', 'uncovered']);
   const summaryTotal = coverageData.covered_count + coverageData.uncovered_count;
-  let summaryPercent = coverageData.percent || NaN;
+  let summaryPercent = coverageData.percent || 0;
 
   let summaryColor;
   if (summaryPercent >= (opts.threshold || 80)) {
@@ -111,17 +122,26 @@ function renderTextReport(
     align: 'right'
   });
 
+  const waitForDrain = new Promise(resolve => {
+    if (opts.log) {
+      resolve();
+    } else {
+      process.stdout.on('drain', resolve);
+    }
+  });
+
   print(String(filesTable));
   print(String(summaryTablePre));
   print(String(summaryTable));
+
+  return waitForDrain;
 }
 
 function generateFlowCoverageReportText(
   coverageData: FlowCoverageSummaryData,
   opts: Object
-) {
-  renderTextReport(coverageData, opts);
-  return Promise.resolve([coverageData, opts]);
+): Promise<void> {
+  return renderTextReport(coverageData, opts);
 }
 
 module.exports = {

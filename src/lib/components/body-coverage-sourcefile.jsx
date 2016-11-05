@@ -91,10 +91,15 @@ module.exports = function HTMLReportBodySourceFile(props: FlowCoverageReportProp
                 {...{
                   disableLink: true,
                   filename: fileName,
+                  flowCoverageParsingError: coverageData.flowCoverageParsingError,
+                  flowCoverageError: coverageData.flowCoverageError,
+                  flowCoverageException: coverageData.flowCoverageException,
+                  flowCoverageStderr: coverageData.flowCoverageStderr,
+                  isError: coverageData.isError,
+                  percent,
                   /* eslint-disable camelcase */
-                  covered_count: covered_count,
-                  uncovered_count: uncovered_count,
-                  percent: percent
+                  covered_count,
+                  uncovered_count
                   /* eslint-enable camelcase */
                 }}
                 />

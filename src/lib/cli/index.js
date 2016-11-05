@@ -8,6 +8,8 @@ exports.run = () => {
     flowCommandPath: args.flowCommandPath,
     projectDir: args.projectDir,
     globIncludePatterns: args.includeGlob,
+    globExcludePatterns: args.excludeGlob,
+    outputDir: args.outputDir,
     reportTypes: args.type,
     threshold: args.threshold
   }).catch(err => {

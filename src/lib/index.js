@@ -3,7 +3,9 @@
 // @flow
 
 import path from 'path';
+
 import {collectFlowCoverage} from './flow';
+import {withTmpDir} from './promisified';
 import reportHTML from './report-html';
 import reportJSON from './report-json';
 import reportText from './report-text';
@@ -14,12 +16,18 @@ export type FlowCoverageReportType = 'json' | 'text' | 'html';
 
 export type FlowCoverageReportOptions = {
   projectDir: string,
-  flowCommandPath?: string,
+  flowCommandPath: string,
+  flowCommandTimeout: number,
   globIncludePatterns: Array<string>,
-  outputDir?: string,
+  globExcludePatterns: Array<string>,
+  outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
-  threshold?: number
+  threshold?: number,
+  log: Function
 };
+
+// Default timeout for flow coverage commands.
+const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
 // User Scenarios
 // 1. generate text report from a project dir
@@ -30,13 +38,28 @@ export type FlowCoverageReportOptions = {
 // 6. set a custom output dir
 // 7. usa a saved json file to compute coverage trend (and fail on negative trends)
 
-function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
+async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   // Apply defaults to options.
   var projectDir = opts.projectDir;
 
+  let tmpDirPath: ?string;
+
+  if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
+    tmpDirPath = await withTmpDir('flow-coverage-report');
+    console.log(`Verbose DUMP_JSON mode enabled (${tmpDirPath})`);
+  }
+
   opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+  opts.flowCommandTimeout = opts.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
+  opts.outputDir = opts.outputDir || './flow-coverage';
+  opts.outputDir = path.isAbsolute(opts.outputDir) ?
+    opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
   opts.globIncludePatterns = opts.globIncludePatterns || [];
+  opts.globExcludePatterns = opts.globExcludePatterns || [];
+
+  if (!Array.isArray(opts.globExcludePatterns)) {
+    opts.globExcludePatterns = [opts.globExcludePatterns];
+  }
 
   // Apply validation checks.
   if (!projectDir) {
@@ -51,28 +74,31 @@ function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
     return Promise.reject(new Error('threshold option is mandatory'));
   }
 
-  return collectFlowCoverage(
-    opts.flowCommandPath, opts.projectDir, opts.globIncludePatterns,
-    opts.threshold
-  ).then((coverageData: FlowCoverageSummaryData) => {
-    var reportResults = [];
-    const reportTypes = opts.reportTypes || ['text'];
+  let coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
+    opts.flowCommandPath, opts.flowCommandTimeout,
+    opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
+    opts.threshold, tmpDirPath
+  );
 
-    if (reportTypes.indexOf('json') >= 0) {
-      reportResults.push(reportJSON.generate(coverageData, opts));
-    }
+  var reportResults = [];
+  const reportTypes = opts.reportTypes || ['text'];
 
-    if (reportTypes.indexOf('text') >= 0) {
-      reportResults.push(reportText.generate(coverageData, opts));
-    }
+  if (reportTypes.indexOf('json') >= 0) {
+    reportResults.push(reportJSON.generate(coverageData, opts));
+  }
 
-    if (reportTypes.indexOf('html') >= 0) {
-      reportResults.push(reportHTML.generate(coverageData, opts));
-    }
+  if (reportTypes.indexOf('text') >= 0) {
+    reportResults.push(reportText.generate(coverageData, opts));
+  }
 
-    return Promise.all(reportResults).then(() => {
-      return [coverageData, opts];
-    });
+  if (reportTypes.indexOf('html') >= 0) {
+    reportResults.push(reportHTML.generate(coverageData, opts).then(() => {
+      console.log(`View generated HTML Report at file://${opts.outputDir}/index.html`);
+    }));
+  }
+
+  return Promise.all(reportResults).then(() => {
+    return [coverageData, opts];
   });
 }
 
