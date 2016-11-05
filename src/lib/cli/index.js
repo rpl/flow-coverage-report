@@ -5,11 +5,12 @@ exports.run = () => {
   const args = processArgv(process.argv);
 
   generateFlowCoverageReport({
+    concurrentFiles: args.concurrentFiles,
     flowCommandPath: args.flowCommandPath,
-    projectDir: args.projectDir,
-    globIncludePatterns: args.includeGlob,
     globExcludePatterns: args.excludeGlob,
+    globIncludePatterns: args.includeGlob,
     outputDir: args.outputDir,
+    projectDir: args.projectDir,
     reportTypes: args.type,
     threshold: args.threshold
   }).catch(err => {
