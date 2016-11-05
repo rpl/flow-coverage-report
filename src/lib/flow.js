@@ -140,6 +140,7 @@ export type FlowCoverageJSONData = {
     uncovered_count: number,
     uncovered_locs: Array<FlowUncoveredLoc>
   },
+  filename?: string,
   percent?: number,
   error?: string,
   isError?: boolean,
@@ -163,6 +164,7 @@ async function collectFlowCoverageForFile(
   }
 
   const emptyCoverageData = {
+    filename,
     expressions: {
       covered_count: 0,
       uncovered_count: 0,
@@ -234,15 +236,12 @@ async function collectFlowCoverageForFile(
   }
 
   if (parsedData && !parsedData.error) {
+    parsedData.filename = filename;
     return parsedData;
   }
 
   return {
-    expressions: {
-      covered_count: 0,
-      uncovered_count: 0,
-      uncovered_locs: []
-    },
+    ...emptyCoverageData,
     isError: true,
     flowCoverageError: parsedData && parsedData.error,
     flowCoverageException: undefined,
@@ -264,6 +263,7 @@ export type FlowCoverageSummaryData = {
   flowStatus: FlowStatus,
   globIncludePatterns: Array<string>,
   globExcludePatterns: Array<string>,
+  concurrentFiles: number,
   files: {
     [key: string]: FlowCoverageJSONData
   }
@@ -276,6 +276,7 @@ exports.collectFlowCoverage = function (
   globIncludePatterns: Array<string>,
   globExcludePatterns: Array<string>,
   threshold: number,
+  concurrentFiles: number,
   tmpDirPath: ?string,
 ): Promise<FlowCoverageSummaryData> {
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
@@ -290,7 +291,8 @@ exports.collectFlowCoverage = function (
       flowStatus: flowStatus,
       files: {},
       globIncludePatterns: globIncludePatterns,
-      globExcludePatterns: globExcludePatterns
+      globExcludePatterns: globExcludePatterns,
+      concurrentFiles: concurrentFiles
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -298,6 +300,18 @@ exports.collectFlowCoverage = function (
       delete loc.start.source;
       delete loc.end.source;
       return loc;
+    }
+
+    let waitForCollectedDataFromFiles = [];
+
+    async function drainQueue() {
+      if (process.env.VERBOSE) {
+        console.log(`Wait for ${waitForCollectedDataFromFiles.length} queued files.`);
+      }
+      // Wait the queued files.
+      await Promise.all(waitForCollectedDataFromFiles);
+      // Empty the collected Data From files queue.
+      waitForCollectedDataFromFiles = [];
     }
 
     function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
@@ -309,24 +323,42 @@ exports.collectFlowCoverage = function (
               if (process.env.VERBOSE) {
                 console.log(`Skip ${filename}, matched excluded pattern.`);
               }
-
               continue;
             }
 
-            const data: FlowCoverageJSONData = await collectFlowCoverageForFile(
+            if (process.env.VERBOSE) {
+              console.log(`Queue ${filename} flow coverage data collection`);
+            }
+
+            waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
               flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
-            );
+            ).then(data => {
+              /* eslint-disable camelcase */
+              coverageSummaryData.covered_count += data.expressions.covered_count;
+              coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
+              data.percent = getCoveredPercent(data.expressions);
 
-            /* eslint-disable camelcase */
-            coverageSummaryData.covered_count += data.expressions.covered_count;
-            coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-            data.percent = getCoveredPercent(data.expressions);
+              if (!data.filename) {
+                throw new Error('Unxepected missing filename from collected coverage data');
+              }
 
-            coverageSummaryData.files[filename] = data;
+              coverageSummaryData.files[data.filename] = data;
 
-            data.expressions.uncovered_locs =
-              data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
-            /* eslint-enable camelcase */
+              data.expressions.uncovered_locs =
+                data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
+              /* eslint-enable camelcase */
+            }));
+
+            // If we have collected at least `concurrentFiles` number of files,
+            // wait the queue to be drained.
+            if (waitForCollectedDataFromFiles.length >= concurrentFiles) {
+              await drainQueue();
+            }
+          }
+
+          // Wait for any remaining queued file.
+          if (waitForCollectedDataFromFiles.length > 0) {
+            await drainQueue();
           }
 
           return files;

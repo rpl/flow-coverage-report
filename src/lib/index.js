@@ -23,6 +23,7 @@ export type FlowCoverageReportOptions = {
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
   threshold?: number,
+  concurrentFiles?: number,
   log: Function
 };
 
@@ -77,7 +78,8 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   let coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
     opts.flowCommandPath, opts.flowCommandTimeout,
     opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
-    opts.threshold, tmpDirPath
+    opts.threshold, opts.concurrentFiles || 1,
+    tmpDirPath
   );
 
   var reportResults = [];

@@ -244,7 +244,9 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   mockRequire(NPM_TEMP, {path: tempPath});
   mockRequire(LIB_PROMISIFIED, {exec, writeFile});
 
+  const filename = 'src/fakeFilename.js';
   const fakeFlowCoverageData = {
+    filename,
     fakeCoverageData: {
       ok: true
     }
@@ -256,7 +258,6 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   }));
 
   const flow = mockRequire.reRequire(LIB_FLOW);
-  const filename = 'src/fakeFilename.js';
 
   const res = await flow.collectFlowCoverageForFile(
     'flow', DEFAULT_FLOW_TIMEOUT, '/fake/projectDir', filename
@@ -339,7 +340,9 @@ test('collectFlowCoverage', async function (t) {
   ];
 
   const res = await flow.collectFlowCoverage(
-    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir', globIncludePatterns, globExcludePatterns,
+    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir',
+    globIncludePatterns, globExcludePatterns,
+    80, 5
   );
 
   t.is(typeof res.generatedAt, 'string');
@@ -352,8 +355,9 @@ test('collectFlowCoverage', async function (t) {
     flowStatus: {...fakeFlowStatus},
     globIncludePatterns,
     globExcludePatterns,
+    concurrentFiles: 5,
     percent: 50,
-    threshold: undefined,
+    threshold: 80,
     /* eslint-disable camelcase */
     covered_count: 4,
     uncovered_count: 4
@@ -382,6 +386,7 @@ test('collectFlowCoverage', async function (t) {
     delete resFiles[filename].expressions.uncovered_locs;
     t.deepEqual(resFiles[filename], {
       percent: 50,
+      filename,
       expressions: {
         /* eslint-disable camelcase */
         covered_count: 1,
