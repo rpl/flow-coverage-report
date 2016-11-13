@@ -74,6 +74,11 @@ function renderTextReport(
     'threshold:',
     coverageData.threshold
   ]);
+  summaryTablePre.push([
+    'concurrent files:',
+    coverageData.concurrentFiles
+  ]);
+
   summaryTablePre.push(['generated at:', coverageData.generatedAt]);
   summaryTablePre.push(['flow version:', coverageData.flowStatus.flowVersion]);
   summaryTablePre.push([
@@ -83,7 +88,7 @@ function renderTextReport(
       ' >= 50' : coverageData.flowStatus.errors.length) +
     ' errors)'
   ]);
-  summaryTablePre.attrRange({row: [3]}, {
+  summaryTablePre.attrRange({row: [6]}, {
     color: coverageData.flowStatus.passed ? 'green' : 'red'
   });
 

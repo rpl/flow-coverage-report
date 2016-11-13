@@ -7,9 +7,10 @@ const examples = appName => `
 Examples:
 
   ${appName} report -i "src/**/*.js"
-  ${appName} report -p /path/to/project -i "src/**/*.js"
+  ${appName} report -p /path/to/project -i "src/**/*.js" -x "src/test/**/*.js"
   ${appName} report -t html -p /path/to/project -i "src/**/*.js"
   ${appName} report -t html -t json -t text /path/to/project -i "src/**/*.js"
+  ${appName} report -i "src/**/*.js" -c 5
 
 For more informations:
 
@@ -17,7 +18,6 @@ For more informations:
 `;
 
 module.exports = {
-
   processArgv(argv) {
     const appName = path.basename(argv[1]).split('.')[0];
     const toArray = value => Array.isArray(value) ? value : [value];
@@ -76,27 +76,33 @@ module.exports = {
         describe: 'output html or json files to this folder relative to project-dir',
         default: './flow-coverage'
       })
+      // --concurrent-files 5
+      .option('concurrent-files', {
+        alias: 'c',
+        type: 'number',
+        describe: 'the maximum number of files concurrently submitted to flow',
+        default: 1
+      })
       .check(argv => {
         argv.includeGlob = toArray(argv.includeGlob);
 
-        const {projectDir} = argv;
-
-        if (!projectDir) {
-          throw new Error('ERROR: No project dir has been specified.');
+        function raiseErrorIfArray(value, msg) {
+          if (Array.isArray(value)) {
+            throw new Error(`ERROR: Only one ${msg} can be specified.`);
+          }
         }
 
-        if (Array.isArray(projectDir)) {
-          throw new Error('ERROR: Only one project dir can be specified.');
-        }
+        const preventDuplicatedOptions = {
+          projectDir: 'project dir',
+          outputDir: 'output dir',
+          threshold: 'threshold',
+          flowCommandPath: 'flow command',
+          concurrentFiles: '--concurrent-files option'
+        };
 
-        const {flowCommandPath} = argv;
-
-        if (!flowCommandPath) {
-          throw new Error('ERROR: No flow command path has been specified.');
-        }
-
-        if (Array.isArray(flowCommandPath)) {
-          throw new Error('ERROR: Only one flow command path can be specified.');
+        for (const option of Object.keys(preventDuplicatedOptions)) {
+          const msg = preventDuplicatedOptions[option];
+          raiseErrorIfArray(argv[option], msg);
         }
 
         const {includeGlob} = argv;
