@@ -30,6 +30,11 @@
   ],
   "author": "Luca Greco <lgreco@mozilla.com>",
   "license": "MPL-2.0",
+  "homepage": "https://github.com/rpl/flow-coverage-report",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rpl/flow-coverage-report.git"
+  },
   "dependencies": {
     "array.prototype.find": "2.0.0",
     "babel-runtime": "6.11.6",
