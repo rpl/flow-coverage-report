@@ -8,7 +8,6 @@ import HTMLReportFooter from './footer';
 import FlowCoverageSummaryTable from './coverage-summary-table';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
 import FlowCoverageFileTableRow from './coverage-file-table-row';
-import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {FlowCoverageReportProps} from './html-report-page';
 
@@ -18,7 +17,6 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
     throw new Error('Missing coverageSummaryData from props');
   }
   const filenames = Object.keys(summary.files).sort();
-  const percent = summary.percent;
 
   const filesSummaryTableProps = {
     id: 'files',
@@ -57,13 +55,14 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
     <body>
       <div className="ui grid container">
         <div className="row">
-          <h1>Flow Coverage Report - Summary</h1>
+          <h2>Flow Coverage Report</h2>
         </div>
         <div className="row">
+          <h4 className="ui header">Summary</h4>
           <FlowCoverageSummaryTable {...props}/>
         </div>
-        <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>
         <div className="row">
+          <h4 className="ui header">Files</h4>
           {filesSummaryTable}
         </div>
         <div className="row centered">
