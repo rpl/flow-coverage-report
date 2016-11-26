@@ -15,7 +15,7 @@
   "scripts": {
     "ava": "nyc ava --verbose",
     "build": "rm -Rf dist && babel -d dist src --source-maps",
-    "flow-coverage": "bin/flow-coverage-report.js -i 'src/lib/**/*.js' -i 'src/lib/**/*.jsx' -t html -t json -t text",
+    "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
     "lint": "xo --reporter=compact",
     "prepublish": "npm run build",
@@ -41,8 +41,10 @@
     "glob": "7.0.5",
     "minimatch": "3.0.3",
     "mkdirp": "0.5.1",
+    "parse-json": "2.2.0",
     "react": "15.3.1",
     "react-dom": "15.3.1",
+    "strip-json-comments": "2.0.1",
     "temp": "0.8.3",
     "terminal-table": "0.0.12",
     "yargs": "5.0.0"
@@ -152,5 +154,14 @@
     "sourceMap": false,
     "instrument": false,
     "all": true
+  },
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/lib/**/*.js",
+      "src/lib/**/*.jsx"
+    ],
+    "type": [
+      "text", "html", "json"
+    ]
   }
 }

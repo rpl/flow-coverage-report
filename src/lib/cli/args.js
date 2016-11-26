@@ -20,7 +20,6 @@ For more informations:
 module.exports = {
   processArgv(argv) {
     const appName = path.basename(argv[1]).split('.')[0];
-    const toArray = value => Array.isArray(value) ? value : [value];
 
     return yargs(argv).usage('Usage: $0 COMMAND PROJECTDIR [...globs]')
       .command('report', 'Generate Flow Coverage Report on file selected by the GLOB parameter')
@@ -32,93 +31,59 @@ module.exports = {
       .option('flow-command-path', {
         alias: 'f',
         type: 'string',
-        default: 'flow',
         coerce: value => value.slice(0, 2) === './' ? path.resolve(value) : value
       })
       // --type text
       .option('type', {
         alias: 't',
         type: 'choice',
-        choices: ['html', 'json', 'text'],
-        default: 'text'
-        // coerce: toArray
+        choices: ['html', 'json', 'text']
       })
       // --project-dir "/project/dir/path"
       .option('project-dir', {
         alias: 'p',
         type: 'string',
-        describe: 'select the project dir path',
-        default: process.cwd(),
-        coerce: path.resolve
+        describe: 'select the project dir path'
       })
       // --include-glob "src/**/*.js"
       .option('include-glob', {
         alias: 'i',
         type: 'string',
-        describe: 'include the files selected by the specified glob',
-        default: '**/*.js'
+        describe: 'include the files selected by the specified glob'
       })
       .option('exclude-glob', {
         alias: 'x',
         type: 'string',
-        describe: 'exclude the files selected by the specified glob',
-        default: 'node_modules/**'
+        describe: 'exclude the files selected by the specified glob'
       })
       .options('threshold', {
         type: 'number',
-        describe: 'the minimum coverage percent requested.',
-        default: 80
+        describe: 'the minimum coverage percent requested.'
       })
       // --output-dir "/var/public_html/flow-coverage"
       .option('output-dir', {
         alias: 'o',
         type: 'string',
-        describe: 'output html or json files to this folder relative to project-dir',
-        default: './flow-coverage'
+        describe: 'output html or json files to this folder relative to project-dir'
       })
       // --concurrent-files 5
       .option('concurrent-files', {
         alias: 'c',
         type: 'number',
-        describe: 'the maximum number of files concurrently submitted to flow',
-        default: 1
+        describe: 'the maximum number of files concurrently submitted to flow'
+      })
+      // --no-config
+      .option('no-config', {
+        type: 'boolean',
+        describe: 'do not load any config file from the project dir'
+      })
+      .option('config', {
+        type: 'string',
+        describe: 'file path of the config file to load'
       })
       .check(argv => {
-        argv.includeGlob = toArray(argv.includeGlob);
-
-        function raiseErrorIfArray(value, msg) {
-          if (Array.isArray(value)) {
-            throw new Error(`ERROR: Only one ${msg} can be specified.`);
-          }
-        }
-
-        const preventDuplicatedOptions = {
-          projectDir: 'project dir',
-          outputDir: 'output dir',
-          threshold: 'threshold',
-          flowCommandPath: 'flow command',
-          concurrentFiles: '--concurrent-files option'
-        };
-
-        for (const option of Object.keys(preventDuplicatedOptions)) {
-          const msg = preventDuplicatedOptions[option];
-          raiseErrorIfArray(argv[option], msg);
-        }
-
-        const {includeGlob} = argv;
-
-        if (!includeGlob || includeGlob.length === 0) {
-          throw new Error('ERROR: No glob has been specified.');
-        }
-
         if (argv._.length > 2) {
           throw new Error('ERROR: The include glob needs to be quoted.');
-        }
-
-        for (const glob of includeGlob) {
-          if (glob[0] === '!') {
-            throw new Error('ERROR: Only include glob syntax are supported.');
-          }
         }
 
         return true;
