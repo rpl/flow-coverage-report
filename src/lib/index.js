@@ -22,6 +22,7 @@ export type FlowCoverageReportOptions = {
   globExcludePatterns: Array<string>,
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
+  htmlTemplateOptions?: Object,
   threshold?: number,
   concurrentFiles?: number,
   log: Function

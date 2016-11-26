@@ -19,7 +19,9 @@ export const defaultConfig = {
   threshold: 80,
   outputDir: './flow-coverage',
   concurrentFiles: 1,
-  noConfig: false
+  noConfig: false,
+  htmlTemplateOptions: {
+  }
 };
 
 const getProjectDir = config => ({...defaultConfig, ...config}).projectDir;

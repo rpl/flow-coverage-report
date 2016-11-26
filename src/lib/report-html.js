@@ -92,6 +92,7 @@ function renderHTMLReport(opt/* : Object */) {
       reportFileContent = '<!DOCTYPE html>\n' +
         // $FLOW_FIXME: incompatible type with React$Element
         react.renderToStaticMarkup(new FlowCoverageHTMLReport({
+          htmlTemplateOptions: opt.htmlTemplateOptions,
           reportType: opt.type,
           coverageGeneratedAt: opt.coverageGeneratedAt,
           coverageSummaryData: opt.data,
@@ -127,6 +128,7 @@ function renderHTMLReport(opt/* : Object */) {
           var reportFileContent = '<!DOCTYPE html>\n' +
                 // $FLOW_FIXME: incompatible type with React$Element
                 react.renderToStaticMarkup(new FlowCoverageHTMLReport({
+                  htmlTemplateOptions: opt.htmlTemplateOptions,
                   reportType: opt.type,
                   coverageGeneratedAt: opt.coverageGeneratedAt,
                   coverageData: opt.data,
@@ -198,6 +200,7 @@ function generateFlowCoverageReportHTML(
   var coverageGeneratedAt = coverageSummaryData.generatedAt;
   var generateSummary = renderHTMLReport({
     type: 'summary', filename: null,
+    htmlTemplateOptions: opts.htmlTemplateOptions,
     coverageGeneratedAt, projectDir, data: coverageSummaryData, outputDir
   });
 
@@ -211,6 +214,7 @@ function generateFlowCoverageReportHTML(
           var data = coverageSummaryData.files[filename];
           return renderHTMLReport({
             type: 'sourcefile', coverageGeneratedAt,
+            htmlTemplateOptions: opts.htmlTemplateOptions,
             projectDir, filename, data, outputDir
           });
         });

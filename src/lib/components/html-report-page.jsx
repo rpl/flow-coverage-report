@@ -30,7 +30,8 @@ export type FlowCoverageReportProps = {
   fileName?: string,
   fileContent?: string|Buffer,
   summaryRelLink?: string,
-  threshold?: number
+  threshold?: number,
+  htmlTemplateOptions?: Object,
 };
 
 module.exports = function HTMLReportPage(props: FlowCoverageReportProps) {

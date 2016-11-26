@@ -25,7 +25,8 @@ exports.run = () => {
     outputDir: args.outputDir,
     projectDir: args.projectDir,
     reportTypes: args.type,
-    threshold: args.threshold
+    threshold: args.threshold,
+    htmlTemplateOptions: args.htmlTemplateOptions
   }).catch(err => {
     console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
     process.exit(255); // eslint-disable-line xo/no-process-exit
