@@ -53,17 +53,27 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
     </table>
   );
 
+  let meterBar;
+
+  if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
+    meterBar = <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>;
+  }
+
   return (
     <body>
       <div className="ui grid container">
         <div className="row">
-          <h1>Flow Coverage Report - Summary</h1>
+          <h2>Flow Coverage Report</h2>
         </div>
         <div className="row">
+          <h4 className="ui header">Summary</h4>
           <FlowCoverageSummaryTable {...props}/>
         </div>
-        <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>
+        {
+          meterBar
+        }
         <div className="row">
+          <h4 className="ui header">Files</h4>
           {filesSummaryTable}
         </div>
         <div className="row centered">

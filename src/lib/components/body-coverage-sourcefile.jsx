@@ -72,15 +72,22 @@ module.exports = function HTMLReportBodySourceFile(props: FlowCoverageReportProp
 
   const {summaryRelLink} = props;
 
+  let meterBar;
+
+  if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
+    meterBar = <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>;
+  }
+
   return (
     <body>
       <div className="ui grid container">
         <div className="row">
-          <h1 className="twelve wide column">Flow Coverage Report - {fileName}</h1>
-          <div className="four wide column" style={{height: 32}}>
-            <a href={summaryRelLink} id="link-to-summary">
-              Go back to all files summary.
-            </a>
+          <div className="twelve wide column">
+            <h2 className="ui header">
+              <a href={summaryRelLink} id="link-to-summary">
+                Flow Coverage Report
+              </a>
+            </h2>
           </div>
         </div>
         <div className="row">
@@ -106,7 +113,9 @@ module.exports = function HTMLReportBodySourceFile(props: FlowCoverageReportProp
             </tbody>
           </table>
         </div>
-        <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>
+        {
+          meterBar
+        }
         <div className="row ui one column centered grid">
           <div className="column" style={{textAlign: 'left'}}>
             <div className="row">

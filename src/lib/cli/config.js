@@ -21,6 +21,8 @@ export const defaultConfig = {
   concurrentFiles: 1,
   noConfig: false,
   htmlTemplateOptions: {
+    autoHeightSource: true,
+    showMeterBar: false
   }
 };
 
