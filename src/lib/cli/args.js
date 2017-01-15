@@ -3,6 +3,8 @@ import yargs from 'yargs';
 
 import npm from '../../../package';
 
+import {defaultConfig} from './config';
+
 const examples = appName => `
 Examples:
 
@@ -31,19 +33,21 @@ module.exports = {
       .option('flow-command-path', {
         alias: 'f',
         type: 'string',
-        coerce: value => value.slice(0, 2) === './' ? path.resolve(value) : value
+        coerce: value => value.slice(0, 2) === './' ? path.resolve(value) : value,
+        describe: `path to the flow executable (defaults to "${defaultConfig.flowCommandPath}")`
       })
       // --type text
       .option('type', {
         alias: 't',
         type: 'choice',
-        choices: ['html', 'json', 'text']
+        choices: ['html', 'json', 'text'],
+        describe: `format of the generated reports (defaults to "${defaultConfig.type.join(', ')}")`
       })
       // --project-dir "/project/dir/path"
       .option('project-dir', {
         alias: 'p',
         type: 'string',
-        describe: 'select the project dir path'
+        describe: `select the project dir path (defaults to "${defaultConfig.projectDir}")`
       })
       // --include-glob "src/**/*.js"
       .option('include-glob', {
@@ -54,23 +58,24 @@ module.exports = {
       .option('exclude-glob', {
         alias: 'x',
         type: 'string',
-        describe: 'exclude the files selected by the specified glob'
+        describe: 'exclude the files selected by the specified glob ' +
+          `(defaults to "${defaultConfig.excludeGlob}")`
       })
       .options('threshold', {
         type: 'number',
-        describe: 'the minimum coverage percent requested.'
+        describe: `the minimum coverage percent requested (defaults to ${defaultConfig.threshold})`
       })
       // --output-dir "/var/public_html/flow-coverage"
       .option('output-dir', {
         alias: 'o',
         type: 'string',
-        describe: 'output html or json files to this folder relative to project-dir'
+        describe: `output html or json files to this folder relative to project-dir (defaults to "${defaultConfig.outputDir}")`
       })
       // --concurrent-files 5
       .option('concurrent-files', {
         alias: 'c',
         type: 'number',
-        describe: 'the maximum number of files concurrently submitted to flow'
+        describe: `the maximum number of files concurrently submitted to flow (defaults to ${defaultConfig.concurrentFiles})`
       })
       // --no-config
       .option('no-config', {
