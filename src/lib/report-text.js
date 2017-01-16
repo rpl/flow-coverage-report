@@ -128,10 +128,12 @@ function renderTextReport(
   });
 
   const waitForDrain = new Promise(resolve => {
-    if (opts.log) {
+    process.stdout.once('drain', resolve);
+
+    const flushed = process.stdout.write('');
+
+    if (flushed || opts.log) {
       resolve();
-    } else {
-      process.stdout.on('drain', resolve);
     }
   });
 
