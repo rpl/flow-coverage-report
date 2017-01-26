@@ -16,7 +16,7 @@ Examples:
 
 For more informations:
 
-  https://github/rpl/flow-coverage-report
+  https://github.com/rpl/flow-coverage-report
 `;
 
 module.exports = {
