@@ -1,8 +1,21 @@
 import {generateFlowCoverageReport} from '../../lib';
 import {processArgv} from './args';
+import {loadConfig, validateConfig, UsageError} from './config';
 
 exports.run = () => {
-  const args = processArgv(process.argv);
+  let args = processArgv(process.argv);
+
+  try {
+    args = loadConfig(args);
+    validateConfig(args);
+  } catch (err) {
+    if (err instanceof UsageError) {
+      console.error('Configuration error:', err.message);
+    } else {
+      console.error('Unexpected exception: ' + err + ' ' + err.stack);
+    }
+    process.exit(255); // eslint-disable-line xo/no-process-exit
+  }
 
   generateFlowCoverageReport({
     concurrentFiles: args.concurrentFiles,
@@ -12,7 +25,8 @@ exports.run = () => {
     outputDir: args.outputDir,
     projectDir: args.projectDir,
     reportTypes: args.type,
-    threshold: args.threshold
+    threshold: args.threshold,
+    htmlTemplateOptions: args.htmlTemplateOptions
   }).catch(err => {
     console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
     process.exit(255); // eslint-disable-line xo/no-process-exit
