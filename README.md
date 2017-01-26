@@ -76,9 +76,42 @@ You have just found it ;-)
 
 ## Changelog
 
+### 0.3.0
+
+Introduces the new command line options:
+- submit more then 1 concurrent file to flow using `-c numManConcurentFilesSubmitted` (defaults to 1)
+- load options from a specific config file using `--config filepath`
+  and disable config loading using `--no-config`
+
+flow-coverage-report v0.3.0 loads the configuration automatically from the `flow-coverage-report`
+section of the target project `package.json` (or from a `.flow-coverage-report.json` file in the
+project dir), which is going to help to reduce the number of command line options that have to
+be explicitly passed on the command line.
+
+In this version, the flow-coverage-report npm package is also switching to a MIT license.
+
+Features:
+
+- enhancements on the HTML report template (thanks to Jason Laster)
+- added optional -c/--concurrent-files option, to submit multiple files to flow
+- optionally load config from package.json or json config file
+
+Bug Fixes:
+
+- fixed missing error exit code with text reporter
+- fixed the link to GitHub in the cli help
+- saved collected coverage data in temp json file to support larger project
+
+Thanks to Ryan Albrecht, Jason Laster, Guillaume Claret and Steven Luscher for their help on this
+new release.
+
 ### 0.2.0
 
-Fixes needed to be able to generate flow coverage reports on larger projects (and projects with flow issues) and new configuration options:
+Introduces the new command line options:
+- excluded file patterns using `-x "pattern"`
+- customize the output dir using `-o reportDirPath`
+
+flow-coverage-report v0.2.0 also introduces some fixes needed to be able to generate flow coverage reports on larger projects (and projects with flow issues) and new command line options:
 
 - fix: fixed NaN percent and React false-positive mutation warning (thanks to Ilia Saulenko)
 - feat: new -o cli option to customize the output dir (thanks to Ryan Albrecht)
