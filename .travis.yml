@@ -10,6 +10,7 @@ script:
 branches:
   only:
   - master
+  - /^greenkeeper/.*$/
 
 ### cache node_modules/ dir between builds on travis
 cache:
