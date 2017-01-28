@@ -6,6 +6,7 @@ import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
 
 var path = require('path');
+var React = require('react');
 var react = require('react-dom/server');
 var mkdirp = require('./promisified').mkdirp;
 var readFile = require('./promisified').readFile;
@@ -90,8 +91,7 @@ function renderHTMLReport(opt/* : Object */) {
       reportFilePath = path.join(opt.outputDir, 'index.html');
 
       reportFileContent = '<!DOCTYPE html>\n' +
-        // $FLOW_FIXME: incompatible type with React$Element
-        react.renderToStaticMarkup(new FlowCoverageHTMLReport({
+        react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
           htmlTemplateOptions: opt.htmlTemplateOptions,
           reportType: opt.type,
           coverageGeneratedAt: opt.coverageGeneratedAt,
@@ -126,8 +126,7 @@ function renderHTMLReport(opt/* : Object */) {
       return mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName)).then(function () {
         return readFile(srcPath).then(function (buff) {
           var reportFileContent = '<!DOCTYPE html>\n' +
-                // $FLOW_FIXME: incompatible type with React$Element
-                react.renderToStaticMarkup(new FlowCoverageHTMLReport({
+                react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
                   htmlTemplateOptions: opt.htmlTemplateOptions,
                   reportType: opt.type,
                   coverageGeneratedAt: opt.coverageGeneratedAt,
