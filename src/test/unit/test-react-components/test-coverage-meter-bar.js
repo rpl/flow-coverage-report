@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -12,7 +12,7 @@ import {BASE_DIR} from './common';
 const REACT_COMPONENT = `${BASE_DIR}/coverage-meter-bar`;
 
 test('<FlowCoverageMeterBar />', t => {
-  const FlowCoverageMeterBar = require(REACT_COMPONENT);
+  const FlowCoverageMeterBar = require(REACT_COMPONENT).default;
   const props = {
     percent: 20,
     threshold: 80

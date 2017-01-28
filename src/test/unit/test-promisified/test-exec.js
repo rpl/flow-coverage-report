@@ -12,7 +12,7 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('promisified exec resolved', async function(t) {
+test('promisified exec resolved', async function (t) {
   const exec = sinon.stub();
   mockRequire('child_process', {exec});
 
@@ -37,7 +37,7 @@ test('promisified exec resolved', async function(t) {
   });
 });
 
-test('promisified exec throws', async function(t) {
+test('promisified exec throws', async function (t) {
   const exec = sinon.stub();
   mockRequire('child_process', {exec});
 
@@ -52,7 +52,7 @@ test('promisified exec throws', async function(t) {
   );
 });
 
-test('promisified exec doNotReject', async function(t) {
+test('promisified exec doNotReject', async function (t) {
   const exec = sinon.stub();
   mockRequire('child_process', {exec});
 

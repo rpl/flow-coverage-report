@@ -10,7 +10,7 @@ function LinkToSourceFileReport(props: {targetFilename: string}) {
   return <a href={href}>{filename}</a>;
 }
 
-module.exports = function FlowCoverageFileTableRow(
+export default function FlowCoverageFileTableRow(
   props: {
     filename: string, covered_count: number, uncovered_count: number,
     percent: number, disableLink?: boolean, threshold?: number,
@@ -91,4 +91,4 @@ module.exports = function FlowCoverageFileTableRow(
     </tr>
   );
   /* eslint-enable camelcase */
-};
+}

@@ -151,7 +151,7 @@ function generateFlowCoverageReportText(
   return renderTextReport(coverageData, opts);
 }
 
-module.exports = {
+export default {
   render: renderTextReport,
   generate: generateFlowCoverageReportText
 };

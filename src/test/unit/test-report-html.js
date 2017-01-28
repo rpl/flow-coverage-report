@@ -18,7 +18,7 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('generate HTML report', async function(t) {
+test('generate HTML report', async function (t) {
   const stubReact = sinon.stub({
     renderToStaticMarkup: () => {}
   });
@@ -38,7 +38,7 @@ test('generate HTML report', async function(t) {
   writeFile.returns(Promise.resolve());
   readFile.returns(Promise.resolve('fake file content'));
 
-  const reportHTML = mockRequire.reRequire(LIB_REPORT_HTML);
+  const reportHTML = mockRequire.reRequire(LIB_REPORT_HTML).default;
 
   const options = {
     projectDir: '/projectDir',

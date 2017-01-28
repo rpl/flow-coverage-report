@@ -134,6 +134,7 @@ test('collectFlowCoverageForFile collects flow command exit errors', async funct
   exec.onFirstCall().returns(Promise.resolve(fakeExecError));
 
   const flow = mockRequire.reRequire(LIB_FLOW);
+
   const filename = 'src/fakeFilename.js';
 
   const collectData = await flow.collectFlowCoverageForFile(

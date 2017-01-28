@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-import type {FlowCoverageReportProps} from './html-report-page';
+import type {FlowCoverageReportProps} from './html-report-page'; // eslint-disable-line import/no-unresolved
 
 const AUTO_HEIGHT_SOURCE = `
 .ui .CodeMirror {
@@ -13,7 +13,7 @@ const AUTO_HEIGHT_SOURCE = `
 }
 `;
 
-module.exports = function HTMLReportHead(props: FlowCoverageReportProps) {
+export default function HTMLReportHead(props: FlowCoverageReportProps) {
   const links = !props.assets || !props.assets.css ? [] :
     props.assets.css.map(
       css => <link key={css} rel="stylesheet" href={css}/>
@@ -36,7 +36,7 @@ module.exports = function HTMLReportHead(props: FlowCoverageReportProps) {
   const charset = <meta key="charset" charSet="utf-8"/>;
   return (
     <head>
-     {[charset].concat(links, scripts, customStyle)}
+      {[charset].concat(links, scripts, customStyle)}
     </head>
   );
-};
+}

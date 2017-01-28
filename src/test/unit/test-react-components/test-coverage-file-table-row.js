@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -12,7 +12,7 @@ import {BASE_DIR} from './common';
 const REACT_COMPONENT = `${BASE_DIR}/coverage-file-table-row`;
 
 test('<FlowCoverageFileTableRow />', t => {
-  const FlowCoverageFileTableRow = require(REACT_COMPONENT);
+  const FlowCoverageFileTableRow = require(REACT_COMPONENT).default;
   const props = {
     /* eslint-disable camelcase */
     filename: 'fake-filename.js',
@@ -40,7 +40,7 @@ test('<FlowCoverageFileTableRow />', t => {
 });
 
 test('<FlowCoverageFileTableRow /> with errors', t => {
-  const FlowCoverageFileTableRow = require(REACT_COMPONENT);
+  const FlowCoverageFileTableRow = require(REACT_COMPONENT).default;
   const baseErrorProps = {
     filename: 'fake-filename.js',
     disableLink: true,

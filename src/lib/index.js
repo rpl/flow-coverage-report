@@ -29,7 +29,7 @@ export type FlowCoverageReportOptions = {
 };
 
 // Default timeout for flow coverage commands.
-const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
+export const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
 // User Scenarios
 // 1. generate text report from a project dir
@@ -40,7 +40,7 @@ const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 // 6. set a custom output dir
 // 7. usa a saved json file to compute coverage trend (and fail on negative trends)
 
-async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
+export default async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   // Apply defaults to options.
   var projectDir = opts.projectDir;
 
@@ -104,7 +104,3 @@ async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
     return [coverageData, opts];
   });
 }
-
-module.exports = {
-  generateFlowCoverageReport: generateFlowCoverageReport
-};

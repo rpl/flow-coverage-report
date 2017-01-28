@@ -11,7 +11,7 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('promised mkdirp', async function(t) {
+test('promised mkdirp', async function (t) {
   const mkdirpStub = sinon.stub();
   mockRequire('mkdirp', mkdirpStub);
 

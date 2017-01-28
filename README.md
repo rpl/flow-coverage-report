@@ -1,5 +1,7 @@
 # flow-coverage-report
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/rpl/flow-coverage-report.svg)](https://greenkeeper.io/)
+
 [![Build Status](https://travis-ci.org/rpl/flow-coverage-report.svg?branch=master)](https://travis-ci.org/rpl/flow-coverage-report)
 
 **flow-coverage-report** is a node command line tool to help projects which are

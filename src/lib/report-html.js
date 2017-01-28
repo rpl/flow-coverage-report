@@ -2,17 +2,15 @@
 
 // @flow
 
+import path from 'path';
+import React from 'react';
+import react from 'react-dom/server';
+
+import {mkdirp, readFile, writeFile} from './promisified';
+import FlowCoverageHTMLReport from './components/html-report-page'; // eslint-disable-line import/no-unresolved
+
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
-
-var path = require('path');
-var React = require('react');
-var react = require('react-dom/server');
-var mkdirp = require('./promisified').mkdirp;
-var readFile = require('./promisified').readFile;
-var writeFile = require('./promisified').writeFile;
-
-var FlowCoverageHTMLReport = require('./components/html-report-page');
 
 var baseSemanticAssets = ['themes', 'default', 'assets'];
 var assetsList = [
@@ -225,7 +223,7 @@ function generateFlowCoverageReportHTML(
   );
 }
 
-module.exports = {
+export default {
   assetsList: assetsList,
   copyAssets: copyAssets,
   render: renderHTMLReport,

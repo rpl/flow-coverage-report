@@ -11,7 +11,7 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('promised readFile', async function(t) {
+test('promised readFile', async function (t) {
   const readFile = sinon.stub();
   mockRequire('fs', {readFile});
 
@@ -35,7 +35,7 @@ test('promised readFile', async function(t) {
   t.true(readFile.calledTwice);
 });
 
-test('promised writeFile', async function(t) {
+test('promised writeFile', async function (t) {
   const writeFile = sinon.stub();
   mockRequire('fs', {writeFile});
 

@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -16,9 +16,9 @@ const HEAD = `${BASE_DIR}/head`;
 const BODY_SUMMARY = `${BASE_DIR}/body-coverage-summary`;
 
 test('<HTMLReportPage reportType="summary"/>', t => {
-  const HTMLReportPage = require(REACT_COMPONENT);
-  const HTMLReportHead = require(HEAD);
-  const HTMLReportBodySummary = require(BODY_SUMMARY);
+  const HTMLReportPage = require(REACT_COMPONENT).default;
+  const HTMLReportHead = require(HEAD).default;
+  const HTMLReportBodySummary = require(BODY_SUMMARY).default;
   const props = {
     reportType: 'summary',
     coverageSummaryData: FLOW_COVERAGE_SUMMARY_DATA

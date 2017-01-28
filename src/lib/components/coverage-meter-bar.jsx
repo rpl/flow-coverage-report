@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-module.exports = function FlowCoverageMeterBar(
+export default function FlowCoverageMeterBar(
   props: {percent: number, threshold?: number}
 ) {
   const threshold = props.threshold || 80;
@@ -15,4 +15,4 @@ module.exports = function FlowCoverageMeterBar(
   return (
     <div className={'row ' + color} style={style}/>
   );
-};
+}
