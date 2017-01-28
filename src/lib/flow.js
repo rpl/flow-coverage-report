@@ -84,7 +84,6 @@ async function checkFlowStatus(
                          {cwd: projectDir, maxBuffer: Infinity},
                          {dontReject: true});
 
-  // $FLOW_FIXME: code is there, but flow doesn't seem to know about it.
   if (res.err && res.err.code !== 2) {
     if (process.env.VERBOSE) {
       console.error('Flow status error', res.err, res.stderr, res.stdout);
