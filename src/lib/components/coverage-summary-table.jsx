@@ -4,9 +4,9 @@
 
 import React from 'react';
 
-import type {FlowCoverageReportProps} from './html-report-page';
+import type {FlowCoverageReportProps} from './html-report-page'; // eslint-disable-line import/no-unresolved
 
-module.exports = function FlowCoverageSummaryTable(props: FlowCoverageReportProps) {
+export default function FlowCoverageSummaryTable(props: FlowCoverageReportProps) {
   if (!props.coverageSummaryData) {
     throw new Error('Missing coverageSummaryData in props');
   }
@@ -35,4 +35,4 @@ module.exports = function FlowCoverageSummaryTable(props: FlowCoverageReportProp
       </tbody>
     </table>
   );
-};
+}

@@ -4,6 +4,7 @@
 
 import React from 'react';
 
+/* eslint-disable import/no-unresolved */
 import HTMLReportFooter from './footer';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
 import FlowCoverageFileTableRow from './coverage-file-table-row';
@@ -13,6 +14,7 @@ import type {
   FlowCoverageReportProps,
   FlowUncoveredLocsProps
 } from './html-report-page';
+/* eslint-enable */
 
 function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
   var uncovered_locs = props.uncovered_locs; // eslint-disable-line camelcase
@@ -22,20 +24,20 @@ function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
       <div className="fields">
         <div key="uncovered-locs-dropdown" className="sixteen wide inline field">
           <select className="ui search dropdown uncovered-locations">
-          {
-            [
-              <option key="placeholder" value="">Uncovered Locations</option>
-            ].concat(
-              uncovered_locs.map((loc, i) => { // eslint-disable-line camelcase
-                const text =
-                  'Start: ' + [loc.start.line, loc.start.column].join(',') + ' - ' +
-                  'End: ' + [loc.end.line, loc.end.column].join(',');
-                const value = loc.start.line;
+            {
+              [
+                <option key="placeholder" value="">Uncovered Locations</option>
+              ].concat(
+                uncovered_locs.map((loc, i) => { // eslint-disable-line camelcase
+                  const text =
+                    'Start: ' + [loc.start.line, loc.start.column].join(',') + ' - ' +
+                    'End: ' + [loc.end.line, loc.end.column].join(',');
+                  const value = loc.start.line;
 
-                return <option key={i} value={value}>{text}</option>;
-              })
-            )
-          }
+                  return <option key={i} value={value}>{text}</option>;
+                })
+              )
+            }
           </select>
         </div>
         <div key="syntax-highlighting-dropdown" className="four wide inline field">
@@ -50,7 +52,7 @@ function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
   );
 }
 
-module.exports = function HTMLReportBodySourceFile(props: FlowCoverageReportProps) {
+export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps) {
   const {fileName, fileContent} = props;
   if (!fileName) {
     throw new Error('Missing fileName in props');
@@ -138,4 +140,4 @@ module.exports = function HTMLReportBodySourceFile(props: FlowCoverageReportProp
       </pre>
     </body>
   );
-};
+}

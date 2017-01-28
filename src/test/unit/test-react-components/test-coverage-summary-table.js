@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -14,7 +14,7 @@ import {BASE_DIR} from './common';
 const REACT_COMPONENT = `${BASE_DIR}/coverage-summary-table`;
 
 test('<FlowCoverageSummaryTable />', t => {
-  const FlowCoverageSummaryTable = require(REACT_COMPONENT);
+  const FlowCoverageSummaryTable = require(REACT_COMPONENT).default;
   const props = {
     coverageSummaryData: FLOW_COVERAGE_SUMMARY_DATA
   };

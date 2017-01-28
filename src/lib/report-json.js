@@ -28,6 +28,6 @@ function saveFlowCoverageReportJSON(
   });
 }
 
-module.exports = {
+export default {
   generate: saveFlowCoverageReportJSON
 };

@@ -2,10 +2,10 @@
 
 // @flow
 
-import {exec} from 'child_process';
+import {exec as nodeExec} from 'child_process';
 import fs from 'fs';
-import glob from 'glob';
-import mkdirp from 'mkdirp';
+import npmGlob from 'glob';
+import npmMkdirp from 'mkdirp';
 import temp from 'temp';
 
 // Automatically cleanup temp file on process.exit
@@ -15,12 +15,12 @@ export type ExecResult = {err?: Error, stdout?: string|Buffer, stderr?: string|B
 export type ExecOptions = child_process$execOpts; // eslint-disable-line camelcase
 export type ExecExtras = {dontReject?: boolean};
 
-exports.exec = function (
+export function exec(
   command: string, options: ExecOptions,
   extra: ?ExecExtras
 ): Promise<ExecResult> {
   return new Promise((resolve, reject) => {
-    exec(command, options, (err, stdout, stderr) => {
+    nodeExec(command, options, (err, stdout, stderr) => {
       if (err) {
         if (extra && extra.dontReject) {
           resolve({err, stdout, stderr});
@@ -32,11 +32,11 @@ exports.exec = function (
       }
     });
   });
-};
+}
 
-exports.mkdirp = function (path: string): Promise<void> {
+export function mkdirp(path: string): Promise<void> {
   return new Promise((resolve, reject) => {
-    mkdirp(path, err => {
+    npmMkdirp(path, err => {
       if (err) {
         reject(err);
       } else {
@@ -44,9 +44,9 @@ exports.mkdirp = function (path: string): Promise<void> {
       }
     });
   });
-};
+}
 
-exports.readFile = function (path: string): Promise<Buffer> {
+export function readFile(path: string): Promise<Buffer> {
   return new Promise((resolve, reject) => {
     fs.readFile(path, (err, buff) => {
       if (err) {
@@ -56,9 +56,9 @@ exports.readFile = function (path: string): Promise<Buffer> {
       }
     });
   });
-};
+}
 
-exports.writeFile = function (path: string, data: string|Buffer): Promise<void> {
+export function writeFile(path: string, data: string|Buffer): Promise<void> {
   return new Promise((resolve, reject) => {
     fs.writeFile(path, data, err => {
       if (err) {
@@ -68,7 +68,7 @@ exports.writeFile = function (path: string, data: string|Buffer): Promise<void> 
       }
     });
   });
-};
+}
 
 export type GlobOptions = {
   cwd?: string,
@@ -77,9 +77,9 @@ export type GlobOptions = {
 
 export type GlobFilelist = Array<string>;
 
-exports.glob = function (pattern: string, options: GlobOptions): Promise<GlobFilelist> {
+export function glob(pattern: string, options: GlobOptions): Promise<GlobFilelist> {
   return new Promise((resolve, reject) => {
-    glob(pattern, options, (err, files) => {
+    npmGlob(pattern, options, (err, files) => {
       if (err) {
         reject(err);
       } else {
@@ -87,9 +87,9 @@ exports.glob = function (pattern: string, options: GlobOptions): Promise<GlobFil
       }
     });
   });
-};
+}
 
-exports.withTmpDir = function (tempFileId: string): Promise<string> {
+export function withTmpDir(tempFileId: string): Promise<string> {
   return new Promise((resolve, reject) => {
     temp.mkdir(tempFileId, (err, dirPath) => {
       if (err) {
@@ -99,4 +99,4 @@ exports.withTmpDir = function (tempFileId: string): Promise<string> {
       }
     });
   });
-};
+}

@@ -74,7 +74,7 @@ export function loadConfig(args) {
 
   try {
     packageJSONPath = path.resolve(path.join(getProjectDir(args), 'package.json'));
-    let pkg = require(packageJSONPath);
+    let pkg = require(packageJSONPath); // eslint-disable-line import/no-dynamic-require
     if (pkg['flow-coverage-report']) {
       if (process.env.VERBOSE) {
         console.log('Loaded config from package.json', pkg['flow-coverage-report']);

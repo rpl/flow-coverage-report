@@ -4,7 +4,7 @@
 
 import React from 'react';
 
-module.exports = function FlowCoverageFileTableHead() {
+export default function FlowCoverageFileTableHead() {
   return (
     <thead>
       <tr>
@@ -16,4 +16,4 @@ module.exports = function FlowCoverageFileTableHead() {
       </tr>
     </thead>
   );
-};
+}

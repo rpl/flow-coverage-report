@@ -4,6 +4,7 @@
 
 import React from 'react';
 
+/* eslint-disable import/no-unresolved */
 import HTMLReportFooter from './footer';
 import FlowCoverageSummaryTable from './coverage-summary-table';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
@@ -11,8 +12,9 @@ import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {FlowCoverageReportProps} from './html-report-page';
+/* eslint-enable */
 
-module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) {
+export default function HTMLReportBodySummary(props: FlowCoverageReportProps) {
   const summary = props.coverageSummaryData;
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');
@@ -28,27 +30,27 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
     <table {...filesSummaryTableProps}>
       <FlowCoverageFileTableHead/>
       <tbody>
-      {
-        filenames.map(filename => {
-          const fileSummary = summary.files[filename];
-          const key = filename;
-          const fileRowProps = {
-            filename: filename,
-            isError: fileSummary.isError,
-            flowCoverageParsingError: fileSummary.flowCoverageParsingError,
-            flowCoverageError: fileSummary.flowCoverageError,
-            flowCoverageException: fileSummary.flowCoverageException,
-            flowCoverageStderr: fileSummary.flowCoverageStderr,
+        {
+          filenames.map(filename => {
+            const fileSummary = summary.files[filename];
+            const key = filename;
+            const fileRowProps = {
+              filename: filename,
+              isError: fileSummary.isError,
+              flowCoverageParsingError: fileSummary.flowCoverageParsingError,
+              flowCoverageError: fileSummary.flowCoverageError,
+              flowCoverageException: fileSummary.flowCoverageException,
+              flowCoverageStderr: fileSummary.flowCoverageStderr,
 
-            percent: fileSummary.percent,
-            /* eslint-disable camelcase */
-            covered_count: fileSummary.expressions.covered_count,
-            uncovered_count: fileSummary.expressions.uncovered_count
-            /* eslint-enable camelcase */
-          };
-          return <FlowCoverageFileTableRow key={key} {...fileRowProps}/>;
-        })
-      }
+              percent: fileSummary.percent,
+              /* eslint-disable camelcase */
+              covered_count: fileSummary.expressions.covered_count,
+              uncovered_count: fileSummary.expressions.uncovered_count
+              /* eslint-enable camelcase */
+            };
+            return <FlowCoverageFileTableRow key={key} {...fileRowProps}/>;
+          })
+        }
       </tbody>
     </table>
   );
@@ -82,4 +84,4 @@ module.exports = function HTMLReportBodySummary(props: FlowCoverageReportProps) 
       </div>
     </body>
   );
-};
+}

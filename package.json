@@ -53,6 +53,7 @@
     "ava": "0.17.0",
     "babel-cli": "6.22.2",
     "babel-core": "6.22.1",
+    "babel-eslint": "7.1.1",
     "babel-plugin-istanbul": "3.1.2",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-plugin-transform-runtime": "6.22.0",
@@ -73,6 +74,7 @@
   },
   "xo": {
     "extends": "xo-react",
+    "parser": "babel-eslint",
     "space": true,
     "envs": [
       "node"
@@ -85,7 +87,8 @@
       "flow-coverage/**/*"
     ],
     "plugins": [
-      "flowtype"
+      "flowtype",
+      "react"
     ],
     "rules": {
       "flowtype/define-flow-type": 1,
@@ -161,7 +164,9 @@
       "src/lib/**/*.jsx"
     ],
     "type": [
-      "text", "html", "json"
+      "text",
+      "html",
+      "json"
     ]
   }
 }

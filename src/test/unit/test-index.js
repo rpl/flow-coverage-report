@@ -15,7 +15,7 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('generateFlowCoverageReport', async function(t) {
+test('generateFlowCoverageReport', async function (t) {
   const collectFlowCoverage = sinon.stub();
   mockRequire(LIB_FLOW, {collectFlowCoverage});
 
@@ -26,7 +26,7 @@ test('generateFlowCoverageReport', async function(t) {
   const generateText = sinon.stub();
   mockRequire(LIB_REPORT_TEXT, {generate: generateText});
 
-  const {generateFlowCoverageReport} = mockRequire.reRequire(LIB_INDEX);
+  const generateFlowCoverageReport = mockRequire.reRequire(LIB_INDEX).default;
 
   const fakeData = {fakeData: true};
   collectFlowCoverage.returns(Promise.resolve(fakeData));

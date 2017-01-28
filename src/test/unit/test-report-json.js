@@ -12,13 +12,13 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('generate JSON report', async function(t) {
+test('generate JSON report', async function (t) {
   const mkdirp = sinon.stub();
   const writeFile = sinon.stub();
 
   mockRequire(LIB_PROMISIFIED, {mkdirp, writeFile});
 
-  const reportJSON = mockRequire.reRequire(LIB_REPORT_JSON);
+  const reportJSON = mockRequire.reRequire(LIB_REPORT_JSON).default;
 
   mkdirp.returns(Promise.resolve());
   writeFile.returns(Promise.resolve());

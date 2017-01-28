@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -14,7 +14,7 @@ import {BASE_DIR} from './common';
 const REACT_COMPONENT = `${BASE_DIR}/body-coverage-sourcefile`;
 
 test('<HTMLReportBodySourceFile />', t => {
-  const HTMLReportBodySourceFile = require(REACT_COMPONENT);
+  const HTMLReportBodySourceFile = require(REACT_COMPONENT).default;
   const fileName = 'src/a.js';
   const props = {
     coverageData: FLOW_COVERAGE_SUMMARY_DATA.files[fileName],

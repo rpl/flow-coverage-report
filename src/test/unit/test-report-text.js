@@ -16,13 +16,13 @@ test.afterEach(() => {
   mockRequire.stopAll();
 });
 
-test('generate Text report', async function(t) {
+test('generate Text report', async function (t) {
   const print = sinon.stub();
   const npmTable = sinon.stub();
 
   mockRequire(NPM_TABLE, npmTable);
 
-  const reportText = mockRequire.reRequire(LIB_REPORT_TEXT);
+  const reportText = mockRequire.reRequire(LIB_REPORT_TEXT).default;
 
   const fakeTable = () => {
     return {

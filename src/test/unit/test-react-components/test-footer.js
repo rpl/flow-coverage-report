@@ -1,6 +1,6 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension */
+/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
 import {test} from 'ava';
 
@@ -12,7 +12,7 @@ import {BASE_DIR} from './common';
 const REACT_COMPONENT = `${BASE_DIR}/footer`;
 
 test('<HTMLReportFooter />', t => {
-  const HTMLReportFooter = require(REACT_COMPONENT);
+  const HTMLReportFooter = require(REACT_COMPONENT).default;
   const props = {
     coverageGeneratedAt: 'fakeGeneratedAt'
   };

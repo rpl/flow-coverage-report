@@ -10,14 +10,17 @@ import type {
   FlowUncoveredLoc
 } from '../flow';
 
+/* eslint-disable import/no-unresolved */
 import HTMLReportHead from './head';
 import HTMLReportBodySummary from './body-coverage-summary';
 import HTMLReportBodySourceFile from './body-coverage-sourcefile';
+/* eslint-enable */
 
 export type FlowUncoveredLocsProps = {
   uncovered_locs: Array<FlowUncoveredLoc>
 };
 
+/* eslint-disable react/no-unused-prop-types */
 export type FlowCoverageReportProps = {
   reportType: 'summary' | 'sourcefile',
   coverageGeneratedAt: string,
@@ -33,8 +36,9 @@ export type FlowCoverageReportProps = {
   threshold?: number,
   htmlTemplateOptions?: Object,
 };
+/* eslint-enable */
 
-module.exports = function HTMLReportPage(props: FlowCoverageReportProps) {
+export default function HTMLReportPage(props: FlowCoverageReportProps) {
   var HTMLReportBody = props.reportType === 'sourcefile' ?
         HTMLReportBodySourceFile : HTMLReportBodySummary;
 
@@ -42,4 +46,4 @@ module.exports = function HTMLReportPage(props: FlowCoverageReportProps) {
     <HTMLReportHead {...props}/>
     <HTMLReportBody {...props}/>
   </html>);
-};
+}

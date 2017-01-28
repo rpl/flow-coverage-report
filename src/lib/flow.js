@@ -14,7 +14,7 @@ if (!Array.prototype.find) {
 // getCoveredPercent helper.
 
 /* eslint-disable camelcase */
-function getCoveredPercent(
+export function getCoveredPercent(
   {
     covered_count, uncovered_count
   }: {
@@ -30,7 +30,6 @@ function getCoveredPercent(
   return Math.floor(covered_count / total * 100);
 }
 /* eslint-disable-line camelcase */
-exports.getCoveredPercent = getCoveredPercent;
 
 // checkFlowStatus definitions and its related flow types.
 
@@ -69,7 +68,7 @@ export type FlowStatus = {
   errors: Array<FlowTypeError>
 }
 
-async function checkFlowStatus(
+export async function checkFlowStatus(
   flowCommandPath: string,
   projectDir: string,
   tmpDirPath: ?string
@@ -117,8 +116,6 @@ async function checkFlowStatus(
   throw new Error('Invalid Flow status JSON format');
 }
 
-exports.checkFlowStatus = checkFlowStatus;
-
 // collectFlowCoverageForFile definitions and its related flow types.
 
 export type FlowUncoveredPos = {
@@ -149,7 +146,7 @@ export type FlowCoverageJSONData = {
   flowCoverageStderr?: string|Buffer
 }
 
-async function collectFlowCoverageForFile(
+export async function collectFlowCoverageForFile(
   flowCommandPath: string,
   flowCommandTimeout: number,
   projectDir: string,
@@ -249,8 +246,6 @@ async function collectFlowCoverageForFile(
   };
 }
 
-exports.collectFlowCoverageForFile = collectFlowCoverageForFile;
-
 // collectForCoverage definitions and its related flow types.
 
 export type FlowCoverageSummaryData = {
@@ -268,7 +263,7 @@ export type FlowCoverageSummaryData = {
   }
 }
 
-exports.collectFlowCoverage = function (
+export function collectFlowCoverage(
   flowCommandPath: string,
   flowCommandTimeout: number,
   projectDir: string,
@@ -372,4 +367,4 @@ exports.collectFlowCoverage = function (
         return coverageSummaryData;
       });
   });
-};
+}
