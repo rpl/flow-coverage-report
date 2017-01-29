@@ -42,6 +42,7 @@ export default function HTMLReportBodySummary(props: FlowCoverageReportProps) {
               flowCoverageException: fileSummary.flowCoverageException,
               flowCoverageStderr: fileSummary.flowCoverageStderr,
 
+              annotation: fileSummary.annotation,
               percent: fileSummary.percent,
               /* eslint-disable camelcase */
               covered_count: fileSummary.expressions.covered_count,

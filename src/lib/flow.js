@@ -4,6 +4,7 @@
 
 import minimatch from 'minimatch';
 import temp from 'temp';
+import {genCheckFlowStatus} from 'flow-annotation-check';
 import {exec, glob, writeFile} from './promisified';
 
 // Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
@@ -137,6 +138,7 @@ export type FlowCoverageJSONData = {
     uncovered_locs: Array<FlowUncoveredLoc>
   },
   filename?: string,
+  annotation?: 'no flow' | 'flow weak' | 'flow',
   percent?: number,
   error?: string,
   isError?: boolean,
@@ -161,6 +163,7 @@ export async function collectFlowCoverageForFile(
 
   const emptyCoverageData = {
     filename,
+    annotation: 'no flow',
     expressions: {
       covered_count: 0,
       uncovered_count: 0,
@@ -233,6 +236,7 @@ export async function collectFlowCoverageForFile(
 
   if (parsedData && !parsedData.error) {
     parsedData.filename = filename;
+    parsedData.annotation = await genCheckFlowStatus(flowCommandPath, filename);
     return parsedData;
   }
 
@@ -248,6 +252,14 @@ export async function collectFlowCoverageForFile(
 
 // collectForCoverage definitions and its related flow types.
 
+type FlowAnnotationSummary = {
+  passed: boolean,
+  flowFiles: number,
+  flowWeakFiles: number,
+  noFlowFiles: number,
+  totalFiles: number,
+};
+
 export type FlowCoverageSummaryData = {
   covered_count: number,
   uncovered_count: number,
@@ -255,12 +267,48 @@ export type FlowCoverageSummaryData = {
   threshold: number,
   generatedAt: string,
   flowStatus: FlowStatus,
+  flowAnnotations: FlowAnnotationSummary,
   globIncludePatterns: Array<string>,
   globExcludePatterns: Array<string>,
   concurrentFiles: number,
   files: {
     [key: string]: FlowCoverageJSONData
   }
+}
+
+export function summarizeAnnotations(
+  coverageSummaryData: FlowCoverageSummaryData
+): FlowAnnotationSummary {
+  let flowFiles = 0;
+  let flowWeakFiles = 0;
+  let noFlowFiles = 0;
+
+  const filenames = Object.keys(coverageSummaryData.files);
+
+  filenames.forEach(function (filename) {
+    switch (coverageSummaryData.files[filename].annotation) {
+      case 'flow':
+        flowFiles += 1;
+        break;
+      case 'flow weak':
+        flowWeakFiles += 1;
+        break;
+      case 'no flow':
+        noFlowFiles += 1;
+        break;
+      default:
+        // no-op
+        break;
+    }
+  });
+
+  return {
+    passed: (flowWeakFiles + noFlowFiles) === 0,
+    flowFiles,
+    flowWeakFiles,
+    noFlowFiles,
+    totalFiles: filenames.length
+  };
 }
 
 export function collectFlowCoverage(
@@ -277,12 +325,21 @@ export function collectFlowCoverage(
     var now = new Date();
     var coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
 
+    const annotationSummary = {
+      passed: false,
+      flowFiles: 0,
+      flowWeakFiles: 0,
+      noFlowFiles: 0,
+      totalFiles: 0
+    };
+
     var coverageSummaryData: FlowCoverageSummaryData = {
       threshold,
       covered_count: 0, uncovered_count: 0, // eslint-disable-line camelcase
       percent: 0,
       generatedAt: coverageGeneratedAt,
       flowStatus: flowStatus,
+      flowAnnotations: annotationSummary,
       files: {},
       globIncludePatterns: globIncludePatterns,
       globExcludePatterns: globExcludePatterns,
@@ -363,6 +420,9 @@ export function collectFlowCoverage(
       .all(globIncludePatterns.map(collectCoverageAndGenerateReportForGlob))
       .then(() => {
         coverageSummaryData.percent = getCoveredPercent(coverageSummaryData);
+        coverageSummaryData.flowAnnotations = summarizeAnnotations(
+          coverageSummaryData
+        );
 
         return coverageSummaryData;
       });

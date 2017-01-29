@@ -16,7 +16,7 @@ test('<FlowCoverageFileTableHead />', t => {
   const wrapper = shallow(<FlowCoverageFileTableHead/>);
 
   const expectedKeys = [
-    'filename', 'percent', 'total', 'covered', 'uncovered'
+    'filename', 'annotation', 'percent', 'total', 'covered', 'uncovered'
   ];
 
   t.is(wrapper.find('thead').length, 1);
