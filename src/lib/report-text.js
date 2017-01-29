@@ -19,25 +19,36 @@ function renderTextReport(
     rightPadding: 1,
     borderStyle: 2
   });
-  filesTable.push(['filename', 'percent', 'total', 'covered', 'uncovered']);
+  filesTable.push([
+    'filename',
+    'annotation',
+    'percent',
+    'total',
+    'covered',
+    'uncovered'
+  ]);
 
   let row = 0;
   for (const filename of Object.keys(coverageData.files).sort()) {
     row += 1;
     const data = coverageData.files[filename];
 
+    const annotation = data.annotation || 'no flow';
     const covered = data.expressions.covered_count;
     const uncovered = data.expressions.uncovered_count;
-    let percent = data.percent || NaN;
+    const percent = data.percent || NaN;
 
     filesTable.push([
       filename,
+      annotation,
       data.isError ? '\u26A0 Error' : percent + ' %',
-      covered + uncovered, covered, uncovered
+      covered + uncovered,
+      covered,
+      uncovered
     ]);
 
     let rowColor;
-    if (percent >= (opts.threshold || 80)) {
+    if (annotation === 'flow' && percent >= (opts.threshold || 80)) {
       rowColor = 'green';
     } else {
       rowColor = 'red';
