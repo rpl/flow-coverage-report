@@ -9,6 +9,7 @@ export default function FlowCoverageFileTableHead() {
     <thead>
       <tr>
         <th key="filename" className="sorted ascending">Filename</th>
+        <th key="annotation">Annotation</th>
         <th key="percent">Percent</th>
         <th key="total">Total</th>
         <th key="covered">Covered</th>

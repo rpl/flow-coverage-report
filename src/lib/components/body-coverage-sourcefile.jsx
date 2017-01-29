@@ -100,6 +100,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
                 {...{
                   disableLink: true,
                   filename: fileName,
+                  annotation: coverageData.annotation,
                   flowCoverageParsingError: coverageData.flowCoverageParsingError,
                   flowCoverageError: coverageData.flowCoverageError,
                   flowCoverageException: coverageData.flowCoverageException,
