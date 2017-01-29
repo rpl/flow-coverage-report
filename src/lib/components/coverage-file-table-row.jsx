@@ -12,27 +12,36 @@ function LinkToSourceFileReport(props: {targetFilename: string}) {
 
 export default function FlowCoverageFileTableRow(
   props: {
-    filename: string, covered_count: number, uncovered_count: number,
-    percent: number, disableLink?: boolean, threshold?: number,
-    isError: boolean, flowCoverageError?: ?string, flowCoverageParsingError?: ?string,
-    flowCoverageException?: ?string, flowCoverageStderr?: ?string|?Buffer,
+    filename: string,
+    annotation: string,
+    covered_count: number,
+    uncovered_count: number,
+    percent: number,
+    disableLink?: boolean,
+    threshold?: number,
+    isError: boolean,
+    flowCoverageError?: ?string,
+    flowCoverageParsingError?: ?string,
+    flowCoverageException?: ?string,
+    flowCoverageStderr?: ?string|?Buffer,
   }
 ) {
   /* eslint-disable camelcase */
   const {
     filename,
+    annotation,
     covered_count, uncovered_count,
-    percent, isError
+    percent, isError,
+    disableLink
   } = props;
 
-  let {
-    disableLink, threshold
-  } = props;
+  const threshold = props.threshold || 80;
 
-  disableLink = props.disableLink;
-  threshold = props.threshold || 80;
-
-  let className = percent >= threshold ? 'positive' : 'negative';
+  const isFlow = annotation === 'flow';
+  const aboveThreshold = percent >= threshold;
+  let className = (!isError && isFlow && aboveThreshold) ?
+    'positive' :
+    'negative';
 
   let errorPopup;
 
@@ -74,6 +83,7 @@ export default function FlowCoverageFileTableRow(
       <td key="filename" className={disableLink ? '' : 'selectable'}>
         {disableLink ? filename : <LinkToSourceFileReport targetFilename={filename}/>}
       </td>
+      <td key="annotation"> @{annotation} </td>
       <td key="percent" className={isError && 'error'}>
         {
           isError ?

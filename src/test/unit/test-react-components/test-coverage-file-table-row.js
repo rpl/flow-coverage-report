@@ -16,6 +16,7 @@ test('<FlowCoverageFileTableRow />', t => {
   const props = {
     /* eslint-disable camelcase */
     filename: 'fake-filename.js',
+    annotation: 'flow',
     covered_count: 1,
     uncovered_count: 2,
     disableLink: false
@@ -24,7 +25,7 @@ test('<FlowCoverageFileTableRow />', t => {
   const wrapper = shallow(<FlowCoverageFileTableRow {...props}/>);
 
   const expectedKeys = [
-    'filename', 'percent', 'total', 'covered', 'uncovered'
+    'filename', 'annotation', 'percent', 'total', 'covered', 'uncovered'
   ];
 
   t.is(wrapper.find('tr').length, 1);
@@ -43,6 +44,7 @@ test('<FlowCoverageFileTableRow /> with errors', t => {
   const FlowCoverageFileTableRow = require(REACT_COMPONENT).default;
   const baseErrorProps = {
     filename: 'fake-filename.js',
+    annotation: 'no flow',
     disableLink: true,
     isError: true,
 
@@ -56,7 +58,7 @@ test('<FlowCoverageFileTableRow /> with errors', t => {
     let wrapper = shallow(<FlowCoverageFileTableRow {...props}/>);
 
     const expectedKeys = [
-      'filename', 'percent', 'total', 'covered', 'uncovered'
+      'filename', 'annotation', 'percent', 'total', 'covered', 'uncovered'
     ];
 
     t.is(wrapper.find('tr').length, 1);

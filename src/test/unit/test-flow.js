@@ -11,6 +11,7 @@ import {DEFAULT_FLOW_TIMEOUT} from '../../lib/index';
 const LIB_FLOW = '../../lib/flow';
 const LIB_PROMISIFIED = '../../lib/promisified';
 const NPM_TEMP = 'temp';
+const NPM_FLOW_ANNOTATION_CHECK = 'flow-annotation-check';
 
 const tmpDirPath = '/tmp/fake-tmp-path';
 const tmpFilePath = `${tmpDirPath}/fake-tmp-file.json`;
@@ -241,13 +242,16 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   const exec = sinon.stub();
   const writeFile = sinon.stub();
   const tempPath = sinon.stub();
+  const genCheckFlowStatus = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
   mockRequire(LIB_PROMISIFIED, {exec, writeFile});
+  mockRequire(NPM_FLOW_ANNOTATION_CHECK, {genCheckFlowStatus});
 
   const filename = 'src/fakeFilename.js';
   const fakeFlowCoverageData = {
     filename,
+    annotation: 'flow',
     fakeCoverageData: {
       ok: true
     }
@@ -257,6 +261,7 @@ test('collectFlowCoverageForFile resolve coverage data', async function (t) {
   exec.onFirstCall().returns(Promise.resolve({
     stdout: new Buffer(JSON.stringify(fakeFlowCoverageData))
   }));
+  genCheckFlowStatus.onFirstCall().returns(Promise.resolve('flow'));
 
   const flow = mockRequire.reRequire(LIB_FLOW);
 
@@ -278,9 +283,11 @@ test('collectFlowCoverage', async function (t) {
   const writeFile = sinon.stub();
   const tempPath = sinon.stub();
   const glob = sinon.stub();
+  const genCheckFlowStatus = sinon.stub();
 
   mockRequire(NPM_TEMP, {path: tempPath});
   mockRequire(LIB_PROMISIFIED, {exec, glob, writeFile});
+  mockRequire(NPM_FLOW_ANNOTATION_CHECK, {genCheckFlowStatus});
 
   const fakeFlowStatus = {
     passed: true,
@@ -299,6 +306,8 @@ test('collectFlowCoverage', async function (t) {
   // Fake the glob results.
   glob.onCall(0).returns(Promise.resolve(firstGlobResults));
   glob.onCall(1).returns(Promise.resolve(secondGlobResults));
+
+  genCheckFlowStatus.returns(Promise.resolve('flow'));
 
   const allFiles = [].concat(firstGlobResults, secondGlobResults);
 
@@ -352,8 +361,19 @@ test('collectFlowCoverage', async function (t) {
   const resFiles = res.files;
   delete res.files;
 
+  const filteredFiles = allFiles.filter(
+    file => !minimatch(file, globExcludePatterns[0])
+  ).sort();
+
   t.deepEqual(res, {
     flowStatus: {...fakeFlowStatus},
+    flowAnnotations: {
+      passed: true,
+      flowFiles: filteredFiles.length,
+      flowWeakFiles: 0,
+      noFlowFiles: 0,
+      totalFiles: filteredFiles.length
+    },
     globIncludePatterns,
     globExcludePatterns,
     concurrentFiles: 5,
@@ -364,10 +384,6 @@ test('collectFlowCoverage', async function (t) {
     uncovered_count: 4
     /* eslint-enable camelcase */
   });
-
-  const filteredFiles = allFiles.filter(
-    file => !minimatch(file, globExcludePatterns[0])
-  ).sort();
 
   t.deepEqual(Object.keys(resFiles).sort(), filteredFiles);
 
@@ -388,6 +404,7 @@ test('collectFlowCoverage', async function (t) {
     t.deepEqual(resFiles[filename], {
       percent: 50,
       filename,
+      annotation: 'flow',
       expressions: {
         /* eslint-disable camelcase */
         covered_count: 1,
