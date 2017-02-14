@@ -37,7 +37,7 @@
   },
   "dependencies": {
     "array.prototype.find": "2.0.3",
-    "babel-runtime": "6.22.0",
+    "babel-runtime": "6.23.0",
     "glob": "7.1.1",
     "minimatch": "3.0.3",
     "mkdirp": "0.5.1",
