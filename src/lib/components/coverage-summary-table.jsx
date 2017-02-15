@@ -12,7 +12,7 @@ export default function FlowCoverageSummaryTable(props: FlowCoverageReportProps)
   }
   var summary = props.coverageSummaryData;
   var percent = summary.percent || NaN;
-  var threshold = props.threshold || 80;
+  var threshold = summary.threshold || 80;
   var className = percent >= threshold ? 'positive' : 'negative';
 
   return (
