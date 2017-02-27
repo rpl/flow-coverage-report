@@ -69,7 +69,7 @@
     "mock-require": "2.0.1",
     "nyc": "10.1.2",
     "react-addons-test-utils": "15.4.2",
-    "sinon": "1.17.7",
+    "sinon": "2.0.0-pre.6",
     "xo": "0.17.1"
   },
   "xo": {
