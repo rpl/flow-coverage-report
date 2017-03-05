@@ -65,7 +65,7 @@
     "eslint-config-xo-react": "0.10.0",
     "eslint-plugin-flowtype": "2.30.0",
     "eslint-plugin-react": "6.9.0",
-    "flow-bin": "0.38.0",
+    "flow-bin": "0.41.0",
     "mock-require": "2.0.1",
     "nyc": "10.1.2",
     "react-addons-test-utils": "15.4.2",
