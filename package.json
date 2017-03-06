@@ -63,7 +63,7 @@
     "cross-env": "3.1.4",
     "enzyme": "2.7.1",
     "eslint-config-xo-react": "0.10.0",
-    "eslint-plugin-flowtype": "2.30.0",
+    "eslint-plugin-flowtype": "2.30.1",
     "eslint-plugin-react": "6.9.0",
     "flow-bin": "0.38.0",
     "mock-require": "2.0.1",
