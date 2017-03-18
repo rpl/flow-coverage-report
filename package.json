@@ -70,7 +70,7 @@
     "nyc": "10.1.2",
     "react-addons-test-utils": "15.4.2",
     "sinon": "1.17.7",
-    "xo": "0.17.1"
+    "xo": "0.18.0"
   },
   "xo": {
     "extends": "xo-react",
