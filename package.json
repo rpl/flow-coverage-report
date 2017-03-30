@@ -37,7 +37,7 @@
     "url": "git+https://github.com/rpl/flow-coverage-report.git"
   },
   "dependencies": {
-    "array.prototype.find": "2.0.3",
+    "array.prototype.find": "2.0.4",
     "babel-runtime": "6.22.0",
     "flow-annotation-check": "1.1.2",
     "glob": "7.1.1",
