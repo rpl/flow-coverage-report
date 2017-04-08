@@ -68,7 +68,7 @@
     "flow-bin": "0.38.0",
     "mock-require": "2.0.1",
     "nyc": "10.1.2",
-    "react-addons-test-utils": "15.4.2",
+    "react-addons-test-utils": "15.5.0",
     "sinon": "1.17.7",
     "xo": "0.17.1"
   },
