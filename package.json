@@ -14,12 +14,13 @@
   ],
   "scripts": {
     "ava": "nyc ava --verbose",
-    "build": "rm -Rf dist && babel -d dist src --source-maps",
+    "build": "rm -Rf dist && babel -d dist src --only src/lib --source-maps",
     "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
+    "jest": "jest --coverage",
     "lint": "xo --reporter=compact",
     "prepublish": "npm run build",
-    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run ava && npm run flow-coverage"
+    "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run jest && npm run flow-coverage"
   },
   "keywords": [
     "flowtype",
@@ -54,6 +55,7 @@
     "babel-cli": "6.22.2",
     "babel-core": "6.22.1",
     "babel-eslint": "7.1.1",
+    "babel-jest": "19.0.0",
     "babel-plugin-istanbul": "3.1.2",
     "babel-plugin-transform-flow-strip-types": "6.22.0",
     "babel-plugin-transform-runtime": "6.22.0",
@@ -64,11 +66,14 @@
     "enzyme": "2.7.1",
     "eslint-config-xo-react": "0.10.0",
     "eslint-plugin-flowtype": "2.30.0",
+    "eslint-plugin-jest": "19.0.1",
     "eslint-plugin-react": "6.9.0",
     "flow-bin": "0.38.0",
+    "jest": "19.0.2",
     "mock-require": "2.0.1",
     "nyc": "10.1.2",
     "react-addons-test-utils": "15.4.2",
+    "react-test-renderer": "15.5.4",
     "sinon": "1.17.7",
     "xo": "0.17.1"
   },
@@ -88,7 +93,8 @@
     ],
     "plugins": [
       "flowtype",
-      "react"
+      "react",
+      "jest"
     ],
     "rules": {
       "flowtype/define-flow-type": 1,
@@ -97,7 +103,18 @@
         1,
         "always"
       ]
-    }
+    },
+    "overrides": [
+      {
+        "files": "src/__tests__/**/**.js",
+        "envs": [
+          "jest/globals"
+        ],
+        "rules": {
+          "import/no-dynamic-require": 0
+        }
+      }
+    ]
   },
   "babel": {
     "compact": false,
@@ -168,5 +185,12 @@
       "html",
       "json"
     ]
+  },
+  "jest": {
+    "transform": {".*": "<rootDir>/node_modules/babel-jest"},
+    "testEnvironment": "node",
+    "testMatch": ["<rootDir>/src/__tests__/**/test-*.js?(x)"],
+    "testPathIgnorePatterns": ["node_modules/"],
+    "collectCoverageFrom": ["src/lib"]
   }
 }
