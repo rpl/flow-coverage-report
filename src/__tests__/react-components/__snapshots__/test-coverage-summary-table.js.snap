@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FlowCoverageSummaryTable /> 1`] = `
+<table
+  className="ui small celled table"
+>
+  <thead>
+    <tr>
+      <th>
+        Percent
+      </th>
+      <th>
+        Total
+      </th>
+      <th>
+        Covered
+      </th>
+      <th>
+        Uncovered
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      className="negative"
+    >
+      <td>
+        NaN
+         %
+      </td>
+      <td>
+        8
+      </td>
+      <td>
+        4
+      </td>
+      <td>
+        4
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

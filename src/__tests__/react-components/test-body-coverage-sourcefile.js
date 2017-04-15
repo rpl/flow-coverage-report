@@ -2,10 +2,8 @@
 
 /* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
-import {test} from 'ava';
-
 import React from 'react';
-import {shallow} from 'enzyme';
+import renderer from 'react-test-renderer';
 
 import {FLOW_COVERAGE_SUMMARY_DATA} from '../fixtures';
 
@@ -13,7 +11,7 @@ import {BASE_DIR} from './common';
 
 const REACT_COMPONENT = `${BASE_DIR}/body-coverage-sourcefile`;
 
-test('<HTMLReportBodySourceFile />', t => {
+test('<HTMLReportBodySourceFile />', () => {
   const HTMLReportBodySourceFile = require(REACT_COMPONENT).default;
   const fileName = 'src/a.js';
   const props = {
@@ -22,9 +20,8 @@ test('<HTMLReportBodySourceFile />', t => {
     fileName
   };
 
-  const wrapper = shallow(<HTMLReportBodySourceFile {...props}/>);
-
-  t.is(wrapper.find('body').length, 1);
+  const tree = renderer.create(<HTMLReportBodySourceFile {...props}/>).toJSON();
+  expect(tree).toMatchSnapshot();
 });
 
-test.todo('<HTMLReportBodySourceFile /> with missing props');
+test.skip('<HTMLReportBodySourceFile /> with missing props');

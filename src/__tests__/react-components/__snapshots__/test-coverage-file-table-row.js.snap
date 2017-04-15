@@ -1,0 +1,251 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FlowCoverageFileTableRow /> 1`] = `
+<tr
+  className="negative"
+>
+  <td
+    className="selectable"
+  >
+    <a
+      href="sourcefiles/fake-filename.js.html"
+    >
+      fake-filename.js
+    </a>
+  </td>
+  <td
+    className={undefined}
+  >
+    <span>
+       %
+    </span>
+  </td>
+  <td>
+     
+    3
+     
+  </td>
+  <td>
+     
+    1
+     
+  </td>
+  <td>
+     
+    2
+     
+  </td>
+</tr>
+`;
+
+exports[`<FlowCoverageFileTableRow /> with errors 1`] = `
+<tr
+  className="error"
+>
+  <td
+    className=""
+  >
+    fake-filename.js
+  </td>
+  <td
+    className="error"
+  >
+    <span>
+      <i
+        className="attention icon"
+        data-position="bottom right"
+      />
+      Error
+      <div
+        className="ui popup"
+      >
+        <div
+          className="header"
+        >
+          Flow Error: 
+          flow coverage
+        </div>
+        <div>
+          <pre>
+            Fake Coverage Error
+          </pre>
+        </div>
+      </div>
+    </span>
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+</tr>
+`;
+
+exports[`<FlowCoverageFileTableRow /> with errors 2`] = `
+<tr
+  className="error"
+>
+  <td
+    className=""
+  >
+    fake-filename.js
+  </td>
+  <td
+    className="error"
+  >
+    <span>
+      <i
+        className="attention icon"
+        data-position="bottom right"
+      />
+      Error
+      <div
+        className="ui popup"
+      >
+        <div
+          className="header"
+        >
+          Flow Error: 
+          JSON Parsing
+        </div>
+        <div>
+          <pre>
+            Fake Parsing Error
+          </pre>
+        </div>
+      </div>
+    </span>
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+</tr>
+`;
+
+exports[`<FlowCoverageFileTableRow /> with errors 3`] = `
+<tr
+  className="error"
+>
+  <td
+    className=""
+  >
+    fake-filename.js
+  </td>
+  <td
+    className="error"
+  >
+    <span>
+      <i
+        className="attention icon"
+        data-position="bottom right"
+      />
+      Error
+      <div
+        className="ui popup"
+      >
+        <div
+          className="header"
+        >
+          Flow Error: 
+          Flow command unexpected error
+        </div>
+        <div>
+          <pre>
+            Fake Coverage Exception
+          </pre>
+        </div>
+      </div>
+    </span>
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+</tr>
+`;
+
+exports[`<FlowCoverageFileTableRow /> with errors 4`] = `
+<tr
+  className="error"
+>
+  <td
+    className=""
+  >
+    fake-filename.js
+  </td>
+  <td
+    className="error"
+  >
+    <span>
+      <i
+        className="attention icon"
+        data-position="bottom right"
+      />
+      Error
+      <div
+        className="ui popup"
+      >
+        <div
+          className="header"
+        >
+          Flow Error: 
+          Flow command stderr
+        </div>
+        <div>
+          <pre>
+            Fake flow unrecognized error stderr
+          </pre>
+        </div>
+      </div>
+    </span>
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+  <td>
+     
+    0
+     
+  </td>
+</tr>
+`;

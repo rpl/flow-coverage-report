@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FlowCoverageFileTableHead /> 1`] = `
+<thead>
+  <tr>
+    <th
+      className="sorted ascending"
+    >
+      Filename
+    </th>
+    <th>
+      Percent
+    </th>
+    <th>
+      Total
+    </th>
+    <th>
+      Covered
+    </th>
+    <th>
+      Uncovered
+    </th>
+  </tr>
+</thead>
+`;
