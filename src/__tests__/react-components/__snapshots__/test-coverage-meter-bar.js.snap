@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<FlowCoverageMeterBar /> 1`] = `
+<div
+  className="row red"
+  style={
+    Object {
+      "height": 12,
+      "padding": 0,
+    }
+  }
+/>
+`;

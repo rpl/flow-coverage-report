@@ -2,23 +2,20 @@
 
 /* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
 
-import {test} from 'ava';
-
 import React from 'react';
-import {shallow} from 'enzyme';
+import renderer from 'react-test-renderer';
 
 import {BASE_DIR} from './common';
 
 const REACT_COMPONENT = `${BASE_DIR}/footer`;
 
-test('<HTMLReportFooter />', t => {
+test('<HTMLReportFooter />', () => {
   const HTMLReportFooter = require(REACT_COMPONENT).default;
   const props = {
     coverageGeneratedAt: 'fakeGeneratedAt'
   };
-  const wrapper = shallow(<HTMLReportFooter {...props}/>);
-
-  t.regex(wrapper.find('footer').text(), /fakeGeneratedAt/);
+  const tree = renderer.create(<HTMLReportFooter {...props}/>).toJSON();
+  expect(tree).toMatchSnapshot();
 });
 
-test.todo('<HTMLReportFooter /> with missing props');
+test.skip('<HTMLReportFooter /> with missing props');

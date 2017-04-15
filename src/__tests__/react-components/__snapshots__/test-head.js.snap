@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`<HTMLReportHead /> 1`] = `
+<head>
+  <meta
+    charSet="utf-8"
+  />
+  <link
+    href="fake.css"
+    rel="stylesheet"
+  />
+  <link
+    href="fake2.css"
+    rel="stylesheet"
+  />
+  <script
+    src="fake.js"
+  />
+  <script
+    src="fake2.js"
+  />
+</head>
+`;
