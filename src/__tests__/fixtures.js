@@ -20,6 +20,8 @@ const FLOW_COVERAGE_SUMMARY_DATA = {
   generatedAt,
   covered_count: 4,
   uncovered_count: 4,
+  threshold: 40,
+  percent: 50,
   globIncludePatterns: [firstGlob, secondGlob],
   files: allFiles.reduce((acc, filename) => {
     acc[filename] = {
