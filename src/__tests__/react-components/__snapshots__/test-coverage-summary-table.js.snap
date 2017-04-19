@@ -22,10 +22,10 @@ exports[`<FlowCoverageSummaryTable /> 1`] = `
   </thead>
   <tbody>
     <tr
-      className="negative"
+      className="positive"
     >
       <td>
-        NaN
+        50
          %
       </td>
       <td>
