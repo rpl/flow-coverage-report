@@ -15,10 +15,10 @@ matrix:
 script:
 - npm test
 
-branches:
-  only:
-  - master
-  - /^greenkeeper/.*$/
+#branches:
+#  only:
+#  - master
+#  - /^greenkeeper/.*$/
 
 ### cache node_modules/ dir between builds on travis
 # Issues with node 4
