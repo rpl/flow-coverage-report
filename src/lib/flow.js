@@ -8,6 +8,7 @@ import {genCheckFlowStatus} from 'flow-annotation-check';
 import {exec, glob, writeFile} from './promisified';
 
 // Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
+/* istanbul ignore if  */
 if (!Array.prototype.find) {
   require('array.prototype.find').shim();
 }
@@ -297,8 +298,7 @@ export function summarizeAnnotations(
         noFlowFiles += 1;
         break;
       default:
-        // no-op
-        break;
+        throw new Error(`Unexpected missing flow annotation on ${filename}`);
     }
   });
 

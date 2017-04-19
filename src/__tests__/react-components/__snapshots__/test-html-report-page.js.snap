@@ -86,6 +86,9 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                 Filename
               </th>
               <th>
+                Annotation
+              </th>
+              <th>
                 Percent
               </th>
               <th>
@@ -111,6 +114,11 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                 >
                   src/a.js
                 </a>
+              </td>
+              <td>
+                 @
+                flow
+                 
               </td>
               <td
                 className={undefined}
@@ -148,6 +156,11 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                   src/b.js
                 </a>
               </td>
+              <td>
+                 @
+                flow
+                 
+              </td>
               <td
                 className={undefined}
               >
@@ -184,6 +197,11 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                   src/d1/c.js
                 </a>
               </td>
+              <td>
+                 @
+                flow
+                 
+              </td>
               <td
                 className={undefined}
               >
@@ -219,6 +237,11 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                 >
                   src/d1/d.js
                 </a>
+              </td>
+              <td>
+                 @
+                flow
+                 
               </td>
               <td
                 className={undefined}

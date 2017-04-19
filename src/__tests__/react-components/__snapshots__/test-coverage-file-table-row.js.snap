@@ -13,6 +13,11 @@ exports[`<FlowCoverageFileTableRow /> 1`] = `
       fake-filename.js
     </a>
   </td>
+  <td>
+     @
+    flow
+     
+  </td>
   <td
     className={undefined}
   >
@@ -46,6 +51,11 @@ exports[`<FlowCoverageFileTableRow /> with errors 1`] = `
     className=""
   >
     fake-filename.js
+  </td>
+  <td>
+     @
+    no flow
+     
   </td>
   <td
     className="error"
@@ -100,6 +110,11 @@ exports[`<FlowCoverageFileTableRow /> with errors 2`] = `
   >
     fake-filename.js
   </td>
+  <td>
+     @
+    no flow
+     
+  </td>
   <td
     className="error"
   >
@@ -153,6 +168,11 @@ exports[`<FlowCoverageFileTableRow /> with errors 3`] = `
   >
     fake-filename.js
   </td>
+  <td>
+     @
+    no flow
+     
+  </td>
   <td
     className="error"
   >
@@ -205,6 +225,11 @@ exports[`<FlowCoverageFileTableRow /> with errors 4`] = `
     className=""
   >
     fake-filename.js
+  </td>
+  <td>
+     @
+    no flow
+     
   </td>
   <td
     className="error"
