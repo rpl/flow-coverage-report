@@ -11,6 +11,9 @@ os:
 
 matrix:
   fast_finish: true
+  exclude:
+  - os: osx
+    node_js: '4'
 
 script:
 - npm test
