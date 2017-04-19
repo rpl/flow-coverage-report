@@ -9,6 +9,9 @@ exports[`<FlowCoverageFileTableHead /> 1`] = `
       Filename
     </th>
     <th>
+      Annotation
+    </th>
+    <th>
       Percent
     </th>
     <th>

@@ -26,6 +26,7 @@ const FLOW_COVERAGE_SUMMARY_DATA = {
   files: allFiles.reduce((acc, filename) => {
     acc[filename] = {
       percent: 50,
+      annotation: 'flow',
       expressions: {
         covered_count: 1,
         uncovered_count: 1,

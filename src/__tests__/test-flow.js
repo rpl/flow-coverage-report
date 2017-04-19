@@ -6,6 +6,7 @@ import {DEFAULT_FLOW_TIMEOUT} from '../lib/index';
 
 const LIB_FLOW = '../lib/flow';
 const LIB_PROMISIFIED = '../lib/promisified';
+const NPM_FLOW_ANNOTATION_CHECK = 'flow-annotation-check';
 const NPM_TEMP = 'temp';
 
 const tmpDirPath = '/tmp/fake-tmp-path';
@@ -284,6 +285,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   const mockExec = jest.fn();
   const mockWriteFile = jest.fn();
   const mockTempPath = jest.fn();
+  const mockGenCheckFlowStatus = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
     path: mockTempPath
@@ -291,6 +293,9 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
     writeFile: mockWriteFile
+  }));
+  jest.mock(NPM_FLOW_ANNOTATION_CHECK, () => ({
+    genCheckFlowStatus: mockGenCheckFlowStatus
   }));
 
   const filename = 'src/fakeFilename.js';
@@ -305,6 +310,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   mockExec.mockReturnValueOnce(Promise.resolve({
     stdout: Buffer.from(JSON.stringify(fakeFlowCoverageData))
   }));
+  mockGenCheckFlowStatus.mockReturnValueOnce(Promise.resolve('flow'));
 
   const flow = require(LIB_FLOW);
 
@@ -318,7 +324,10 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   expect(mockExec.mock.calls[0][1]).toEqual({
     cwd: '/fake/projectDir', maxBuffer: Infinity, timeout: DEFAULT_FLOW_TIMEOUT
   });
-  expect(res).toEqual(fakeFlowCoverageData);
+  expect(res).toEqual({
+    ...fakeFlowCoverageData,
+    annotation: 'flow'
+  });
 });
 
 it('collectFlowCoverage', async () => {
@@ -326,6 +335,7 @@ it('collectFlowCoverage', async () => {
   const mockWriteFile = jest.fn();
   const mockTempPath = jest.fn();
   const mockGlob = jest.fn();
+  const mockGenCheckFlowStatus = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
     path: mockTempPath
@@ -334,6 +344,9 @@ it('collectFlowCoverage', async () => {
     exec: mockExec,
     glob: mockGlob,
     writeFile: mockWriteFile
+  }));
+  jest.mock(NPM_FLOW_ANNOTATION_CHECK, () => ({
+    genCheckFlowStatus: mockGenCheckFlowStatus
   }));
 
   const fakeFlowStatus = {
@@ -344,6 +357,12 @@ it('collectFlowCoverage', async () => {
 
   const firstGlobResults = ['src/a.js', 'src/b.js', 'test/test-a.js'];
   const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js', 'test/subdir/test-d.js'];
+  const expectedFlowAnnotations = {
+    'src/a.js': 'flow',
+    'src/b.js': 'flow',
+    'src/d1/c.js': 'no flow',
+    'src/d1/d.js': 'flow weak'
+  };
 
   // Fake reply to flow status command.
   mockExec.mockReturnValueOnce(Promise.resolve({
@@ -353,6 +372,11 @@ it('collectFlowCoverage', async () => {
   // Fake the glob results.
   mockGlob.mockReturnValueOnce(Promise.resolve(firstGlobResults));
   mockGlob.mockReturnValueOnce(Promise.resolve(secondGlobResults));
+
+  // Fake flow-annotation-check
+  mockGenCheckFlowStatus.mockImplementation((flowommentPath, filename) => {
+    return Promise.resolve(expectedFlowAnnotations[filename]);
+  });
 
   const allFiles = [].concat(firstGlobResults, secondGlobResults);
 
@@ -406,8 +430,19 @@ it('collectFlowCoverage', async () => {
   const resFiles = res.files;
   delete res.files;
 
+  const filteredFiles = allFiles.filter(
+    file => !minimatch(file, globExcludePatterns[0])
+  ).sort();
+
   expect(res).toEqual({
     flowStatus: {...fakeFlowStatus},
+    flowAnnotations: {
+      passed: false,
+      flowFiles: filteredFiles.length - 2,
+      flowWeakFiles: 1,
+      noFlowFiles: 1,
+      totalFiles: filteredFiles.length
+    },
     globIncludePatterns,
     globExcludePatterns,
     concurrentFiles: 5,
@@ -418,10 +453,6 @@ it('collectFlowCoverage', async () => {
     uncovered_count: 4
     /* eslint-enable camelcase */
   });
-
-  const filteredFiles = allFiles.filter(
-    file => !minimatch(file, globExcludePatterns[0])
-  ).sort();
 
   expect(Object.keys(resFiles).sort()).toEqual(filteredFiles);
 
@@ -442,6 +473,7 @@ it('collectFlowCoverage', async () => {
     expect(resFiles[filename]).toEqual({
       percent: 50,
       filename,
+      annotation: expectedFlowAnnotations[filename],
       expressions: {
         /* eslint-disable camelcase */
         covered_count: 1,

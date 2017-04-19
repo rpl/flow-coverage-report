@@ -14,6 +14,7 @@ test('<FlowCoverageFileTableRow />', () => {
   const props = {
     /* eslint-disable camelcase */
     filename: 'fake-filename.js',
+    annotation: 'flow',
     covered_count: 1,
     uncovered_count: 2,
     disableLink: false
@@ -27,6 +28,7 @@ test('<FlowCoverageFileTableRow /> with errors', () => {
   const FlowCoverageFileTableRow = require(REACT_COMPONENT).default;
   const baseErrorProps = {
     filename: 'fake-filename.js',
+    annotation: 'no flow',
     disableLink: true,
     isError: true,
 
