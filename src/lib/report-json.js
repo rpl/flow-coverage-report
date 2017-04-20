@@ -13,15 +13,15 @@ function saveFlowCoverageReportJSON(
   coverageSummaryData: FlowCoverageSummaryData,
   opts: FlowCoverageReportOptions
 ) {
-  var projectDir = opts.projectDir;
-  var outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+  const projectDir = opts.projectDir;
+  const outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
 
   coverageSummaryData.globIncludePatterns = opts.globIncludePatterns;
 
   return mkdirp(outputDir).then(() =>
     writeFile(
       path.join(outputDir, 'flow-coverage.json'),
-      new Buffer(JSON.stringify(coverageSummaryData))
+      Buffer.from(JSON.stringify(coverageSummaryData))
     )
   ).then(() => {
     return [coverageSummaryData, opts];

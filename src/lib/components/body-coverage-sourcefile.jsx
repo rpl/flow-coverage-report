@@ -17,7 +17,7 @@ import type {
 /* eslint-enable */
 
 function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
-  var uncovered_locs = props.uncovered_locs; // eslint-disable-line camelcase
+  const uncovered_locs = props.uncovered_locs; // eslint-disable-line camelcase
 
   return (
     <div className="ui form">
@@ -34,7 +34,13 @@ function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
                     'End: ' + [loc.end.line, loc.end.column].join(',');
                   const value = loc.start.line;
 
-                  return <option key={i} value={value}>{text}</option>;
+                  /* eslint-disable react/no-array-index-key */
+                  return (
+                    <option key={i} value={value}>
+                      {text}
+                    </option>
+                  );
+                  /* eslint-enable react/no-array-index-key */
                 })
               )
             }
@@ -58,14 +64,20 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
     throw new Error('Missing fileName in props');
   }
 
-  const {coverageData} = props;
-  if (!coverageData) {
-    throw new Error('Missing coverageData in props');
+  const {coverageData, coverageSummaryData} = props;
+  if (!coverageData || !coverageSummaryData) {
+    throw new Error('Missing coverage data props');
   }
   const percent = coverageData.percent || NaN;
 
   if (!coverageData.percent) {
     throw new Error('Missing percent in coverageData');
+  }
+
+  const threshold = coverageSummaryData.threshold;
+
+  if (!threshold) {
+    throw new Error('Missing threshold in coverageSummaryData');
   }
 
   const {
@@ -77,7 +89,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
   let meterBar;
 
   if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
-    meterBar = <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>;
+    meterBar = <FlowCoverageMeterBar percent={percent} threshold={threshold}/>;
   }
 
   return (
@@ -107,6 +119,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
                   flowCoverageStderr: coverageData.flowCoverageStderr,
                   isError: coverageData.isError,
                   percent,
+                  threshold,
                   /* eslint-disable camelcase */
                   covered_count,
                   uncovered_count
@@ -128,7 +141,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
                 }
                 />
             </div>
-            <textarea id="file-content" value={String(fileContent)} readOnly/>
+            <textarea readOnly id="file-content" value={String(fileContent)}/>
           </div>
         </div>
         <div className="row centered">

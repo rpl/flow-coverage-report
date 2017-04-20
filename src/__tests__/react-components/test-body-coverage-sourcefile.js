@@ -15,6 +15,7 @@ test('<HTMLReportBodySourceFile />', () => {
   const HTMLReportBodySourceFile = require(REACT_COMPONENT).default;
   const fileName = 'src/a.js';
   const props = {
+    coverageSummaryData: FLOW_COVERAGE_SUMMARY_DATA,
     coverageData: FLOW_COVERAGE_SUMMARY_DATA.files[fileName],
     summaryRelLink: '../index.html',
     fileName

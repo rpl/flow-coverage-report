@@ -35,13 +35,14 @@ export default function HTMLReportBodySummary(props: FlowCoverageReportProps) {
             const fileSummary = summary.files[filename];
             const key = filename;
             const fileRowProps = {
-              filename: filename,
+              filename,
               isError: fileSummary.isError,
               flowCoverageParsingError: fileSummary.flowCoverageParsingError,
               flowCoverageError: fileSummary.flowCoverageError,
               flowCoverageException: fileSummary.flowCoverageException,
               flowCoverageStderr: fileSummary.flowCoverageStderr,
-
+              disableLink: false,
+              threshold: summary.threshold,
               annotation: fileSummary.annotation,
               percent: fileSummary.percent,
               /* eslint-disable camelcase */
@@ -59,7 +60,7 @@ export default function HTMLReportBodySummary(props: FlowCoverageReportProps) {
   let meterBar;
 
   if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
-    meterBar = <FlowCoverageMeterBar percent={percent} threshold={props.threshold}/>;
+    meterBar = <FlowCoverageMeterBar percent={percent} threshold={summary.threshold}/>;
   }
 
   return (

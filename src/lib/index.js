@@ -42,7 +42,7 @@ export const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
 export default async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
   // Apply defaults to options.
-  var projectDir = opts.projectDir;
+  const projectDir = opts.projectDir;
 
   let tmpDirPath: ?string;
 
@@ -52,7 +52,7 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
   }
 
   opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.flowCommandTimeout = opts.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // defaults to 15s
+  opts.flowCommandTimeout = opts.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // Defaults to 15s
   opts.outputDir = opts.outputDir || './flow-coverage';
   opts.outputDir = path.isAbsolute(opts.outputDir) ?
     opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
@@ -76,14 +76,14 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     return Promise.reject(new Error('threshold option is mandatory'));
   }
 
-  let coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
+  const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
     opts.flowCommandPath, opts.flowCommandTimeout,
     opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
     opts.threshold, opts.concurrentFiles || 1,
     tmpDirPath
   );
 
-  var reportResults = [];
+  const reportResults = [];
   const reportTypes = opts.reportTypes || ['text'];
 
   if (reportTypes.indexOf('json') >= 0) {
