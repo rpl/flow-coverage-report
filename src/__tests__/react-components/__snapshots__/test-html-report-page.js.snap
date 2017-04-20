@@ -104,7 +104,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
           </thead>
           <tbody>
             <tr
-              className="negative"
+              className="positive"
             >
               <td
                 className="selectable"
@@ -121,7 +121,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                  
               </td>
               <td
-                className={undefined}
+                className=""
               >
                 <span>
                   50
@@ -145,7 +145,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
               </td>
             </tr>
             <tr
-              className="negative"
+              className="positive"
             >
               <td
                 className="selectable"
@@ -162,7 +162,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                  
               </td>
               <td
-                className={undefined}
+                className=""
               >
                 <span>
                   50
@@ -186,7 +186,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
               </td>
             </tr>
             <tr
-              className="negative"
+              className="positive"
             >
               <td
                 className="selectable"
@@ -203,7 +203,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                  
               </td>
               <td
-                className={undefined}
+                className=""
               >
                 <span>
                   50
@@ -227,7 +227,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
               </td>
             </tr>
             <tr
-              className="negative"
+              className="positive"
             >
               <td
                 className="selectable"
@@ -244,7 +244,7 @@ exports[`<HTMLReportPage reportType="summary"/> 1`] = `
                  
               </td>
               <td
-                className={undefined}
+                className=""
               >
                 <span>
                   50

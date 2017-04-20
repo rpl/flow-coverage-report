@@ -15,7 +15,7 @@ test('<HTMLReportPage reportType="summary"/>', () => {
   const HTMLReportPage = require(REACT_COMPONENT).default;
   const props = {
     reportType: 'summary',
-    coverageSummaryData: FLOW_COVERAGE_SUMMARY_DATA
+    coverageSummaryData: {...FLOW_COVERAGE_SUMMARY_DATA, threshold: 40}
   };
   const tree = renderer.create(<HTMLReportPage {...props}/>).toJSON();
   expect(tree).toMatchSnapshot();

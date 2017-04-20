@@ -19,7 +19,7 @@ exports[`<FlowCoverageFileTableRow /> 1`] = `
      
   </td>
   <td
-    className={undefined}
+    className=""
   >
     <span>
        %

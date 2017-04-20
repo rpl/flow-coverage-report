@@ -13,11 +13,20 @@ const REACT_COMPONENT = `${BASE_DIR}/coverage-summary-table`;
 
 test('<FlowCoverageSummaryTable />', () => {
   const FlowCoverageSummaryTable = require(REACT_COMPONENT).default;
-  const props = {
-    coverageSummaryData: FLOW_COVERAGE_SUMMARY_DATA
+
+  // Expect positive with lower threshold.
+  const positiveSummaryProps = {
+    coverageSummaryData: {...FLOW_COVERAGE_SUMMARY_DATA, threshold: 40}
   };
-  const tree = renderer.create(<FlowCoverageSummaryTable {...props}/>).toJSON();
-  expect(tree).toMatchSnapshot();
+  const positiveSummaryTree = renderer.create(<FlowCoverageSummaryTable {...positiveSummaryProps}/>).toJSON();
+  expect(positiveSummaryTree).toMatchSnapshot();
+
+  // Expect positive with higher threshold.
+  const negativeSummaryProps = {
+    coverageSummaryData: {...FLOW_COVERAGE_SUMMARY_DATA, threshold: 90}
+  };
+  const negativeSummaryTree = renderer.create(<FlowCoverageSummaryTable {...negativeSummaryProps}/>).toJSON();
+  expect(negativeSummaryTree).toMatchSnapshot();
 });
 
 test.skip('<FlowCoverageSummaryTable /> with missing props');

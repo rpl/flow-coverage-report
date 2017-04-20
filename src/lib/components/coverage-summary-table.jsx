@@ -10,10 +10,10 @@ export default function FlowCoverageSummaryTable(props: FlowCoverageReportProps)
   if (!props.coverageSummaryData) {
     throw new Error('Missing coverageSummaryData in props');
   }
-  var summary = props.coverageSummaryData;
-  var percent = summary.percent || NaN;
-  var threshold = summary.threshold || 80;
-  var className = percent >= threshold ? 'positive' : 'negative';
+  const summary = props.coverageSummaryData;
+  const percent = summary.percent || NaN;
+  const threshold = summary.threshold || 80;
+  const className = percent >= threshold ? 'positive' : 'negative';
 
   return (
     <table className="ui small celled table">

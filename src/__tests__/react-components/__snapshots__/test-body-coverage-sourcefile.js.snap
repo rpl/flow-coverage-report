@@ -55,7 +55,7 @@ exports[`<HTMLReportBodySourceFile /> 1`] = `
         </thead>
         <tbody>
           <tr
-            className="negative"
+            className="positive"
           >
             <td
               className=""
@@ -68,7 +68,7 @@ exports[`<HTMLReportBodySourceFile /> 1`] = `
                
             </td>
             <td
-              className={undefined}
+              className=""
             >
               <span>
                 50

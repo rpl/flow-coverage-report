@@ -13,8 +13,6 @@ if (!Array.prototype.find) {
   require('array.prototype.find').shim();
 }
 
-// getCoveredPercent helper.
-
 /* eslint-disable camelcase */
 export function getCoveredPercent(
   {
@@ -33,7 +31,7 @@ export function getCoveredPercent(
 }
 /* eslint-disable-line camelcase */
 
-// checkFlowStatus definitions and its related flow types.
+// Definitions and flow types related to checkFlowStatus.
 
 export type FlowTypeErrorPosition = {
   offset: number,
@@ -103,7 +101,7 @@ export async function checkFlowStatus(
   try {
     statusData = JSON.parse(String(res.stdout));
   } catch (err) {
-    let unexpectedException: ?SyntaxError = err;
+    const unexpectedException: ?SyntaxError = err;
 
     // Verify the integrity of the format of the JSON status result.
     if (unexpectedException) {
@@ -118,7 +116,7 @@ export async function checkFlowStatus(
   throw new Error('Invalid Flow status JSON format');
 }
 
-// collectFlowCoverageForFile definitions and its related flow types.
+// Definitions and flow types related to collectFlowCoverageForFile.
 
 export type FlowUncoveredPos = {
   line: number,
@@ -251,7 +249,7 @@ export async function collectFlowCoverageForFile(
   };
 }
 
-// collectForCoverage definitions and its related flow types.
+// Definition and flow types related to collectForCoverage.
 
 type FlowAnnotationSummary = {
   passed: boolean,
@@ -286,7 +284,7 @@ export function summarizeAnnotations(
 
   const filenames = Object.keys(coverageSummaryData.files);
 
-  filenames.forEach(function (filename) {
+  filenames.forEach(filename => {
     switch (coverageSummaryData.files[filename].annotation) {
       case 'flow':
         flowFiles += 1;
@@ -322,8 +320,8 @@ export function collectFlowCoverage(
   tmpDirPath: ?string,
 ): Promise<FlowCoverageSummaryData> {
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
-    var now = new Date();
-    var coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
+    const now = new Date();
+    const coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
 
     const annotationSummary = {
       passed: false,
@@ -333,17 +331,17 @@ export function collectFlowCoverage(
       totalFiles: 0
     };
 
-    var coverageSummaryData: FlowCoverageSummaryData = {
+    const coverageSummaryData: FlowCoverageSummaryData = {
       threshold,
       covered_count: 0, uncovered_count: 0, // eslint-disable-line camelcase
       percent: 0,
       generatedAt: coverageGeneratedAt,
-      flowStatus: flowStatus,
+      flowStatus,
       flowAnnotations: annotationSummary,
       files: {},
-      globIncludePatterns: globIncludePatterns,
-      globExcludePatterns: globExcludePatterns,
-      concurrentFiles: concurrentFiles
+      globIncludePatterns,
+      globExcludePatterns,
+      concurrentFiles
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -403,7 +401,7 @@ export function collectFlowCoverage(
             // If we have collected at least `concurrentFiles` number of files,
             // wait the queue to be drained.
             if (waitForCollectedDataFromFiles.length >= concurrentFiles) {
-              await drainQueue();
+              await drainQueue(); // eslint-disable-line no-await-in-loop
             }
           }
 

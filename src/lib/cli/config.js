@@ -29,15 +29,15 @@ export const defaultConfig = {
 const getProjectDir = config => ({...defaultConfig, ...config}).projectDir;
 
 /**
- * try to load configuration parameters from the project dir if the following order:
+ * Try to load configuration parameters from the project dir if the following order:
  * - do not load any config if --no-config option is specified
  * - from the package.json "flow-coverage-report" property, if any
  * - from a .flow-coverage-report.json, if any
  * - from the --config cli parameter, if any
  */
 export function loadConfig(args) {
-  // remove any undefined property from the yargs object.
-  for (let key of Object.keys(args)) {
+  // Remove any undefined property from the yargs object.
+  for (const key of Object.keys(args)) {
     if (typeof args[key] === 'undefined') {
       delete args[key];
     }
@@ -55,9 +55,9 @@ export function loadConfig(args) {
   }
 
   if (args.config) {
-    let filePath = path.resolve(args.config);
-    let fileRawData = fs.readFileSync(filePath);
-    let fileConfigData = parseJSON(stripJSONComments(`${fileRawData}`));
+    const filePath = path.resolve(args.config);
+    const fileRawData = fs.readFileSync(filePath);
+    const fileConfigData = parseJSON(stripJSONComments(`${fileRawData}`));
 
     if (process.env.VERBOSE) {
       console.log('Loaded config from file', filePath, fileConfigData);
@@ -74,7 +74,7 @@ export function loadConfig(args) {
 
   try {
     packageJSONPath = path.resolve(path.join(getProjectDir(args), 'package.json'));
-    let pkg = require(packageJSONPath); // eslint-disable-line import/no-dynamic-require
+    const pkg = require(packageJSONPath); // eslint-disable-line import/no-dynamic-require
     if (pkg['flow-coverage-report']) {
       if (process.env.VERBOSE) {
         console.log('Loaded config from package.json', pkg['flow-coverage-report']);
@@ -96,8 +96,8 @@ export function loadConfig(args) {
 
   try {
     projectConfigPath = path.resolve(path.join(getProjectDir(args), '.flow-coverage-report.json'));
-    let projectConfigRaw = fs.readFileSync(projectConfigPath);
-    let projectConfigData = parseJSON(stripJSONComments(`${projectConfigRaw}`));
+    const projectConfigRaw = fs.readFileSync(projectConfigPath);
+    const projectConfigData = parseJSON(stripJSONComments(`${projectConfigRaw}`));
 
     if (process.env.VERBOSE) {
       console.log('Loaded config from project dir', projectConfigPath, projectConfigData);

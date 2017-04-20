@@ -28,18 +28,17 @@ export type FlowCoverageReportProps = {
     css?: Array<string>,
     js?: Array<string>
   },
-  coverageSummaryData?: FlowCoverageSummaryData,
+  coverageSummaryData: FlowCoverageSummaryData,
   coverageData?: FlowCoverageJSONData,
   fileName?: string,
   fileContent?: string|Buffer,
   summaryRelLink?: string,
-  threshold?: number,
   htmlTemplateOptions?: Object,
 };
 /* eslint-enable */
 
 export default function HTMLReportPage(props: FlowCoverageReportProps) {
-  var HTMLReportBody = props.reportType === 'sourcefile' ?
+  const HTMLReportBody = props.reportType === 'sourcefile' ?
         HTMLReportBodySourceFile : HTMLReportBodySummary;
 
   return (<html>
@@ -47,3 +46,11 @@ export default function HTMLReportPage(props: FlowCoverageReportProps) {
     <HTMLReportBody {...props}/>
   </html>);
 }
+
+HTMLReportPage.defaultProps = {
+  coverageData: null,
+  fileName: null,
+  fileContent: null,
+  htmlTemplateOptions: null,
+  summaryRelLink: null
+};

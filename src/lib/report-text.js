@@ -115,7 +115,7 @@ function renderTextReport(
 
   summaryTable.push(['project', 'percent', 'total', 'covered', 'uncovered']);
   const summaryTotal = coverageData.covered_count + coverageData.uncovered_count;
-  let summaryPercent = coverageData.percent || 0;
+  const summaryPercent = coverageData.percent || 0;
 
   let summaryColor;
   if (summaryPercent >= (opts.threshold || 80)) {

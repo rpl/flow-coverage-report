@@ -12,8 +12,8 @@ import FlowCoverageHTMLReport from './components/html-report-page'; // eslint-di
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
 
-var baseSemanticAssets = ['themes', 'default', 'assets'];
-var assetsList = [
+const baseSemanticAssets = ['themes', 'default', 'assets'];
+const assetsList = [
   'jquery-3.1.0.min.js',
   'semantic.min.js',
   'semantic.min.css',
@@ -28,23 +28,21 @@ var assetsList = [
   'flow-highlight-source.js',
   'flow-highlight-source.css',
   'flow-coverage-report.css'
-].concat(
-[
-    ['images', 'flags.png'],
-    ['fonts', 'icons.eot'],
-    ['fonts', 'icons.otf'],
-    ['fonts', 'icons.svg'],
-    ['fonts', 'icons.ttf'],
-    ['fonts', 'icons.woff'],
-    ['fonts', 'icons.woff2']
-].map(function (el) {
+].concat([
+  ['images', 'flags.png'],
+  ['fonts', 'icons.eot'],
+  ['fonts', 'icons.otf'],
+  ['fonts', 'icons.svg'],
+  ['fonts', 'icons.ttf'],
+  ['fonts', 'icons.woff'],
+  ['fonts', 'icons.woff2']
+].map(el => {
   return path.join.apply(null, baseSemanticAssets.concat(el));
-})
-);
+}));
 
 function copyAsset(outputDir, assetName) {
-  var srcfileReady = readFile(path.join(__dirname, '..', '..', 'assets', assetName));
-  var createDestDir = mkdirp(path.join(outputDir, 'assets', path.dirname(assetName)));
+  const srcfileReady = readFile(path.join(__dirname, '..', '..', 'assets', assetName));
+  const createDestDir = mkdirp(path.join(outputDir, 'assets', path.dirname(assetName)));
 
   function destFileWritten(data) {
     return writeFile(path.join(outputDir, 'assets', assetName), data);
@@ -52,8 +50,8 @@ function copyAsset(outputDir, assetName) {
 
   return Promise.all([
     srcfileReady, createDestDir
-  ]).then(function (res) {
-    var srcFileData = res[0];
+  ]).then(res => {
+    const srcFileData = res[0];
 
     return destFileWritten(srcFileData);
   });
@@ -81,19 +79,16 @@ function renderHTMLReport(opt/* : Object */) {
   }
 
   function summaryReportContent() {
-    return new Promise(function (resolve) {
-      var reportFilePath;
-      var reportFileContent;
-      var toRelative = relativeToFilename.bind(null, '');
+    return new Promise(resolve => {
+      const toRelative = relativeToFilename.bind(null, '');
 
-      reportFilePath = path.join(opt.outputDir, 'index.html');
-
-      reportFileContent = '<!DOCTYPE html>\n' +
+      const reportFilePath = path.join(opt.outputDir, 'index.html');
+      const reportFileContent = '<!DOCTYPE html>\n' +
         react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
           htmlTemplateOptions: opt.htmlTemplateOptions,
           reportType: opt.type,
           coverageGeneratedAt: opt.coverageGeneratedAt,
-          coverageSummaryData: opt.data,
+          coverageSummaryData: opt.coverageSummaryData,
           assets: {
             css: [
               'semantic.min.css',
@@ -109,26 +104,27 @@ function renderHTMLReport(opt/* : Object */) {
         }));
 
       resolve({
-        reportFilePath: reportFilePath,
-        reportFileContent: reportFileContent
+        reportFilePath,
+        reportFileContent
       });
     });
   }
 
   function sourceReportContent() {
-    return new Promise(function (resolve, reject) {
-      var srcPath = path.join(opt.projectDir, opt.filename);
-      var dirName = path.dirname(opt.filename);
-      var toRelative = relativeToFilename.bind(null, 'sourcefiles');
+    return new Promise((resolve, reject) => {
+      const srcPath = path.join(opt.projectDir, opt.filename);
+      const dirName = path.dirname(opt.filename);
+      const toRelative = relativeToFilename.bind(null, 'sourcefiles');
 
-      return mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName)).then(function () {
-        return readFile(srcPath).then(function (buff) {
-          var reportFileContent = '<!DOCTYPE html>\n' +
+      return mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName)).then(() => {
+        return readFile(srcPath).then(buff => {
+          const reportFileContent = '<!DOCTYPE html>\n' +
                 react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
                   htmlTemplateOptions: opt.htmlTemplateOptions,
                   reportType: opt.type,
                   coverageGeneratedAt: opt.coverageGeneratedAt,
-                  coverageData: opt.data,
+                  coverageSummaryData: opt.coverageSummaryData,
+                  coverageData: opt.coverageData,
                   fileName: opt.filename,
                   fileContent: buff,
                   summaryRelLink: toRelative('index.html'),
@@ -154,17 +150,17 @@ function renderHTMLReport(opt/* : Object */) {
                   }
                 }));
 
-          var reportFilePath = path.join(opt.outputDir, 'sourcefiles', opt.filename) + '.html';
+          const reportFilePath = path.join(opt.outputDir, 'sourcefiles', opt.filename) + '.html';
           resolve({
-            reportFilePath: reportFilePath,
-            reportFileContent: reportFileContent
+            reportFilePath,
+            reportFileContent
           });
         }, reject);
       }, reject);
     });
   }
 
-  var waitForReportContent;
+  let waitForReportContent;
 
   if (opt.type === 'summary') {
     waitForReportContent = summaryReportContent();
@@ -175,12 +171,12 @@ function renderHTMLReport(opt/* : Object */) {
   }
 
   if (waitForReportContent) {
-    return waitForReportContent.then(function (res) {
-      var reportFilePath = res.reportFilePath;
-      var reportFileContent = res.reportFileContent;
+    return waitForReportContent.then(res => {
+      const reportFilePath = res.reportFilePath;
+      const reportFileContent = res.reportFileContent;
 
-      return mkdirp(path.dirname(reportFilePath)).then(function () {
-        return writeFile(reportFilePath, new Buffer(reportFileContent));
+      return mkdirp(path.dirname(reportFilePath)).then(() => {
+        return writeFile(reportFilePath, Buffer.from(reportFileContent));
       });
     });
   }
@@ -192,27 +188,29 @@ function generateFlowCoverageReportHTML(
   coverageSummaryData: FlowCoverageSummaryData,
   opts: FlowCoverageReportOptions
 ) {
-  var projectDir = opts.projectDir;
-  var outputDir = opts.outputDir;
-  var coverageGeneratedAt = coverageSummaryData.generatedAt;
-  var generateSummary = renderHTMLReport({
+  const projectDir = opts.projectDir;
+  const outputDir = opts.outputDir;
+  const coverageGeneratedAt = coverageSummaryData.generatedAt;
+  const generateSummary = renderHTMLReport({
     type: 'summary', filename: null,
     htmlTemplateOptions: opts.htmlTemplateOptions,
-    coverageGeneratedAt, projectDir, data: coverageSummaryData, outputDir
+    coverageSummaryData,
+    coverageGeneratedAt, projectDir, outputDir
   });
 
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
   }
 
-  var waitForCopyAssets = copyAssets(outputDir);
-  var generateSourceFiles = Object.keys(coverageSummaryData.files)
-        .map(function (filename) {
-          var data = coverageSummaryData.files[filename];
+  const waitForCopyAssets = copyAssets(outputDir);
+  const generateSourceFiles = Object.keys(coverageSummaryData.files)
+        .map(filename => {
+          const coverageData = coverageSummaryData.files[filename];
           return renderHTMLReport({
             type: 'sourcefile', coverageGeneratedAt,
             htmlTemplateOptions: opts.htmlTemplateOptions,
-            projectDir, filename, data, outputDir
+            coverageSummaryData,
+            projectDir, filename, coverageData, outputDir
           });
         });
   return Promise.all(
@@ -224,8 +222,8 @@ function generateFlowCoverageReportHTML(
 }
 
 export default {
-  assetsList: assetsList,
-  copyAssets: copyAssets,
+  assetsList,
+  copyAssets,
   render: renderHTMLReport,
   generate: generateFlowCoverageReportHTML
 };
