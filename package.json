@@ -129,45 +129,7 @@
     ],
     "ignore": [
       "assets/"
-    ],
-    "env": {
-      "test": {
-        "plugins": [
-          [
-            "istanbul",
-            {
-              "include": [
-                "src/lib/**/*.js",
-                "src/lib/**/*.jsx"
-              ]
-            }
-          ]
-        ]
-      }
-    }
-  },
-  "ava": {
-    "files": [
-      "dist/test/**/test-*.js"
     ]
-  },
-  "nyc": {
-    "reporter": [
-      "lcov",
-      "html",
-      "text"
-    ],
-    "extension": [
-      ".js",
-      ".jsx"
-    ],
-    "include": [
-      "dist/lib/**/*.js",
-      "dist/lib/**/*.jsx"
-    ],
-    "sourceMap": false,
-    "instrument": false,
-    "all": true
   },
   "flow-coverage-report": {
     "includeGlob": [
