@@ -68,11 +68,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps)
   if (!coverageData || !coverageSummaryData) {
     throw new Error('Missing coverage data props');
   }
-  const percent = typeof coverageData.percent === 'number' ? coverageData.percent : NaN;
-
-  if (!coverageData.percent) {
-    throw new Error('Missing percent in coverageData');
-  }
+  const {percent} = coverageData;
 
   const threshold = coverageSummaryData.threshold;
 

@@ -138,7 +138,7 @@ export type FlowCoverageJSONData = {
   },
   filename?: string,
   annotation?: 'no flow' | 'flow weak' | 'flow',
-  percent?: number,
+  percent: number,
   error?: string,
   isError?: boolean,
   flowCoverageError?: ?string,
@@ -198,6 +198,7 @@ export async function collectFlowCoverageForFile(
     // generated report.
     return {
       ...emptyCoverageData,
+      percent: NaN,
       isError: true,
       flowCoverageError: undefined,
       flowCoverageException: res.err && res.err.message,
@@ -241,6 +242,7 @@ export async function collectFlowCoverageForFile(
 
   return {
     ...emptyCoverageData,
+    percent: NaN,
     isError: true,
     flowCoverageError: parsedData && parsedData.error,
     flowCoverageException: undefined,
