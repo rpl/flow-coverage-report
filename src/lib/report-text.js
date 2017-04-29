@@ -36,7 +36,7 @@ function renderTextReport(
     const annotation = data.annotation || 'no flow';
     const covered = data.expressions.covered_count;
     const uncovered = data.expressions.uncovered_count;
-    const percent = data.percent || NaN;
+    const percent = typeof data.percent === 'number' ? data.percent : NaN;
 
     filesTable.push([
       filename,
@@ -115,7 +115,7 @@ function renderTextReport(
 
   summaryTable.push(['project', 'percent', 'total', 'covered', 'uncovered']);
   const summaryTotal = coverageData.covered_count + coverageData.uncovered_count;
-  const summaryPercent = coverageData.percent || 0;
+  const summaryPercent = typeof coverageData.percent === 'number' ? coverageData.percent : NaN;
 
   let summaryColor;
   if (summaryPercent >= (opts.threshold || 80)) {
