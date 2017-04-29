@@ -1,0 +1,40 @@
+'use babel';
+
+import path from 'path';
+
+import {
+  FIXTURE_PATH,
+  runFlowCoverageReport
+} from '../../common';
+
+const testProjectDir = path.join(FIXTURE_PATH, 'project-low-coverage');
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
+
+describe('CLI exit value', async () => {
+  it('should exit with code 2 when total coverage is lower than the default threshold', async () => {
+    const {exitCode, error} = await runFlowCoverageReport([
+      '-i', `"src/*.js"`
+    ], {cwd: testProjectDir});
+
+    expect({exitCode, error}).toMatchSnapshot();
+  });
+
+  it('should exit with code 2 when total coverage is lower than the custom threshold', async () => {
+    const {exitCode, error} = await runFlowCoverageReport([
+      '-i', `"src/*.js"`,
+      '--threshold', '22'
+    ], {cwd: testProjectDir});
+
+    expect({exitCode, error}).toMatchSnapshot();
+  });
+
+  it('should exit with code 0 when total coverage is higher than the custom threshold', async () => {
+    const {exitCode, error} = await runFlowCoverageReport([
+      '-i', `"src/*.js"`,
+      '--threshold', '10'
+    ], {cwd: testProjectDir});
+
+    expect({exitCode, error}).toMatchSnapshot();
+  });
+});

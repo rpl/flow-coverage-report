@@ -17,7 +17,9 @@
     "build": "rm -Rf dist && babel -d dist src --only src/lib --source-maps",
     "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
-    "jest": "jest --coverage",
+    "jest:unit": "jest --coverage src/__tests__",
+    "jest:integrations": "jest __tests__/integrations -i",
+    "jest": "npm run jest:unit && npm run jest:integrations",
     "lint": "xo --reporter=compact",
     "prepublish": "npm run build",
     "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run jest && npm run flow-coverage"
@@ -84,7 +86,8 @@
       "assets/**/*",
       "node_modules/**/*",
       "coverage/**/*",
-      "flow-coverage/**/*"
+      "flow-coverage/**/*",
+      "__tests__/**/fixtures/**/*"
     ],
     "plugins": [
       "flowtype",
@@ -101,7 +104,10 @@
     },
     "overrides": [
       {
-        "files": "src/__tests__/**/**.js",
+        "files": [
+          "src/__tests__/**/**.js",
+          "__tests__/**/**.js"
+        ],
         "envs": [
           "jest/globals"
         ],
@@ -164,7 +170,8 @@
     },
     "testEnvironment": "node",
     "testMatch": [
-      "<rootDir>/src/__tests__/**/test-*.js?(x)"
+      "<rootDir>/src/__tests__/**/test-*.js?(x)",
+      "<rootDir>/__tests__/**/test-*.js?(x)"
     ],
     "testPathIgnorePatterns": [
       "node_modules/"
