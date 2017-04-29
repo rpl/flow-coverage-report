@@ -18,7 +18,7 @@
     "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
     "jest:unit": "jest --coverage src/__tests__",
-    "jest:integrations": "jest __tests__/integrations",
+    "jest:integrations": "jest __tests__/integrations -i",
     "jest": "npm run jest:unit && npm run jest:integrations",
     "lint": "xo --reporter=compact",
     "prepublish": "npm run build",
