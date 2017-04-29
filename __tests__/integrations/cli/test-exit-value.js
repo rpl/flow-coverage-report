@@ -9,6 +9,8 @@ import {
 
 const testProjectDir = path.join(FIXTURE_PATH, 'project-low-coverage');
 
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
+
 describe('CLI exit value', async () => {
   it('should exit with code 2 when total coverage is lower than the default threshold', async () => {
     const {exitCode, error} = await runFlowCoverageReport([
