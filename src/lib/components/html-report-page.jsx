@@ -22,7 +22,6 @@ export type FlowUncoveredLocsProps = {
 
 /* eslint-disable react/no-unused-prop-types */
 export type FlowCoverageReportProps = {
-  reportType: 'summary' | 'sourcefile',
   coverageGeneratedAt: string,
   assets: {
     css?: Array<string>,
@@ -37,13 +36,17 @@ export type FlowCoverageReportProps = {
 };
 /* eslint-enable */
 
-export default function HTMLReportPage(props: FlowCoverageReportProps) {
-  const HTMLReportBody = props.reportType === 'sourcefile' ?
-        HTMLReportBodySourceFile : HTMLReportBodySummary;
-
+export function HTMLReportSummaryPage(props: FlowCoverageReportProps) {
   return (<html>
     <HTMLReportHead {...props}/>
-    <HTMLReportBody {...props}/>
+    <HTMLReportBodySummary {...props}/>
+  </html>);
+}
+
+export function HTMLReportSourceFilePage(props: FlowCoverageReportProps) {
+  return (<html>
+    <HTMLReportHead {...props}/>
+    <HTMLReportBodySourceFile {...props}/>
   </html>);
 }
 
