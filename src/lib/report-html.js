@@ -126,6 +126,7 @@ function renderHTMLReport(opt/* : Object */) {
                   fileName: opt.filename,
                   fileContent: buff,
                   summaryRelLink: toRelative('index.html'),
+                  threshold: opt.threshold,
                   assets: {
                     css: [
                       'semantic.min.css',
@@ -187,27 +188,35 @@ function generateFlowCoverageReportHTML(
 ) {
   const projectDir = opts.projectDir;
   const outputDir = opts.outputDir;
-  const coverageGeneratedAt = coverageSummaryData.generatedAt;
-  const generateSummary = renderHTMLReport({
-    type: 'summary', filename: null,
-    htmlTemplateOptions: opts.htmlTemplateOptions,
-    coverageSummaryData,
-    coverageGeneratedAt, projectDir, outputDir
-  });
 
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
   }
+
+  const coverageGeneratedAt = coverageSummaryData.generatedAt;
+  const generateSummary = renderHTMLReport({
+    type: 'summary',
+    filename: null,
+    htmlTemplateOptions: opts.htmlTemplateOptions,
+    coverageSummaryData,
+    coverageGeneratedAt,
+    projectDir,
+    outputDir
+  });
 
   const waitForCopyAssets = copyAssets(outputDir);
   const generateSourceFiles = Object.keys(coverageSummaryData.files)
         .map(filename => {
           const coverageData = coverageSummaryData.files[filename];
           return renderHTMLReport({
-            type: 'sourcefile', coverageGeneratedAt,
+            type: 'sourcefile',
+            coverageGeneratedAt,
             htmlTemplateOptions: opts.htmlTemplateOptions,
             coverageSummaryData,
-            projectDir, filename, coverageData, outputDir
+            projectDir,
+            filename,
+            coverageData,
+            outputDir
           });
         });
   return Promise.all(

@@ -20,40 +20,55 @@ export type FlowUncoveredLocsProps = {
   uncovered_locs: Array<FlowUncoveredLoc>
 };
 
-/* eslint-disable react/no-unused-prop-types */
-export type FlowCoverageReportProps = {
-  coverageGeneratedAt: string,
+export type FlowReportMetaProps = {
   assets: {
     css?: Array<string>,
     js?: Array<string>
   },
-  coverageSummaryData: FlowCoverageSummaryData,
-  coverageData?: FlowCoverageJSONData,
-  fileName?: string,
-  fileContent?: string|Buffer,
-  summaryRelLink?: string,
-  htmlTemplateOptions?: Object,
+  coverageGeneratedAt: string,
+  htmlTemplateOptions: {
+    autoHeightSource?: boolean,
+  },
 };
-/* eslint-enable */
 
-export function HTMLReportSummaryPage(props: FlowCoverageReportProps) {
+export type FlowCoverageSummaryReportProps = {
+  assets: {
+    css?: Array<string>,
+    js?: Array<string>
+  },
+  coverageGeneratedAt: string,
+  htmlTemplateOptions: {
+    autoHeightSource?: boolean,
+  },
+  coverageSummaryData: FlowCoverageSummaryData,
+};
+
+export type FlowCoverageSourceFileReportProps = {
+  assets: {
+    css?: Array<string>,
+    js?: Array<string>
+  },
+  coverageGeneratedAt: string,
+  htmlTemplateOptions: {
+    autoHeightSource?: boolean,
+  },
+  coverageSummaryData: FlowCoverageSummaryData,
+  coverageData: FlowCoverageJSONData,
+  fileName: string,
+  fileContent: string|Buffer,
+  summaryRelLink: string,
+};
+
+export function HTMLReportSummaryPage(props: FlowCoverageSummaryReportProps) {
   return (<html>
     <HTMLReportHead {...props}/>
     <HTMLReportBodySummary {...props}/>
   </html>);
 }
 
-export function HTMLReportSourceFilePage(props: FlowCoverageReportProps) {
+export function HTMLReportSourceFilePage(props: FlowCoverageSourceFileReportProps) {
   return (<html>
     <HTMLReportHead {...props}/>
     <HTMLReportBodySourceFile {...props}/>
   </html>);
 }
-
-HTMLReportPage.defaultProps = {
-  coverageData: null,
-  fileName: null,
-  fileContent: null,
-  htmlTemplateOptions: null,
-  summaryRelLink: null
-};

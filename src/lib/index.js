@@ -23,7 +23,7 @@ export type FlowCoverageReportOptions = {
   outputDir: string,
   reportTypes?: Array<FlowCoverageReportType>,
   htmlTemplateOptions?: Object,
-  threshold?: number,
+  threshold: number,
   concurrentFiles?: number,
   log: Function
 };

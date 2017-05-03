@@ -11,7 +11,7 @@ import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {
-  FlowCoverageReportProps,
+  FlowCoverageSourceFileReportProps,
   FlowUncoveredLocsProps
 } from './html-report-page';
 /* eslint-enable */
@@ -58,7 +58,7 @@ function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
   );
 }
 
-export default function HTMLReportBodySourceFile(props: FlowCoverageReportProps) {
+export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileReportProps) {
   const {fileName, fileContent} = props;
   if (!fileName) {
     throw new Error('Missing fileName in props');

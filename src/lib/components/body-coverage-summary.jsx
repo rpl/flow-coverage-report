@@ -11,10 +11,10 @@ import FlowCoverageFileTableHead from './coverage-file-table-head';
 import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
-import type {FlowCoverageReportProps} from './html-report-page';
+import type {FlowCoverageSummaryReportProps} from './html-report-page';
 /* eslint-enable */
 
-export default function HTMLReportBodySummary(props: FlowCoverageReportProps) {
+export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportProps) {
   const summary = props.coverageSummaryData;
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');
