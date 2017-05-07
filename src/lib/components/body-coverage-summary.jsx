@@ -71,7 +71,12 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
         </div>
         <div className="row">
           <h4 className="ui header">Summary</h4>
-          <FlowCoverageSummaryTable {...props}/>
+          <FlowCoverageSummaryTable
+            assets={props.assets}
+            coverageGeneratedAt={props.coverageGeneratedAt}
+            htmlTemplateOptions={props.htmlTemplateOptions}
+            coverageSummaryData={props.coverageSummaryData}
+            />
         </div>
         {
           meterBar
