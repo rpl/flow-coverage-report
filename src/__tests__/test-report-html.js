@@ -9,21 +9,14 @@ const LIB_PROMISIFIED = '../lib/promisified';
 const LIB_REACT_COMPONENT = '../lib/components/html-report-page.jsx';
 const NPM_REACT = 'react-dom/server';
 
+jest.mock(NPM_REACT);
+jest.mock(LIB_REACT_COMPONENT);
+
 beforeEach(() => {
   jest.resetModules();
 });
 
 it('generate HTML report', async () => {
-  const mockStubReact = {
-    renderToStaticMarkup: jest.fn()
-  };
-  jest.mock(NPM_REACT, () => mockStubReact);
-
-  const mockReactComponent = () => {
-    return {};
-  };
-  jest.mock(LIB_REACT_COMPONENT, () => mockReactComponent);
-
   const mockMkdirp = jest.fn();
   const mockReadFile = jest.fn();
   const mockWriteFile = jest.fn();

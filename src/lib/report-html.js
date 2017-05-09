@@ -7,7 +7,7 @@ import React from 'react';
 import react from 'react-dom/server';
 
 import {mkdirp, readFile, writeFile} from './promisified';
-import FlowCoverageHTMLReport from './components/html-report-page'; // eslint-disable-line import/no-unresolved
+import {HTMLReportSummaryPage, HTMLReportSourceFilePage} from './components/html-report-page'; // eslint-disable-line import/no-unresolved
 
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
@@ -84,9 +84,8 @@ function renderHTMLReport(opt/* : Object */) {
 
       const reportFilePath = path.join(opt.outputDir, 'index.html');
       const reportFileContent = '<!DOCTYPE html>\n' +
-        react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
+        react.renderToStaticMarkup(React.createElement(HTMLReportSummaryPage, {
           htmlTemplateOptions: opt.htmlTemplateOptions,
-          reportType: opt.type,
           coverageGeneratedAt: opt.coverageGeneratedAt,
           coverageSummaryData: opt.coverageSummaryData,
           assets: {
@@ -119,15 +118,15 @@ function renderHTMLReport(opt/* : Object */) {
       return mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName)).then(() => {
         return readFile(srcPath).then(buff => {
           const reportFileContent = '<!DOCTYPE html>\n' +
-                react.renderToStaticMarkup(React.createElement(FlowCoverageHTMLReport, {
+                react.renderToStaticMarkup(React.createElement(HTMLReportSourceFilePage, {
                   htmlTemplateOptions: opt.htmlTemplateOptions,
-                  reportType: opt.type,
                   coverageGeneratedAt: opt.coverageGeneratedAt,
                   coverageSummaryData: opt.coverageSummaryData,
                   coverageData: opt.coverageData,
                   fileName: opt.filename,
                   fileContent: buff,
                   summaryRelLink: toRelative('index.html'),
+                  threshold: opt.threshold,
                   assets: {
                     css: [
                       'semantic.min.css',
@@ -162,26 +161,25 @@ function renderHTMLReport(opt/* : Object */) {
 
   let waitForReportContent;
 
-  if (opt.type === 'summary') {
-    waitForReportContent = summaryReportContent();
+  switch (opt.type) {
+    case 'summary':
+      waitForReportContent = summaryReportContent();
+      break;
+    case 'sourcefile':
+      waitForReportContent = sourceReportContent();
+      break;
+    default:
+      return Promise.reject(new Error('Unknown report type: ' + opt.type));
   }
 
-  if (opt.type === 'sourcefile') {
-    waitForReportContent = sourceReportContent();
-  }
+  return waitForReportContent.then(res => {
+    const reportFilePath = res.reportFilePath;
+    const reportFileContent = res.reportFileContent;
 
-  if (waitForReportContent) {
-    return waitForReportContent.then(res => {
-      const reportFilePath = res.reportFilePath;
-      const reportFileContent = res.reportFileContent;
-
-      return mkdirp(path.dirname(reportFilePath)).then(() => {
-        return writeFile(reportFilePath, Buffer.from(reportFileContent));
-      });
+    return mkdirp(path.dirname(reportFilePath)).then(() => {
+      return writeFile(reportFilePath, Buffer.from(reportFileContent));
     });
-  }
-
-  return Promise.reject(new Error('Unknown report type: ' + opt.type));
+  });
 }
 
 function generateFlowCoverageReportHTML(
@@ -190,27 +188,35 @@ function generateFlowCoverageReportHTML(
 ) {
   const projectDir = opts.projectDir;
   const outputDir = opts.outputDir;
-  const coverageGeneratedAt = coverageSummaryData.generatedAt;
-  const generateSummary = renderHTMLReport({
-    type: 'summary', filename: null,
-    htmlTemplateOptions: opts.htmlTemplateOptions,
-    coverageSummaryData,
-    coverageGeneratedAt, projectDir, outputDir
-  });
 
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
   }
+
+  const coverageGeneratedAt = coverageSummaryData.generatedAt;
+  const generateSummary = renderHTMLReport({
+    type: 'summary',
+    filename: null,
+    htmlTemplateOptions: opts.htmlTemplateOptions,
+    coverageSummaryData,
+    coverageGeneratedAt,
+    projectDir,
+    outputDir
+  });
 
   const waitForCopyAssets = copyAssets(outputDir);
   const generateSourceFiles = Object.keys(coverageSummaryData.files)
         .map(filename => {
           const coverageData = coverageSummaryData.files[filename];
           return renderHTMLReport({
-            type: 'sourcefile', coverageGeneratedAt,
+            type: 'sourcefile',
+            coverageGeneratedAt,
             htmlTemplateOptions: opts.htmlTemplateOptions,
             coverageSummaryData,
-            projectDir, filename, coverageData, outputDir
+            projectDir,
+            filename,
+            coverageData,
+            outputDir
           });
         });
   return Promise.all(
