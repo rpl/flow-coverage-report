@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<HTMLReportPage reportType="summary"/> 1`] = `
+exports[`<HTMLReportSummaryPage/> 1`] = `
 <html>
   <head>
     <meta

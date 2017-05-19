@@ -4,16 +4,15 @@
 
 import React from 'react';
 
-import type {FlowCoverageReportProps} from './html-report-page'; // eslint-disable-line import/no-unresolved
+import type {FlowCoverageSummaryReportProps} from './html-report-page'; // eslint-disable-line import/no-unresolved
 
-export default function FlowCoverageSummaryTable(props: FlowCoverageReportProps) {
+export default function FlowCoverageSummaryTable(props: FlowCoverageSummaryReportProps) {
   if (!props.coverageSummaryData) {
     throw new Error('Missing coverageSummaryData in props');
   }
   const summary = props.coverageSummaryData;
   const percent = summary.percent;
-  const threshold = summary.threshold || 80;
-  const className = percent >= threshold ? 'positive' : 'negative';
+  const className = percent >= summary.threshold ? 'positive' : 'negative';
 
   return (
     <table className="ui small celled table">

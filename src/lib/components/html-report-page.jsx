@@ -20,37 +20,53 @@ export type FlowUncoveredLocsProps = {
   uncovered_locs: Array<FlowUncoveredLoc>
 };
 
-/* eslint-disable react/no-unused-prop-types */
-export type FlowCoverageReportProps = {
-  reportType: 'summary' | 'sourcefile',
-  coverageGeneratedAt: string,
+export type FlowReportMetaProps = {
   assets: {
     css?: Array<string>,
     js?: Array<string>
   },
-  coverageSummaryData: FlowCoverageSummaryData,
-  coverageData?: FlowCoverageJSONData,
-  fileName?: string,
-  fileContent?: string|Buffer,
-  summaryRelLink?: string,
-  htmlTemplateOptions?: Object,
+  coverageGeneratedAt: string,
+  htmlTemplateOptions: {
+    autoHeightSource?: boolean,
+  },
 };
-/* eslint-enable */
 
-export default function HTMLReportPage(props: FlowCoverageReportProps) {
-  const HTMLReportBody = props.reportType === 'sourcefile' ?
-        HTMLReportBodySourceFile : HTMLReportBodySummary;
+export type FlowCoverageSummaryReportProps = FlowReportMetaProps & {
+  coverageSummaryData: FlowCoverageSummaryData,
+};
 
+export type FlowCoverageSourceFileReportProps = FlowReportMetaProps & {
+  coverageSummaryData: FlowCoverageSummaryData,
+  coverageData: FlowCoverageJSONData,
+  fileName: string,
+  fileContent: string|Buffer,
+  summaryRelLink: string,
+};
+
+export function HTMLReportSummaryPage(props: FlowCoverageSummaryReportProps) {
   return (<html>
     <HTMLReportHead {...props}/>
-    <HTMLReportBody {...props}/>
+    <HTMLReportBodySummary
+      assets={props.assets}
+      coverageGeneratedAt={props.coverageGeneratedAt}
+      htmlTemplateOptions={props.htmlTemplateOptions}
+      coverageSummaryData={props.coverageSummaryData}
+      />
   </html>);
 }
 
-HTMLReportPage.defaultProps = {
-  coverageData: null,
-  fileName: null,
-  fileContent: null,
-  htmlTemplateOptions: null,
-  summaryRelLink: null
-};
+export function HTMLReportSourceFilePage(props: FlowCoverageSourceFileReportProps) {
+  return (<html>
+    <HTMLReportHead {...props}/>
+    <HTMLReportBodySourceFile
+      assets={props.assets}
+      coverageGeneratedAt={props.coverageGeneratedAt}
+      htmlTemplateOptions={props.htmlTemplateOptions}
+      coverageSummaryData={props.coverageSummaryData}
+      coverageData={props.coverageData}
+      fileName={props.fileName}
+      fileContent={props.fileContent}
+      summaryRelLink={props.summaryRelLink}
+      />
+  </html>);
+}

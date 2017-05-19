@@ -11,14 +11,13 @@ import {BASE_DIR} from './common';
 
 const REACT_COMPONENT = `${BASE_DIR}/html-report-page`;
 
-test('<HTMLReportPage reportType="summary"/>', () => {
-  const HTMLReportPage = require(REACT_COMPONENT).default;
+test('<HTMLReportSummaryPage/>', () => {
+  const HTMLReportSummaryPage = require(REACT_COMPONENT).HTMLReportSummaryPage;
   const props = {
-    reportType: 'summary',
     coverageSummaryData: {...FLOW_COVERAGE_SUMMARY_DATA, threshold: 40}
   };
-  const tree = renderer.create(<HTMLReportPage {...props}/>).toJSON();
+  const tree = renderer.create(<HTMLReportSummaryPage {...props}/>).toJSON();
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportPage reportType="sourcefile"/>');
+test.skip('<HTMLReportSourceFilePage/>');
