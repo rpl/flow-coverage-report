@@ -1,6 +1,8 @@
 [ignore]
 .*/node_modules/fbjs/.*
 .*/dist/.*
+## NOTE: fix issue with find-package-json fixtures
+.*/fixture/broken/.*
 
 ## flow issues on malformed json test fixture
 .*/node_modules/conventional-changelog-core/.*
