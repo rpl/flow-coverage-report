@@ -53,9 +53,6 @@ it('promised writeFile', async () => {
   mockWriteFile.mockImplementationOnce((...args) => {
     args[2]();
   });
-  mockWriteFile.mockImplementationOnce((...args) => {
-    args[2](new Error('Fake writeFile error'));
-  });
 
   const promisified = require(LIB_PROMISIFIED);
 
@@ -70,7 +67,18 @@ it('promised writeFile', async () => {
   expect(exception).toBe(undefined);
   expect(mockWriteFile.mock.calls.length).toBe(1);
 
-  await expect(promisified.writeFile('/my/fake/file', 'Fake data')).toThrow();
+  mockWriteFile.mockImplementationOnce((...args) => {
+    args[2](new Error('Fake writeFile error'));
+  });
+
+  exception = undefined;
+  try {
+    await promisified.writeFile('/my/fake/file', 'Fake data');
+  } catch (err) {
+    exception = err;
+  }
+
+  expect(`${exception}`).toMatch(/Fake writeFile error/);
 
   expect(mockWriteFile.mock.calls.length).toBe(2);
 });
