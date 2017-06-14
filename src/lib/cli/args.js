@@ -8,11 +8,11 @@ import {defaultConfig} from './config';
 const examples = appName => `
 Examples:
 
-  ${appName} report -i "src/**/*.js"
-  ${appName} report -p /path/to/project -i "src/**/*.js" -x "src/test/**/*.js"
-  ${appName} report -t html -p /path/to/project -i "src/**/*.js"
-  ${appName} report -t html -t json -t text /path/to/project -i "src/**/*.js"
-  ${appName} report -i "src/**/*.js" -c 5
+  ${appName} -i "src/**/*.js"
+  ${appName} -p /path/to/project -i "src/**/*.js" -x "src/test/**/*.js"
+  ${appName} -t html -p /path/to/project -i "src/**/*.js"
+  ${appName} -t html -t json -t text /path/to/project -i "src/**/*.js"
+  ${appName} -i "src/**/*.js" -c 5
 
 For more informations:
 
@@ -23,7 +23,6 @@ export default function processArgv(argv) {
   const appName = path.basename(argv[1]).split('.')[0];
 
   return yargs(argv).usage('Usage: $0 COMMAND PROJECTDIR [...globs]')
-    .command('report', 'Generate Flow Coverage Report on file selected by the GLOB parameter')
     .help('h')
     .alias('h', 'help')
     .version(() => npm.name + ' ' + npm.version)
