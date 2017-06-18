@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Fixed #92 - Escape special chars in filenames 1`] = `
+Object {
+  "filteredStdout": Array [
+    "│ src/file-with-a space.js  │       flow │   100 % │     3 │       3 │ 0         │",
+    "│ src/file-with-a-\\"-char.js │       flow │   100 % │     3 │       3 │ 0         │",
+    "│ src/file-with-a-$-char.js │       flow │   100 % │     3 │       3 │ 0         │",
+    "│ src/file-with-a-'-char.js │       flow │   100 % │     3 │       3 │ 0         │",
+    "│ src/file-with-a-\\\\-char.js │       flow │   100 % │     3 │       3 │ 0         │",
+    "│ src/file-with-a-\`-char.js │       flow │   100 % │     3 │       3 │ 0         │",
+  ],
+  "stderr": "",
+}
+`;

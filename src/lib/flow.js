@@ -13,6 +13,11 @@ if (!Array.prototype.find) {
   require('array.prototype.find').shim();
 }
 
+// Escape special characters in file names.
+export function escapeFileName(fileName: string): string {
+  return fileName.replace(/(["\s'$`\\])/g, '\\$1');
+}
+
 /* eslint-disable camelcase */
 export function getCoveredPercent(
   {
@@ -175,7 +180,7 @@ export async function collectFlowCoverageForFile(
   }
 
   const res = await exec(
-    `${flowCommandPath} coverage --json ${filename}`,
+    `${flowCommandPath} coverage --json ${escapeFileName(filename)}`,
     // NOTE: set a default timeouts and maxButter to Infinity to prevent,
     // misconfigured projects and source files that should raises errors
     // or hangs the flow daemon to prevent the coverage reporter to complete
