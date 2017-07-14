@@ -382,7 +382,7 @@ export function collectFlowCoverage(
             }
 
             waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
-              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
+              flowCommandPath, flowCommandTimeout, projectDir, `"${filename}"`, tmpDirPath
             ).then(data => {
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
