@@ -47,6 +47,30 @@ To customize the output dir (which defaults to `flow-coverage/`). you can use th
 flow-coverage-report -o my-custom-flow-coverage-dir/
 ```
 
+### With a config file
+
+The `--config` flag allows specifying a path to a config file. The config file
+is a JSON file with the following structure:
+
+``` json
+{
+  "concurrentFiles": 1,
+  "excludeGlob": [
+    "node_modules/**"
+  ],
+  "flowCommandPath": "path/to/flow/bin",
+  "includeGlob": [
+    "src/**/*.js"
+  ],
+  "outputDir": "path/to/output",
+  "projectDir": "path/to/project",
+  "threshold": 80,
+  "type": "text"
+}
+```
+
+`type` can be one of `"text"`, `"html"`, or `"json"`. The default is `"text"`.
+
 ## Background
 
 As a gradual typing system for JavaScript, flow will help you to statically checks
