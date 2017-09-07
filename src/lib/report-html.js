@@ -61,7 +61,7 @@ function copyAssets(outputDir/* : string */) {
   return Promise.all(assetsList.map(copyAsset.bind(null, outputDir)));
 }
 
-function renderHTMLReport(opt/* : Object */) {
+function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
   if (opt.filename &&
       opt.filename.indexOf('..') >= 0) {
     return Promise.reject(new Error(
