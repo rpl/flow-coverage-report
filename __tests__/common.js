@@ -4,6 +4,10 @@ import {exec} from 'child_process';
 export const FIXTURE_PATH = path.join(__dirname, 'fixtures');
 export const BIN_PATH = path.join(__dirname, '../bin/');
 
+// Increased timeout for integrations tests (which can be slower on
+// older nodejs version or because of the flow daemon).
+jest.setTimeout(20000);
+
 export function runFlowCoverageReport(args, options = {}) {
   return new Promise(resolve => {
     options.env = options.env || {};

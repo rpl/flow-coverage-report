@@ -51,7 +51,7 @@ test('promisified exec throws', async () => {
   } catch (err) {
     exception = err;
   }
-  expect(exception).toMatchObject({message: mockErrorMessage});
+  expect({message: exception.message}).toMatchObject({message: mockErrorMessage});
 });
 
 test('promisified exec doNotReject', async () => {
