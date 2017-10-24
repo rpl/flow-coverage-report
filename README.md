@@ -47,7 +47,7 @@ To customize the output dir (which defaults to `flow-coverage/`). you can use th
 flow-coverage-report -o my-custom-flow-coverage-dir/
 ```
 
-### With a config file
+### Load default options from a JSON config file
 
 The `--config` flag allows specifying a path to a config file. The config file
 is a JSON file with the following structure:
@@ -70,6 +70,34 @@ is a JSON file with the following structure:
 ```
 
 `type` can be one of `"text"`, `"html"`, or `"json"`. The default is `"text"`.
+
+### Load default options from package.json
+
+For an npm package, the default options can also be configured by including them in a
+"flow-coverage-report" package.json property property:
+
+```json
+{
+  "name": "my-npm-package",
+  "version": "1.0.1",
+  "scripts": {
+    "flow-coverage": "flow-coverage-report",
+    ...
+  },
+  ...
+  "flow-coverage-report": {
+    "includeGlob": [
+      "src/lib/**/*.js",
+      "src/lib/**/*.jsx"
+    ],
+    "type": [
+      "text",
+      "html",
+      "json"
+    ]
+  }
+}
+```
 
 ## Background
 
