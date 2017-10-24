@@ -27,11 +27,11 @@ or
 $ npm install --save-dev flow-coverage-report
 ```
 
-Run the flow reporter (`-i` configures the include globs, `-x` the exclude patterns,
+Run the flow reporter (`-i` configures the include globs, `-x` the exclude patterns, `-c` to configure a minimum coverage below which the build should fail (defaults to 80%)
 and `-t` the report types enabled):
 
 ```
-flow-coverage-report -i 'src/**/*.js' -i 'src/**/*.jsx' -x 'src/test/**' -t html -t json -t text
+flow-coverage-report -i 'src/**/*.js' -i 'src/**/*.jsx' -x 'src/test/**' -t html -t json -t text -c 90
 ```
 
 If the **flow** executable is not in your PATH, you can specified it using the
