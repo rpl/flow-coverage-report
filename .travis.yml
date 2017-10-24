@@ -2,12 +2,14 @@ language: node_js
 sudo: false
 
 node_js:
-- '4'
 - '6'
 
 os:
 - linux
-- osx
+
+## Disable because it seems to be often slow (and sometimes errored)
+## on Travis CI
+# - osx
 
 matrix:
   fast_finish: true
