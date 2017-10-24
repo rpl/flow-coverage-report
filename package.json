@@ -7,7 +7,7 @@
     "flow-coverage-report": "./bin/flow-coverage-report.js"
   },
   "files": [
-    "src/**/*",
+    "src/lib/**/*",
     "dist/**/*",
     "bin/*",
     "assets/**/*"
