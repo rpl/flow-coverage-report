@@ -201,7 +201,8 @@ function generateFlowCoverageReportHTML(
     coverageSummaryData,
     coverageGeneratedAt,
     projectDir,
-    outputDir
+    outputDir,
+    threshold: opts.threshold
   });
 
   const waitForCopyAssets = copyAssets(outputDir);
@@ -216,7 +217,8 @@ function generateFlowCoverageReportHTML(
             projectDir,
             filename,
             coverageData,
-            outputDir
+            outputDir,
+            threshold: opts.threshold
           });
         });
   return Promise.all(
