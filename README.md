@@ -129,6 +129,21 @@ You have just found it ;-)
 
 ## Changelog
 
+### 0.4.0
+
+Features:
+
+- collect and report flow preamble annotation type along with coverage information (thanks to Ryan Albrecht)
+
+Bug Fixes:
+
+- fixed bug related to ignored custom threshold in the rendered HTML report (thanks to Boris Egorov)
+- fixed coverage percent 0 rendered as NaN in report text
+- upgraded flow to v.0.57.3 and fixed new flow error (Julien Wajsberg)
+- fix flow coverage for escaped special chars in filenames
+
+Thanks to Ryan Albrecht, Boris Egorov, Julien Wajsberg for their help on this new release.
+
 ### 0.3.0
 
 Introduces the new command line options:
