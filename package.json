@@ -71,7 +71,7 @@
     "eslint-plugin-react": "7.1.0",
     "flow-bin": "0.57.3",
     "jest": "21.2.1",
-    "react-test-renderer": "15.5.4",
+    "react-test-renderer": "16.1.0",
     "xo": "0.18.1"
   },
   "xo": {
