@@ -41,6 +41,7 @@
   "dependencies": {
     "array.prototype.find": "2.0.4",
     "babel-runtime": "6.23.0",
+    "badge-up": "2.3.0",
     "flow-annotation-check": "1.8.0",
     "glob": "7.1.1",
     "minimatch": "3.0.4",
