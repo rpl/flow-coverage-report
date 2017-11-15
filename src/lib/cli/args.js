@@ -38,7 +38,7 @@ export default function processArgv(argv) {
     .option('type', {
       alias: 't',
       type: 'choice',
-      choices: ['html', 'json', 'text'],
+      choices: ['html', 'json', 'text', 'badge'],
       describe: `format of the generated reports (defaults to "${defaultConfig.type.join(', ')}")`
     })
     // --project-dir "/project/dir/path"
