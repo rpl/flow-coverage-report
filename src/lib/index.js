@@ -7,12 +7,13 @@ import path from 'path';
 import {collectFlowCoverage} from './flow';
 import {withTmpDir} from './promisified';
 import reportHTML from './report-html';
+import reportBadge from './report-badge';
 import reportJSON from './report-json';
 import reportText from './report-text';
 
 import type {FlowCoverageSummaryData} from './flow'; // eslint-disable-line no-duplicate-imports
 
-export type FlowCoverageReportType = 'json' | 'text' | 'html';
+export type FlowCoverageReportType = 'json' | 'text' | 'badge' |'html';
 
 export type FlowCoverageReportOptions = {
   projectDir: string,
@@ -92,6 +93,10 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
 
   if (reportTypes.indexOf('text') >= 0) {
     reportResults.push(reportText.generate(coverageData, opts));
+  }
+
+  if (reportTypes.indexOf('badge') >= 0) {
+    reportResults.push(reportBadge.generate(coverageData, opts));
   }
 
   if (reportTypes.indexOf('html') >= 0) {
