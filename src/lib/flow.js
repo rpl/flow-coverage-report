@@ -7,6 +7,8 @@ import temp from 'temp';
 import {genCheckFlowStatus} from 'flow-annotation-check';
 import {exec, glob, writeFile} from './promisified';
 
+const NO_ANNOTATION_NO_COVERAGE = true; // TODO(dmnd): option or default?
+
 // Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
 /* istanbul ignore if  */
 if (!Array.prototype.find) {
@@ -237,6 +239,11 @@ export async function collectFlowCoverageForFile(
       delete res.stderr;
     } catch (err) {
     }
+  }
+
+  if (parsedData.annotation === 'no flow' && NO_ANNOTATION_NO_COVERAGE) {
+    parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
+    parsedData.expressions.covered_count = 0;
   }
 
   if (parsedData && !parsedData.error) {
