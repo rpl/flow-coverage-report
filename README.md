@@ -129,6 +129,14 @@ You have just found it ;-)
 
 ## Changelog
 
+### 0.4.1
+
+Bug Fixes:
+
+- fixed wrong annotation on multiple pragmas on the same line (#135)
+
+Thanks to Ryan Albrecht and Karolis Grinkevičius for their help on this bugfix release.
+
 ### 0.4.0
 
 Features:
