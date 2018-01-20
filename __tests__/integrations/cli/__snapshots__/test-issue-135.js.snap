@@ -1,0 +1,10 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Fixed #135 - Annotation wrong on multiple pragma on the same line 1`] = `
+Object {
+  "filteredStdout": Array [
+    "│ src/multiple-pragmas.js │       flow │   100 % │     0 │       0 │ 0         │",
+  ],
+  "stderr": "",
+}
+`;
