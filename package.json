@@ -73,7 +73,8 @@
     "flow-bin": "0.57.3",
     "jest": "22.1.1",
     "react-test-renderer": "15.5.4",
-    "xo": "0.18.1"
+    "xo": "0.18.1",
+    "yaml-jest": "1.0.5"
   },
   "xo": {
     "extends": "xo-react",
@@ -162,13 +163,24 @@
     "type": [
       "text",
       "html",
-      "json"
+      "json",
+      "badge"
     ]
   },
   "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "yml"
+    ],
     "transform": {
-      ".*": "<rootDir>/node_modules/babel-jest"
+      "\\.yml$": "yaml-jest",
+      "\\.js$": "babel-jest",
+      "\\.jsx$": "babel-jest"
     },
+    "transformIgnorePatterns": [
+      "node_modules/(?!(svgo)/)"
+    ],
     "testEnvironment": "node",
     "testMatch": [
       "<rootDir>/src/__tests__/**/test-*.js?(x)",
