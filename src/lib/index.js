@@ -95,7 +95,8 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     reportResults.push(reportText.generate(coverageData, opts));
   }
 
-  if (reportTypes.indexOf('badge') >= 0) {
+  // Run the badge reporter implicitly if the html report has been included.
+  if (reportTypes.indexOf('badge') >= 0 || reportTypes.indexOf('html') >= 0) {
     reportResults.push(reportBadge.generate(coverageData, opts));
   }
 
