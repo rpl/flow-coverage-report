@@ -11,32 +11,45 @@ import {mkdirp, writeFile} from './promisified';
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
 
-function saveBadgeReport(
+async function saveBadgeReport(
   coverageData: FlowCoverageSummaryData,
   opts: FlowCoverageReportOptions
 ): Promise<void> {
   const percent = coverageData.percent;
   const threshold = opts.threshold || 80;
-  const difference = percent - threshold;
+  const hasFlowErrors = !coverageData.flowStatus.passed;
 
-  let color;
+  const generateFlowCoverageBadge = () => new Promise((resolve, reject) => {
+    let color;
 
-  if (difference < -40) {
-    color = 'red';
-  } else if (difference < -30) {
-    color = 'orange';
-  } else if (difference < -20) {
-    color = 'yellow';
-  } else if (difference < -10) {
-    color = 'yellowgreen';
-  } else if (difference < 0) {
-    color = 'green';
-  } else {
-    color = 'brightgreen';
-  }
+    if (percent < (threshold / 2)) {
+      color = 'red';
+    } else if (percent < (threshold * 5 / 8)) {
+      color = 'orange';
+    } else if (percent < (threshold * 6 / 8)) {
+      color = 'yellow';
+    } else if (percent < (threshold * 7 / 8)) {
+      color = 'yellowgreen';
+    } else if (percent < threshold) {
+      color = 'green';
+    } else {
+      color = 'brightgreen';
+    }
 
-  const badgeGen = () => new Promise((resolve, reject) => {
-    badge('flow', `${percent}%`, badge.colors[color], (err, svg) => {
+    badge('flow-coverage', `${percent}%`, badge.colors[color], (err, svg) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(svg);
+      }
+    });
+  });
+
+  const generateFlowBadge = () => new Promise((resolve, reject) => {
+    const color = hasFlowErrors ? 'red' : 'brightgreen';
+    const result = hasFlowErrors ? 'failing' : 'passing';
+
+    badge('flow', result, badge.colors[color], (err, svg) => {
       if (err) {
         reject(err);
       } else {
@@ -48,9 +61,12 @@ function saveBadgeReport(
   const projectDir = opts.projectDir;
   const outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
 
-  return mkdirp(outputDir).then(badgeGen).then(svg => {
-    return writeFile(path.join(outputDir, 'flow-coverage.svg'), svg);
-  });
+  await mkdirp(outputDir);
+  const flowCoverageSVG = await generateFlowCoverageBadge();
+  await writeFile(path.join(outputDir, 'flow-coverage-badge.svg'), flowCoverageSVG);
+
+  const flowSVG = await generateFlowBadge();
+  await writeFile(path.join(outputDir, 'flow-badge.svg'), flowSVG);
 }
 
 export default {
