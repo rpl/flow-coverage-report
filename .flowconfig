@@ -1,6 +1,7 @@
 [ignore]
 .*/node_modules/fbjs/.*
 .*/dist/.*
+.*/__tests__/fixtures/.*
 
 ## flow issues on malformed json test fixture
 .*/node_modules/conventional-changelog-core/.*

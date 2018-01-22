@@ -1,0 +1,589 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`badge reporter should generate green badges on full covered project: flow-badge green 1`] = `
+Object {
+  "attrs": Object {
+    "height": "20",
+    "width": "88",
+    "xmlns": "http://www.w3.org/2000/svg",
+  },
+  "childs": Array [
+    Object {
+      "attrs": Object {
+        "id": "b",
+        "x2": "0",
+        "y2": "100%",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "offset": "0",
+            "stopColor": "#bbb",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+        Object {
+          "attrs": Object {
+            "offset": "1",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+      ],
+      "name": "linearGradient",
+    },
+    Object {
+      "attrs": Object {
+        "id": "a",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#fff",
+            "height": "20",
+            "rx": "3",
+            "width": "88",
+          },
+          "name": "rect",
+        },
+      ],
+      "name": "mask",
+    },
+    Object {
+      "attrs": Object {
+        "mask": "url(#a)",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "d": "M0 0h34v20H0z",
+            "fill": "#555",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M34 0h54v20H34z",
+            "fill": "#4C1",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M0 0h88v20H0z",
+            "fill": "url(#b)",
+          },
+          "name": "path",
+        },
+      ],
+      "name": "g",
+    },
+    Object {
+      "attrs": Object {
+        "fill": "#fff",
+        "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
+        "fontSize": "11",
+        "textAnchor": "middle",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "17",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "17",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "60",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "passing",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "60",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "passing",
+            },
+          ],
+          "name": "text",
+        },
+      ],
+      "name": "g",
+    },
+  ],
+  "name": "svg",
+}
+`;
+
+exports[`badge reporter should generate green badges on full covered project: flow-coverage-badge green 1`] = `
+Object {
+  "attrs": Object {
+    "height": "20",
+    "width": "132",
+    "xmlns": "http://www.w3.org/2000/svg",
+  },
+  "childs": Array [
+    Object {
+      "attrs": Object {
+        "id": "b",
+        "x2": "0",
+        "y2": "100%",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "offset": "0",
+            "stopColor": "#bbb",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+        Object {
+          "attrs": Object {
+            "offset": "1",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+      ],
+      "name": "linearGradient",
+    },
+    Object {
+      "attrs": Object {
+        "id": "a",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#fff",
+            "height": "20",
+            "rx": "3",
+            "width": "132",
+          },
+          "name": "rect",
+        },
+      ],
+      "name": "mask",
+    },
+    Object {
+      "attrs": Object {
+        "mask": "url(#a)",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "d": "M0 0h91v20H0z",
+            "fill": "#555",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M91 0h41v20H91z",
+            "fill": "#4C1",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M0 0h132v20H0z",
+            "fill": "url(#b)",
+          },
+          "name": "path",
+        },
+      ],
+      "name": "g",
+    },
+    Object {
+      "attrs": Object {
+        "fill": "#fff",
+        "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
+        "fontSize": "11",
+        "textAnchor": "middle",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "45.5",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow-coverage",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "45.5",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow-coverage",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "110.5",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "100%",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "110.5",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "100%",
+            },
+          ],
+          "name": "text",
+        },
+      ],
+      "name": "g",
+    },
+  ],
+  "name": "svg",
+}
+`;
+
+exports[`badge reporter should generate red badges on project-low-coverage-with-error: flow-badge red 1`] = `
+Object {
+  "attrs": Object {
+    "height": "20",
+    "width": "81",
+    "xmlns": "http://www.w3.org/2000/svg",
+  },
+  "childs": Array [
+    Object {
+      "attrs": Object {
+        "id": "b",
+        "x2": "0",
+        "y2": "100%",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "offset": "0",
+            "stopColor": "#bbb",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+        Object {
+          "attrs": Object {
+            "offset": "1",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+      ],
+      "name": "linearGradient",
+    },
+    Object {
+      "attrs": Object {
+        "id": "a",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#fff",
+            "height": "20",
+            "rx": "3",
+            "width": "81",
+          },
+          "name": "rect",
+        },
+      ],
+      "name": "mask",
+    },
+    Object {
+      "attrs": Object {
+        "mask": "url(#a)",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "d": "M0 0h34v20H0z",
+            "fill": "#555",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M34 0h47v20H34z",
+            "fill": "#E05D44",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M0 0h81v20H0z",
+            "fill": "url(#b)",
+          },
+          "name": "path",
+        },
+      ],
+      "name": "g",
+    },
+    Object {
+      "attrs": Object {
+        "fill": "#fff",
+        "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
+        "fontSize": "11",
+        "textAnchor": "middle",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "17",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "17",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "56.5",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "failing",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "56.5",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "failing",
+            },
+          ],
+          "name": "text",
+        },
+      ],
+      "name": "g",
+    },
+  ],
+  "name": "svg",
+}
+`;
+
+exports[`badge reporter should generate red badges on project-low-coverage-with-error: flow-coverage-badge red 1`] = `
+Object {
+  "attrs": Object {
+    "height": "20",
+    "width": "125",
+    "xmlns": "http://www.w3.org/2000/svg",
+  },
+  "childs": Array [
+    Object {
+      "attrs": Object {
+        "id": "b",
+        "x2": "0",
+        "y2": "100%",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "offset": "0",
+            "stopColor": "#bbb",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+        Object {
+          "attrs": Object {
+            "offset": "1",
+            "stopOpacity": ".1",
+          },
+          "name": "stop",
+        },
+      ],
+      "name": "linearGradient",
+    },
+    Object {
+      "attrs": Object {
+        "id": "a",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#fff",
+            "height": "20",
+            "rx": "3",
+            "width": "125",
+          },
+          "name": "rect",
+        },
+      ],
+      "name": "mask",
+    },
+    Object {
+      "attrs": Object {
+        "mask": "url(#a)",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "d": "M0 0h91v20H0z",
+            "fill": "#555",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M91 0h34v20H91z",
+            "fill": "#E05D44",
+          },
+          "name": "path",
+        },
+        Object {
+          "attrs": Object {
+            "d": "M0 0h125v20H0z",
+            "fill": "url(#b)",
+          },
+          "name": "path",
+        },
+      ],
+      "name": "g",
+    },
+    Object {
+      "attrs": Object {
+        "fill": "#fff",
+        "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
+        "fontSize": "11",
+        "textAnchor": "middle",
+      },
+      "childs": Array [
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "45.5",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow-coverage",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "45.5",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "flow-coverage",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "fill": "#010101",
+            "fillOpacity": ".3",
+            "x": "107",
+            "y": "15",
+          },
+          "childs": Array [
+            Object {
+              "text": "37%",
+            },
+          ],
+          "name": "text",
+        },
+        Object {
+          "attrs": Object {
+            "x": "107",
+            "y": "14",
+          },
+          "childs": Array [
+            Object {
+              "text": "37%",
+            },
+          ],
+          "name": "text",
+        },
+      ],
+      "name": "g",
+    },
+  ],
+  "name": "svg",
+}
+`;
