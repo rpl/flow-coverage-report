@@ -51,7 +51,7 @@
     "strip-json-comments": "2.0.1",
     "temp": "0.8.3",
     "terminal-table": "0.0.12",
-    "yargs": "8.0.1"
+    "yargs": "11.0.0"
   },
   "devDependencies": {
     "babel-cli": "6.24.1",
