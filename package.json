@@ -66,7 +66,7 @@
     "babel-preset-stage-2": "6.24.1",
     "cross-env": "5.0.0",
     "eslint-config-xo-react": "0.12.0",
-    "eslint-plugin-flowtype": "2.33.0",
+    "eslint-plugin-flowtype": "2.41.1",
     "eslint-plugin-jest": "20.0.2",
     "eslint-plugin-react": "7.1.0",
     "flow-bin": "0.57.3",
