@@ -158,6 +158,7 @@ export async function collectFlowCoverageForFile(
   projectDir: string,
   filename: string,
   tmpDirPath: ?string,
+  strictCoverage: ?boolean,
 ): Promise<FlowCoverageJSONData> {
   let tmpFilePath: ?string;
 
@@ -242,6 +243,14 @@ export async function collectFlowCoverageForFile(
   if (parsedData && !parsedData.error) {
     parsedData.filename = filename;
     parsedData.annotation = await genCheckFlowStatus(flowCommandPath, filename);
+
+    // In strictCoverage mode all files that are not strictly flow
+    // (e.g. non annotated and flow weak files) are considered
+    // as completely uncovered.
+    if (strictCoverage && parsedData.annotation !== 'flow') {
+      parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
+      parsedData.expressions.covered_count = 0;
+    }
     return parsedData;
   }
 
@@ -325,6 +334,7 @@ export function collectFlowCoverage(
   threshold: number,
   concurrentFiles: number,
   tmpDirPath: ?string,
+  strictCoverage: ?boolean,
 ): Promise<FlowCoverageSummaryData> {
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     const now = new Date();
@@ -348,7 +358,8 @@ export function collectFlowCoverage(
       files: {},
       globIncludePatterns,
       globExcludePatterns,
-      concurrentFiles
+      concurrentFiles,
+      strictCoverage
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -387,7 +398,7 @@ export function collectFlowCoverage(
             }
 
             waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
-              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath
+              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath, strictCoverage,
             ).then(data => {
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
