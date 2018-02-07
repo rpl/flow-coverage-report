@@ -19,6 +19,7 @@ export const defaultConfig = {
   threshold: 80,
   outputDir: './flow-coverage',
   concurrentFiles: 1,
+  unflowedFilesNoCoverage: false,
   noConfig: false,
   htmlTemplateOptions: {
     autoHeightSource: true,
@@ -36,6 +37,7 @@ const getProjectDir = config => ({...defaultConfig, ...config}).projectDir;
  * - from the --config cli parameter, if any
  */
 export function loadConfig(args) {
+  console.log(args);
   // Remove any undefined property from the yargs object.
   for (const key of Object.keys(args)) {
     if (typeof args[key] === 'undefined') {
