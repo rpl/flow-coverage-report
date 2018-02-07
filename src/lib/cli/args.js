@@ -75,6 +75,12 @@ export default function processArgv(argv) {
       type: 'number',
       describe: `the maximum number of files concurrently submitted to flow (defaults to ${defaultConfig.concurrentFiles})`
     })
+    // --strict-coverage
+    .option('strict-coverage', {
+      type: 'boolean',
+      describe: 'non annotated and flow weak files are considered as completely uncovered. ' +
+        'Default behavior is for flow to best-guess coverage on all the files included in the report.'
+    })
     // --no-config
     .option('no-config', {
       type: 'boolean',

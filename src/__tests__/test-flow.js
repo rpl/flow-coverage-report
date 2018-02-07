@@ -330,7 +330,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   });
 });
 
-it('collectFlowCoverage', async () => {
+const testCollectFlowCoverage = async ({expectedResults, strictCoverage} = {}) => {
   const mockExec = jest.fn();
   const mockWriteFile = jest.fn();
   const mockTempPath = jest.fn();
@@ -421,7 +421,7 @@ it('collectFlowCoverage', async () => {
   const res = await flow.collectFlowCoverage(
     'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir',
     globIncludePatterns, globExcludePatterns,
-    80, 5
+    80, 5, '/tmp/fakeTmpDir', strictCoverage
   );
 
   expect(typeof res.generatedAt).toBe('string');
@@ -445,13 +445,15 @@ it('collectFlowCoverage', async () => {
     },
     globIncludePatterns,
     globExcludePatterns,
+    strictCoverage,
     concurrentFiles: 5,
     percent: 50,
     threshold: 80,
     /* eslint-disable camelcase */
     covered_count: 4,
-    uncovered_count: 4
+    uncovered_count: 4,
     /* eslint-enable camelcase */
+    ...expectedResults
   });
 
   expect(Object.keys(resFiles).sort()).toEqual(filteredFiles);
@@ -470,14 +472,18 @@ it('collectFlowCoverage', async () => {
       }
     }]);
     delete resFiles[filename].expressions.uncovered_locs;
+
+    // Detect if the single file coverage is expected to be 0.
+    const forceNoCoverage = !(!strictCoverage || expectedFlowAnnotations[filename] === 'flow');
+
     expect(resFiles[filename]).toEqual({
-      percent: 50,
+      percent: forceNoCoverage ? 0 : 50,
       filename,
       annotation: expectedFlowAnnotations[filename],
       expressions: {
         /* eslint-disable camelcase */
-        covered_count: 1,
-        uncovered_count: 1
+        covered_count: forceNoCoverage ? 0 : 1,
+        uncovered_count: forceNoCoverage ? 2 : 1
         /* eslint-enable camelcase */
       }
     });
@@ -486,6 +492,20 @@ it('collectFlowCoverage', async () => {
   expect(mockWriteFile.mock.calls.length).toBe(0);
   expect(mockExec.mock.calls.length).toBe(5);
   expect(mockGlob.mock.calls.length).toBe(2);
+};
+
+it('collectFlowCoverage', async () => {
+  await testCollectFlowCoverage();
+});
+
+it('collectFlowCoverage - strictCoverage mode', async () => {
+  await testCollectFlowCoverage({strictCoverage: true, expectedResults: {
+    percent: 25,
+    /* eslint-disable camelcase */
+    covered_count: 2,
+    uncovered_count: 6
+    /* eslint-enable camelcase */
+  }});
 });
 
 it('getCoveredPercent', () => {

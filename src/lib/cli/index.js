@@ -26,6 +26,7 @@ exports.run = () => {
     projectDir: args.projectDir,
     reportTypes: args.type,
     threshold: args.threshold,
+    strictCoverage: args.strictCoverage,
     htmlTemplateOptions: args.htmlTemplateOptions
   }).catch(err => {
     console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);

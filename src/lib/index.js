@@ -25,6 +25,7 @@ export type FlowCoverageReportOptions = {
   reportTypes?: Array<FlowCoverageReportType>,
   htmlTemplateOptions?: Object,
   threshold: number,
+  strictCoverage: boolean,
   concurrentFiles?: number,
   log: Function
 };
@@ -81,7 +82,8 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     opts.flowCommandPath, opts.flowCommandTimeout,
     opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
     opts.threshold, opts.concurrentFiles || 1,
-    tmpDirPath
+    tmpDirPath,
+    opts.strictCoverage
   );
 
   const reportResults = [];

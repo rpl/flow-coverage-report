@@ -19,6 +19,7 @@ export const defaultConfig = {
   threshold: 80,
   outputDir: './flow-coverage',
   concurrentFiles: 1,
+  strictCoverage: false,
   noConfig: false,
   htmlTemplateOptions: {
     autoHeightSource: true,
