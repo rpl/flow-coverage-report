@@ -243,9 +243,10 @@ export async function collectFlowCoverageForFile(
   if (parsedData && !parsedData.error) {
     parsedData.filename = filename;
     parsedData.annotation = await genCheckFlowStatus(flowCommandPath, filename);
-    if (unflowedFilesNoCoverage && parsedData.annotation === "no flow") {
+
+    if (unflowedFilesNoCoverage && parsedData.annotation === 'no flow') {
       parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
-	    parsedData.expressions.covered_count = 0;
+      parsedData.expressions.covered_count = 0;
     }
     return parsedData;
   }
@@ -354,7 +355,7 @@ export function collectFlowCoverage(
       files: {},
       globIncludePatterns,
       globExcludePatterns,
-      concurrentFiles,
+      concurrentFiles
     };
 
     // Remove the source attribute from all ucovered_locs entry.
