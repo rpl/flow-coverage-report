@@ -243,7 +243,6 @@ export async function collectFlowCoverageForFile(
   if (parsedData && !parsedData.error) {
     parsedData.filename = filename;
     parsedData.annotation = await genCheckFlowStatus(flowCommandPath, filename);
-    console.log(unflowedFilesNoCoverage);
     if (unflowedFilesNoCoverage && parsedData.annotation === "no flow") {
       parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
 	    parsedData.expressions.covered_count = 0;
