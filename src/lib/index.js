@@ -25,6 +25,7 @@ export type FlowCoverageReportOptions = {
   reportTypes?: Array<FlowCoverageReportType>,
   htmlTemplateOptions?: Object,
   threshold: number,
+  unflowedFilesNoCoverage: boolean,
   concurrentFiles?: number,
   log: Function
 };
@@ -76,12 +77,12 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
   if (!opts.threshold) {
     return Promise.reject(new Error('threshold option is mandatory'));
   }
-
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
     opts.flowCommandPath, opts.flowCommandTimeout,
     opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
     opts.threshold, opts.concurrentFiles || 1,
-    tmpDirPath
+    tmpDirPath,
+    opts.unflowedFilesNoCoverage
   );
 
   const reportResults = [];

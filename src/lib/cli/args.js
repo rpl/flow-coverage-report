@@ -75,6 +75,11 @@ export default function processArgv(argv) {
       type: 'number',
       describe: `the maximum number of files concurrently submitted to flow (defaults to ${defaultConfig.concurrentFiles})`
     })
+    // --no-coverage-unflowed-files
+    .option('unflowed-files-no-coverage', {
+      type: 'boolean',
+      describe: 'expressions in unflowed files are counted towards total expressions but none are considered flow typed. default behavior is for flow to best-guess unflowed files.'
+    })
     // --no-config
     .option('no-config', {
       type: 'boolean',

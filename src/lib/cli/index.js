@@ -4,7 +4,6 @@ import {loadConfig, validateConfig, UsageError} from './config';
 
 exports.run = () => {
   let args = processArgv(process.argv);
-
   try {
     args = loadConfig(args);
     validateConfig(args);
@@ -26,6 +25,7 @@ exports.run = () => {
     projectDir: args.projectDir,
     reportTypes: args.type,
     threshold: args.threshold,
+    unflowedFilesNoCoverage: args.unflowedFilesNoCoverage,
     htmlTemplateOptions: args.htmlTemplateOptions
   }).catch(err => {
     console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
