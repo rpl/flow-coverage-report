@@ -129,6 +129,24 @@ You have just found it ;-)
 
 ## Changelog
 
+### 0.5.0
+
+Features:
+
+- added a new badge reporter (#140)
+- added a new --strict-coverage option to enforce a more strict coverage reporting mode. (#141)
+
+The new badge reporter is implicitly executed when the html report is enabled and it generates
+two badges: 'flow-badge.svg' is a badge related to the flow validation check, 'flow-coverage-badge.svg'
+is a badge related to the flow coverage level reached by the project.
+
+The new --strict-coverage option enables a more strict coverage reporting where only the flow
+annotated files are considered as covered (while all the non annotated files and the "@flow weak"
+annotated ones are considered as fully uncovered).
+
+Thanks to Rúnar Berg Baugsson Sigríðarson for contributing the new badge reporter, and to Desmond Brand
+and Matt Sprague for contributing the new --strict-coverage option.
+
 ### 0.4.1
 
 Bug Fixes:
