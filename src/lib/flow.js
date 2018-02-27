@@ -335,6 +335,7 @@ export function collectFlowCoverage(
   concurrentFiles: number,
   tmpDirPath: ?string,
   strictCoverage: ?boolean,
+  excludeNonFlow: boolean
 ): Promise<FlowCoverageSummaryData> {
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     const now = new Date();
@@ -398,8 +399,11 @@ export function collectFlowCoverage(
             }
 
             waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
-              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath, strictCoverage,
+              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath, strictCoverage
             ).then(data => {
+              if (excludeNonFlow && data.annotation !== 'flow') {
+                return;
+              }
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
               coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
