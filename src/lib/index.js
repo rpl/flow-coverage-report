@@ -27,7 +27,8 @@ export type FlowCoverageReportOptions = {
   threshold: number,
   strictCoverage: boolean,
   excludeNonFlow: boolean,
-  concurrentFiles?: number
+  concurrentFiles?: number,
+  log?: Function
 };
 
 // Default timeout for flow coverage commands.
