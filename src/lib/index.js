@@ -26,8 +26,8 @@ export type FlowCoverageReportOptions = {
   htmlTemplateOptions?: Object,
   threshold: number,
   strictCoverage: boolean,
-  concurrentFiles?: number,
-  log: Function
+  excludeNonFlow: boolean,
+  concurrentFiles?: number
 };
 
 // Default timeout for flow coverage commands.
@@ -83,7 +83,8 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
     opts.threshold, opts.concurrentFiles || 1,
     tmpDirPath,
-    opts.strictCoverage
+    opts.strictCoverage,
+    opts.excludeNonFlow
   );
 
   const reportResults = [];

@@ -29,6 +29,7 @@ exports.run = () => {
     threshold: args.threshold,
     strictCoverage: args.strictCoverage,
     htmlTemplateOptions: args.htmlTemplateOptions,
+    excludeNonFlow: args.excludeNonFlow,
     flowCommandTimeout: args.flowCommandTimeout
   }).then(([coverageSummaryData]) => {
     const {percent, threshold} = coverageSummaryData;

@@ -81,6 +81,10 @@ export default function processArgv(argv) {
       describe: 'non annotated and flow weak files are considered as completely uncovered. ' +
         'Default behavior is for flow to best-guess coverage on all the files included in the report.'
     })
+    .option('exclude-non-flow', {
+      type: 'boolean',
+      describe: 'Excludes flies without flow annotation from the report'
+    })
     // --no-config
     .option('no-config', {
       type: 'boolean',
