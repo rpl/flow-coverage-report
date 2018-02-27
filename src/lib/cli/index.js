@@ -1,3 +1,4 @@
+// @flow
 import generateFlowCoverageReport from '../../lib';
 import processArgv from './args';
 import {loadConfig, validateConfig, UsageError} from './config';
@@ -27,10 +28,9 @@ exports.run = () => {
     reportTypes: args.type,
     threshold: args.threshold,
     strictCoverage: args.strictCoverage,
-    htmlTemplateOptions: args.htmlTemplateOptions
-  }).catch(err => {
-    console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
-    process.exit(255); // eslint-disable-line unicorn/no-process-exit
+    htmlTemplateOptions: args.htmlTemplateOptions,
+    excludeNonFlow: args.excludeNonFlow,
+    flowCommandTimeout: args.flowCommandTimeout
   }).then(([coverageSummaryData]) => {
     const {percent, threshold} = coverageSummaryData;
     if (percent < threshold) {
@@ -39,5 +39,8 @@ exports.run = () => {
       );
       process.exit(2); // eslint-disable-line unicorn/no-process-exit
     }
+  }).catch(err => {
+    console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
+    process.exit(255); // eslint-disable-line unicorn/no-process-exit
   });
 };

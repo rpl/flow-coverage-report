@@ -87,6 +87,7 @@
       "node"
     ],
     "ignores": [
+      "flow-typed/**/*",
       "dist/**/*",
       "assets/**/*",
       "node_modules/**/*",
