@@ -1,3 +1,4 @@
+// @flow
 import path from 'path';
 import yargs from 'yargs';
 
@@ -19,25 +20,24 @@ For more informations:
   https://github.com/rpl/flow-coverage-report
 `;
 
-export default function processArgv(argv) {
+export default function processArgv(argv: Array<string>) {
   const appName = path.basename(argv[1]).split('.')[0];
 
   return yargs(argv).usage('Usage: $0 COMMAND PROJECTDIR [...globs]')
     .help('h')
     .alias('h', 'help')
-    .version(() => npm.name + ' ' + npm.version)
+    .version(npm.name + ' ' + npm.version)
     .alias('v', 'version')
     // -f flow-command-path
     .option('flow-command-path', {
       alias: 'f',
       type: 'string',
-      coerce: value => value.slice(0, 2) === './' ? path.resolve(value) : value,
+      coerce: (value: string) => value.slice(0, 2) === './' ? path.resolve(value) : value,
       describe: `path to the flow executable (defaults to "${defaultConfig.flowCommandPath}")`
     })
     // --type text
     .option('type', {
       alias: 't',
-      type: 'choice',
       choices: ['html', 'json', 'text', 'badge'],
       describe: `format of the generated reports (defaults to "${defaultConfig.type.join(', ')}")`
     })
