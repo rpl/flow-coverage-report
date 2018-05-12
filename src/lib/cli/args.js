@@ -83,7 +83,7 @@ export default function processArgv(argv: Array<string>) {
     })
     .option('exclude-non-flow', {
       type: 'boolean',
-      describe: 'Excludes flies without flow annotation from the report'
+      describe: 'Excludes files without flow annotation from the report'
     })
     // --no-config
     .option('no-config', {
