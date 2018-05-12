@@ -10,6 +10,7 @@
 src/.*
 
 [libs]
+flow-typed/npm
 
 [options]
 suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
