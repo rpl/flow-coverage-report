@@ -9,8 +9,8 @@ const generatedAt = now.toDateString() + ' ' + now.toTimeString();
 
 const firstGlob = 'src/*.js';
 const secondGlob = 'src/*/*.js';
-const firstGlobResults = ['src/a.js', 'src/b.js'];
-const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js'];
+const firstGlobResults = ['src/a.js', 'src/b.js', 'src/c.js'];
+const secondGlobResults = ['src/d1/d.js', 'src/d1/e.js'];
 
 const allFiles = [].concat(firstGlobResults, secondGlobResults);
 
@@ -18,8 +18,8 @@ const allFiles = [].concat(firstGlobResults, secondGlobResults);
 const FLOW_COVERAGE_SUMMARY_DATA = {
   flowStatus: {...FLOW_STATUS_PASSED},
   generatedAt,
-  covered_count: 4,
-  uncovered_count: 4,
+  covered_count: 5,
+  uncovered_count: 5,
   threshold: 40,
   percent: 50,
   globIncludePatterns: [firstGlob, secondGlob],
