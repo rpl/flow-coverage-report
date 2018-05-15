@@ -359,7 +359,7 @@ const testCollectFlowCoverage = async ({expectedResults, strictCoverage} = {}) =
   const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js', 'test/subdir/test-d.js'];
   const expectedFlowAnnotations = {
     'src/a.js': 'flow',
-    'src/b.js': 'flow',
+    'src/b.js': 'flow strict',
     'src/d1/c.js': 'no flow',
     'src/d1/d.js': 'flow weak'
   };
@@ -474,7 +474,7 @@ const testCollectFlowCoverage = async ({expectedResults, strictCoverage} = {}) =
     delete resFiles[filename].expressions.uncovered_locs;
 
     // Detect if the single file coverage is expected to be 0.
-    const forceNoCoverage = !(!strictCoverage || expectedFlowAnnotations[filename] === 'flow');
+    const forceNoCoverage = !(!strictCoverage || ['flow', 'flow strict'].indexOf(expectedFlowAnnotations[filename]) !== -1);
 
     expect(resFiles[filename]).toEqual({
       percent: forceNoCoverage ? 0 : 50,

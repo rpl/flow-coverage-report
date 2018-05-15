@@ -142,7 +142,7 @@ export type FlowCoverageJSONData = {
     uncovered_locs: Array<FlowUncoveredLoc>
   },
   filename?: string,
-  annotation?: 'no flow' | 'flow weak' | 'flow',
+  annotation?: 'no flow' | 'flow weak' | 'flow' | 'flow strict',
   percent: number,
   error?: string,
   isError?: boolean,
@@ -247,7 +247,7 @@ export async function collectFlowCoverageForFile(
     // In strictCoverage mode all files that are not strictly flow
     // (e.g. non annotated and flow weak files) are considered
     // as completely uncovered.
-    if (strictCoverage && parsedData.annotation !== 'flow') {
+    if (strictCoverage && ['flow', 'flow strict'].indexOf(parsedData.annotation) === -1) {
       parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
       parsedData.expressions.covered_count = 0;
     }
@@ -303,6 +303,7 @@ export function summarizeAnnotations(
   filenames.forEach(filename => {
     switch (coverageSummaryData.files[filename].annotation) {
       case 'flow':
+      case 'flow strict':
         flowFiles += 1;
         break;
       case 'flow weak':
