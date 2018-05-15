@@ -38,7 +38,7 @@ export default function FlowCoverageFileTableRow(
     threshold
   } = props;
 
-  const isFlow = annotation === 'flow';
+  const isFlow = ['flow', 'flow strict', 'flow strict-local'].indexOf(annotation) !== -1;
   const aboveThreshold = percent >= threshold;
   let className = (!isError && isFlow && aboveThreshold) ?
     'positive' : 'negative';

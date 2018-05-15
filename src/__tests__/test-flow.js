@@ -357,13 +357,14 @@ const testCollectFlowCoverage = async ({
     flowVersion: '0.30.0'
   };
 
-  const firstGlobResults = ['src/a.js', 'src/b.js', 'test/test-a.js'];
-  const secondGlobResults = ['src/d1/c.js', 'src/d1/d.js', 'test/subdir/test-d.js'];
+  const firstGlobResults = ['src/a.js', 'src/b.js', 'src/c.js', 'test/test-a.js'];
+  const secondGlobResults = ['src/d1/d.js', 'src/d1/e.js', 'test/subdir/test-d.js'];
   const expectedFlowAnnotations = {
     'src/a.js': 'flow',
-    'src/b.js': 'flow',
-    'src/d1/c.js': 'no flow',
-    'src/d1/d.js': 'flow weak'
+    'src/b.js': 'flow strict',
+    'src/c.js': 'flow strict-local',
+    'src/d1/d.js': 'no flow',
+    'src/d1/e.js': 'flow weak'
   };
 
   // Fake reply to flow status command.
@@ -455,8 +456,8 @@ const testCollectFlowCoverage = async ({
     percent: 50,
     threshold: 80,
     /* eslint-disable camelcase */
-    covered_count: excludeNonFlow ? 3 : 4,
-    uncovered_count: excludeNonFlow ? 3 : 4,
+    covered_count: excludeNonFlow ? 4 : 5,
+    uncovered_count: excludeNonFlow ? 4 : 5,
     /* eslint-enable camelcase */
     ...expectedResults
   });
@@ -490,7 +491,11 @@ const testCollectFlowCoverage = async ({
     delete resFiles[filename].expressions.uncovered_locs;
 
     // Detect if the single file coverage is expected to be 0.
-    const forceNoCoverage = !(!strictCoverage || expectedFlowAnnotations[filename] === 'flow');
+    const forceNoCoverage = !(!strictCoverage || [
+      'flow',
+      'flow strict',
+      'flow strict-local'
+    ].indexOf(expectedFlowAnnotations[filename]) !== -1);
 
     if (excludeNonFlow && expectedFlowAnnotations[filename] === 'no flow') {
       expect(resFiles[filename]).toEqual(undefined);
@@ -510,7 +515,7 @@ const testCollectFlowCoverage = async ({
   }
 
   expect(mockWriteFile.mock.calls.length).toBe(0);
-  expect(mockExec.mock.calls.length).toBe(excludeNonFlow ? 4 : 5);
+  expect(mockExec.mock.calls.length).toBe(excludeNonFlow ? 5 : 6);
   expect(mockGlob.mock.calls.length).toBe(2);
 };
 
@@ -522,10 +527,10 @@ it('collectFlowCoverage - strictCoverage mode', async () => {
   await testCollectFlowCoverage({
     strictCoverage: true,
     expectedResults: {
-      percent: 25,
+      percent: 30,
       /* eslint-disable camelcase */
-      covered_count: 2,
-      uncovered_count: 6
+      covered_count: 3,
+      uncovered_count: 7
       /* eslint-enable camelcase */
     }
   });

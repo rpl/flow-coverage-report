@@ -48,13 +48,13 @@ exports[`<HTMLReportBodySummary /> 1`] = `
                %
             </td>
             <td>
-              8
+              10
             </td>
             <td>
-              4
+              5
             </td>
             <td>
-              4
+              5
             </td>
           </tr>
         </tbody>
@@ -186,9 +186,9 @@ exports[`<HTMLReportBodySummary /> 1`] = `
               className="selectable"
             >
               <a
-                href="sourcefiles/src/d1/c.js.html"
+                href="sourcefiles/src/c.js.html"
               >
-                src/d1/c.js
+                src/c.js
               </a>
             </td>
             <td>
@@ -230,6 +230,47 @@ exports[`<HTMLReportBodySummary /> 1`] = `
                 href="sourcefiles/src/d1/d.js.html"
               >
                 src/d1/d.js
+              </a>
+            </td>
+            <td>
+               @
+              flow
+               
+            </td>
+            <td
+              className=""
+            >
+              <span>
+                50
+                 %
+              </span>
+            </td>
+            <td>
+               
+              2
+               
+            </td>
+            <td>
+               
+              1
+               
+            </td>
+            <td>
+               
+              1
+               
+            </td>
+          </tr>
+          <tr
+            className="positive"
+          >
+            <td
+              className="selectable"
+            >
+              <a
+                href="sourcefiles/src/d1/e.js.html"
+              >
+                src/d1/e.js
               </a>
             </td>
             <td>
@@ -335,13 +376,13 @@ exports[`<HTMLReportBodySummary /> 2`] = `
                %
             </td>
             <td>
-              8
+              10
             </td>
             <td>
-              4
+              5
             </td>
             <td>
-              4
+              5
             </td>
           </tr>
         </tbody>
@@ -473,9 +514,9 @@ exports[`<HTMLReportBodySummary /> 2`] = `
               className="selectable"
             >
               <a
-                href="sourcefiles/src/d1/c.js.html"
+                href="sourcefiles/src/c.js.html"
               >
-                src/d1/c.js
+                src/c.js
               </a>
             </td>
             <td>
@@ -517,6 +558,47 @@ exports[`<HTMLReportBodySummary /> 2`] = `
                 href="sourcefiles/src/d1/d.js.html"
               >
                 src/d1/d.js
+              </a>
+            </td>
+            <td>
+               @
+              flow
+               
+            </td>
+            <td
+              className=""
+            >
+              <span>
+                50
+                 %
+              </span>
+            </td>
+            <td>
+               
+              2
+               
+            </td>
+            <td>
+               
+              1
+               
+            </td>
+            <td>
+               
+              1
+               
+            </td>
+          </tr>
+          <tr
+            className="negative"
+          >
+            <td
+              className="selectable"
+            >
+              <a
+                href="sourcefiles/src/d1/e.js.html"
+              >
+                src/d1/e.js
               </a>
             </td>
             <td>
