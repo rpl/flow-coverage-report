@@ -29,13 +29,13 @@ exports[`<FlowCoverageSummaryTable /> 1`] = `
          %
       </td>
       <td>
-        8
+        10
       </td>
       <td>
-        4
+        5
       </td>
       <td>
-        4
+        5
       </td>
     </tr>
   </tbody>
@@ -71,13 +71,13 @@ exports[`<FlowCoverageSummaryTable /> 2`] = `
          %
       </td>
       <td>
-        8
+        10
       </td>
       <td>
-        4
+        5
       </td>
       <td>
-        4
+        5
       </td>
     </tr>
   </tbody>

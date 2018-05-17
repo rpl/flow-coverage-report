@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Accept '@flow strict' and '@flow strict-local' pragmas 1`] = `
+Object {
+  "filteredStdoutLocal": Array [
+    "│ src/local.js │ flow strict-local │   100 % │     0 │       0 │ 0         │",
+  ],
+  "filteredStdoutMain": Array [
+    "│ src/main.js  │       flow strict │   100 % │     0 │       0 │ 0         │",
+  ],
+  "stderr": "",
+}
+`;
