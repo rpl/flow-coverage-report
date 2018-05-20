@@ -37,6 +37,7 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
             const fileRowProps = {
               filename,
               isError: fileSummary.isError,
+              isFlow: fileSummary.isFlow,
               flowCoverageParsingError: fileSummary.flowCoverageParsingError,
               flowCoverageError: fileSummary.flowCoverageError,
               flowCoverageException: fileSummary.flowCoverageException,

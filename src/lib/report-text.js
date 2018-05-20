@@ -48,11 +48,7 @@ function renderTextReport(
     ]);
 
     let rowColor;
-    if ([
-      'flow',
-      'flow strict',
-      'flow strict-local'
-    ].indexOf(annotation) !== -1 && percent >= (opts.threshold || 80)) {
+    if (data.isFlow && percent >= (opts.threshold || 80)) {
       rowColor = 'green';
     } else {
       rowColor = 'red';

@@ -36,6 +36,20 @@ export function getCoveredPercent(
 }
 /* eslint-disable-line camelcase */
 
+export function isFlowAnnotation(
+  annotation: string, strict: boolean = false
+): boolean {
+  const validFlowAnnotation = new Set([
+    'flow', 'flow weak', 'flow strict', 'flow strict-local'
+  ]);
+
+  if (strict) {
+    validFlowAnnotation.delete('flow weak');
+  }
+
+  return validFlowAnnotation.has(annotation);
+}
+
 // Definitions and flow types related to checkFlowStatus.
 
 export type FlowTypeErrorPosition = {
@@ -153,6 +167,7 @@ export type FlowCoverageJSONData = {
   percent: number,
   error?: string,
   isError?: boolean,
+  isFlow: boolean,
   flowCoverageError?: ?string,
   flowCoverageException?: ?string,
   flowCoverageParsingError?: ?string,
@@ -177,6 +192,7 @@ export async function collectFlowCoverageForFile(
   const emptyCoverageData = {
     filename,
     annotation: 'no flow',
+    isFlow: false,
     expressions: {
       covered_count: 0,
       uncovered_count: 0,
@@ -251,15 +267,12 @@ export async function collectFlowCoverageForFile(
   if (parsedData && !parsedData.error) {
     parsedData.filename = filename;
     parsedData.annotation = await genCheckFlowStatus(flowCommandPath, filename);
+    parsedData.isFlow = isFlowAnnotation(parsedData.annotation, Boolean(strictCoverage));
 
     // In strictCoverage mode all files that are not strictly flow
     // (e.g. non annotated and flow weak files) are considered
     // as completely uncovered.
-    if (strictCoverage && [
-      'flow',
-      'flow strict',
-      'flow strict-local'
-    ].indexOf(parsedData.annotation) === -1) {
+    if (strictCoverage && !parsedData.isFlow) {
       parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
       parsedData.expressions.covered_count = 0;
     }
@@ -270,6 +283,7 @@ export async function collectFlowCoverageForFile(
     ...emptyCoverageData,
     percent: NaN,
     isError: true,
+    isFlow: Boolean(parsedData && parsedData.isFlow),
     flowCoverageError: parsedData && parsedData.error,
     flowCoverageException: undefined,
     flowCoverageParsingError,
@@ -292,6 +306,7 @@ export type FlowCoverageSummaryData = {
   uncovered_count: number,
   percent: number,
   threshold: number,
+  strictCoverage: boolean,
   generatedAt: string,
   flowStatus: FlowStatus,
   flowAnnotations: FlowAnnotationSummary,
@@ -313,12 +328,8 @@ export function summarizeAnnotations(
   const filenames = Object.keys(coverageSummaryData.files);
 
   filenames.forEach(filename => {
-    switch (coverageSummaryData.files[filename].annotation) {
-      case 'flow':
-      case 'flow strict':
-      case 'flow strict-local':
-        flowFiles += 1;
-        break;
+    const {annotation} = coverageSummaryData.files[filename];
+    switch (annotation) {
       case 'flow weak':
         flowWeakFiles += 1;
         break;
@@ -326,6 +337,11 @@ export function summarizeAnnotations(
         noFlowFiles += 1;
         break;
       default:
+        if (typeof annotation === 'string' &&
+            isFlowAnnotation(annotation, true)) {
+          flowFiles += 1;
+          return;
+        }
         throw new Error(`Unexpected missing flow annotation on ${filename}`);
     }
   });
@@ -374,7 +390,7 @@ export function collectFlowCoverage(
       globIncludePatterns,
       globExcludePatterns,
       concurrentFiles,
-      strictCoverage,
+      strictCoverage: Boolean(strictCoverage),
       excludeNonFlow
     };
 

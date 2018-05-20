@@ -3,6 +3,7 @@
 import minimatch from 'minimatch';
 
 import {DEFAULT_FLOW_TIMEOUT} from '../lib/index';
+import {isFlowAnnotation} from '../lib/flow';
 
 const LIB_FLOW = '../lib/flow';
 const LIB_PROMISIFIED = '../lib/promisified';
@@ -326,7 +327,8 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   });
   expect(res).toEqual({
     ...fakeFlowCoverageData,
-    annotation: 'flow'
+    annotation: 'flow',
+    isFlow: true
   });
 });
 
@@ -450,7 +452,7 @@ const testCollectFlowCoverage = async ({
     },
     globIncludePatterns,
     globExcludePatterns,
-    strictCoverage,
+    strictCoverage: Boolean(strictCoverage),
     excludeNonFlow,
     concurrentFiles: 5,
     percent: 50,
@@ -504,6 +506,7 @@ const testCollectFlowCoverage = async ({
         percent: forceNoCoverage ? 0 : 50,
         filename,
         annotation: expectedFlowAnnotations[filename],
+        isFlow: isFlowAnnotation(expectedFlowAnnotations[filename], Boolean(strictCoverage)),
         expressions: {
           /* eslint-disable camelcase */
           covered_count: forceNoCoverage ? 0 : 1,

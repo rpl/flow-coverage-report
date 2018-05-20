@@ -12,6 +12,18 @@ const secondGlob = 'src/*/*.js';
 const firstGlobResults = ['src/a.js', 'src/b.js', 'src/c.js'];
 const secondGlobResults = ['src/d1/d.js', 'src/d1/e.js'];
 
+const fakeTypeAnnotations = {
+  'src/c.js': 'no flow',
+  'src/d1/d.js': 'flow strict',
+  'src/d1/e.js': 'flow strict-local'
+};
+
+const fakeIsFlow = {
+  'src/c.js': false,
+  'src/d1/d.js': true,
+  'src/d1/e.js': true
+};
+
 const allFiles = [].concat(firstGlobResults, secondGlobResults);
 
 /* eslint-disable camelcase */
@@ -26,7 +38,8 @@ const FLOW_COVERAGE_SUMMARY_DATA = {
   files: allFiles.reduce((acc, filename) => {
     acc[filename] = {
       percent: 50,
-      annotation: 'flow',
+      annotation: fakeTypeAnnotations[filename] || 'flow',
+      isFlow: filename in fakeIsFlow ? fakeIsFlow[filename] : true,
       expressions: {
         covered_count: 1,
         uncovered_count: 1,

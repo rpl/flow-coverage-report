@@ -180,7 +180,7 @@ exports[`<HTMLReportBodySummary /> 1`] = `
             </td>
           </tr>
           <tr
-            className="positive"
+            className="negative"
           >
             <td
               className="selectable"
@@ -193,7 +193,7 @@ exports[`<HTMLReportBodySummary /> 1`] = `
             </td>
             <td>
                @
-              flow
+              no flow
                
             </td>
             <td
@@ -234,7 +234,7 @@ exports[`<HTMLReportBodySummary /> 1`] = `
             </td>
             <td>
                @
-              flow
+              flow strict
                
             </td>
             <td
@@ -275,7 +275,7 @@ exports[`<HTMLReportBodySummary /> 1`] = `
             </td>
             <td>
                @
-              flow
+              flow strict-local
                
             </td>
             <td
@@ -521,7 +521,7 @@ exports[`<HTMLReportBodySummary /> 2`] = `
             </td>
             <td>
                @
-              flow
+              no flow
                
             </td>
             <td
@@ -562,7 +562,7 @@ exports[`<HTMLReportBodySummary /> 2`] = `
             </td>
             <td>
                @
-              flow
+              flow strict
                
             </td>
             <td
@@ -603,7 +603,7 @@ exports[`<HTMLReportBodySummary /> 2`] = `
             </td>
             <td>
                @
-              flow
+              flow strict-local
                
             </td>
             <td
