@@ -20,6 +20,7 @@ export default function FlowCoverageFileTableRow(
     disableLink: boolean,
     threshold: number,
     isError: boolean,
+    isFlow: boolean,
     flowCoverageError: ?string,
     flowCoverageParsingError: ?string,
     flowCoverageException: ?string,
@@ -34,11 +35,11 @@ export default function FlowCoverageFileTableRow(
     uncovered_count,
     percent,
     isError,
+    isFlow,
     disableLink,
     threshold
   } = props;
 
-  const isFlow = ['flow', 'flow strict', 'flow strict-local'].indexOf(annotation) !== -1;
   const aboveThreshold = percent >= threshold;
   let className = (!isError && isFlow && aboveThreshold) ?
     'positive' : 'negative';

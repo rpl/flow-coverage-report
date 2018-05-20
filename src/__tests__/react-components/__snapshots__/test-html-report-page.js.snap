@@ -186,7 +186,7 @@ exports[`<HTMLReportSummaryPage/> 1`] = `
               </td>
             </tr>
             <tr
-              className="positive"
+              className="negative"
             >
               <td
                 className="selectable"
@@ -199,7 +199,7 @@ exports[`<HTMLReportSummaryPage/> 1`] = `
               </td>
               <td>
                  @
-                flow
+                no flow
                  
               </td>
               <td
@@ -240,7 +240,7 @@ exports[`<HTMLReportSummaryPage/> 1`] = `
               </td>
               <td>
                  @
-                flow
+                flow strict
                  
               </td>
               <td
@@ -281,7 +281,7 @@ exports[`<HTMLReportSummaryPage/> 1`] = `
               </td>
               <td>
                  @
-                flow
+                flow strict-local
                  
               </td>
               <td

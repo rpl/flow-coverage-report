@@ -114,6 +114,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
                   flowCoverageException: coverageData.flowCoverageException,
                   flowCoverageStderr: coverageData.flowCoverageStderr,
                   isError: coverageData.isError,
+                  isFlow: coverageData.isFlow,
                   percent,
                   threshold,
                   /* eslint-disable camelcase */

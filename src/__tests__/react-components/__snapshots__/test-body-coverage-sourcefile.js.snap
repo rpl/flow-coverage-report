@@ -193,7 +193,7 @@ exports[`<HTMLReportBodySourceFile /> 1`] = `
       }
     }
   >
-    {"percent":50,"annotation":"flow","expressions":{"covered_count":1,"uncovered_count":1,"uncovered_locs":[{"start":{"line":1,"column":1,"offset":10},"end":{"line":2,"column":2,"offset":30}}]}}
+    {"percent":50,"annotation":"flow","isFlow":true,"expressions":{"covered_count":1,"uncovered_count":1,"uncovered_locs":[{"start":{"line":1,"column":1,"offset":10},"end":{"line":2,"column":2,"offset":30}}]}}
   </pre>
 </body>
 `;
