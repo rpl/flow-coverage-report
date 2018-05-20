@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "ava": "nyc ava --verbose",
-    "build": "rm -Rf dist && babel -d dist src --only src/lib --source-maps",
+    "build": "rimraf dist && babel -d dist src --only src/lib --source-maps",
+    "update-flow-typed": "rimraf flow-typed && flow-typed install -s -i dev",
     "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
     "jest:unit": "jest --coverage src/__tests__",
@@ -70,7 +71,8 @@
     "eslint-plugin-flowtype": "2.33.0",
     "eslint-plugin-jest": "20.0.2",
     "eslint-plugin-react": "7.1.0",
-    "flow-bin": "0.57.3",
+    "flow-bin": "0.72.0",
+    "flow-typed": "2.4.0",
     "jest": "22.1.1",
     "react-test-renderer": "15.5.4",
     "rimraf": "2.6.2",
@@ -160,11 +162,11 @@
     }
   },
   "flow-coverage-report": {
-    "includeGlob": [
+    "globIncludePatterns": [
       "src/lib/**/*.js",
       "src/lib/**/*.jsx"
     ],
-    "type": [
+    "reportTypes": [
       "text",
       "html",
       "json",

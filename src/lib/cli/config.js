@@ -1,25 +1,28 @@
+// @flow
 import path from 'path';
 import fs from 'fs';
 import parseJSON from 'parse-json';
 import stripJSONComments from 'strip-json-comments';
 
-export class UsageError {
-  constructor(message) {
-    this.message = message;
+export class UsageError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'UsageError';
   }
 }
 
-const toArray = value => Array.isArray(value) ? value : [value];
+const toArray = (value: any): Array<any> => Array.isArray(value) ? value : [value];
 
 export const defaultConfig = {
-  type: ['text'],
+  reportTypes: ['text'],
   flowCommandPath: 'flow',
   projectDir: path.resolve(process.cwd()),
-  excludeGlob: ['node_modules/**'],
+  globExcludePatterns: ['node_modules/**'],
   threshold: 80,
   outputDir: './flow-coverage',
   concurrentFiles: 1,
   strictCoverage: false,
+  excludeNonFlow: false,
   noConfig: false,
   htmlTemplateOptions: {
     autoHeightSource: true,
@@ -27,7 +30,44 @@ export const defaultConfig = {
   }
 };
 
-const getProjectDir = config => ({...defaultConfig, ...config}).projectDir;
+const getProjectDir = (config: Object): string => {
+  const {projectDir} = ({...defaultConfig, ...config});
+
+  if (!projectDir) {
+    throw new UsageError('projectDir option is mandatory');
+  }
+
+  if (typeof projectDir !== 'string') {
+    throw new UsageError('Unexpected non-string projectDir option');
+  }
+
+  return projectDir;
+};
+
+/**
+ * Normalize config properties to match the property name used internally
+ * when it has multiple aliases.
+ *
+ * @param {object} config
+ */
+function normalizedConfig(config: Object): Object {
+  if (config.includeGlobs) {
+    console.warn('WARN: includeGlobs config file property has been renamed to globIncludePatterns');
+    config.globIncludePatterns = config.includeGlobs;
+  }
+
+  if (config.excludeGlobs) {
+    console.warn('WARN: excludeGlobs config file property has been renamed to globExcludePatterns');
+    config.globExcludePatterns = config.excludeGlobs;
+  }
+
+  if (config.type) {
+    console.warn('WARN: type config file property has been renamed to reportTypes');
+    config.reportTypes = config.type;
+  }
+
+  return config;
+}
 
 /**
  * Try to load configuration parameters from the project dir if the following order:
@@ -36,7 +76,7 @@ const getProjectDir = config => ({...defaultConfig, ...config}).projectDir;
  * - from a .flow-coverage-report.json, if any
  * - from the --config cli parameter, if any
  */
-export function loadConfig(args) {
+export function loadConfig(args: Object): Object {
   // Remove any undefined property from the yargs object.
   for (const key of Object.keys(args)) {
     if (typeof args[key] === 'undefined') {
@@ -55,10 +95,14 @@ export function loadConfig(args) {
     args.includeGlob = toArray(args.includeGlob);
   }
 
+  if (args.globIncludePatterns) {
+    args.globIncludePatterns = toArray(args.globIncludePatterns);
+  }
+
   if (args.config) {
     const filePath = path.resolve(args.config);
     const fileRawData = fs.readFileSync(filePath);
-    const fileConfigData = parseJSON(stripJSONComments(`${fileRawData}`));
+    const fileConfigData = parseJSON(stripJSONComments(String(fileRawData)));
 
     if (process.env.VERBOSE) {
       console.log('Loaded config from file', filePath, fileConfigData);
@@ -66,7 +110,7 @@ export function loadConfig(args) {
 
     return {
       ...defaultConfig,
-      ...fileConfigData,
+      ...normalizedConfig(fileConfigData),
       ...args
     };
   }
@@ -75,6 +119,7 @@ export function loadConfig(args) {
 
   try {
     packageJSONPath = path.resolve(path.join(getProjectDir(args), 'package.json'));
+    // $FlowIgnoreMe: the following dynamic require loads only the package.json file.
     const pkg = require(packageJSONPath); // eslint-disable-line import/no-dynamic-require
     if (pkg['flow-coverage-report']) {
       if (process.env.VERBOSE) {
@@ -83,7 +128,7 @@ export function loadConfig(args) {
 
       return {
         ...defaultConfig,
-        ...pkg['flow-coverage-report'],
+        ...normalizedConfig(pkg['flow-coverage-report']),
         ...args
       };
     }
@@ -98,7 +143,7 @@ export function loadConfig(args) {
   try {
     projectConfigPath = path.resolve(path.join(getProjectDir(args), '.flow-coverage-report.json'));
     const projectConfigRaw = fs.readFileSync(projectConfigPath);
-    const projectConfigData = parseJSON(stripJSONComments(`${projectConfigRaw}`));
+    const projectConfigData = parseJSON(stripJSONComments(String(projectConfigRaw)));
 
     if (process.env.VERBOSE) {
       console.log('Loaded config from project dir', projectConfigPath, projectConfigData);
@@ -106,7 +151,7 @@ export function loadConfig(args) {
 
     return {
       ...defaultConfig,
-      ...projectConfigData,
+      ...normalizedConfig(projectConfigData),
       ...args
     };
   } catch (err) {
@@ -127,7 +172,7 @@ export function loadConfig(args) {
  * flow type declaration in the "src/lib/index.js module")
  */
 
-export function validateConfig(args) {
+export function validateConfig(args: Object): Object {
   function raiseErrorIfArray(value, msg) {
     if (Array.isArray(value)) {
       throw new UsageError(`ERROR: Only one ${msg} can be specified.`);
@@ -147,12 +192,13 @@ export function validateConfig(args) {
     raiseErrorIfArray(args[option], msg);
   }
 
-  const {includeGlob} = args;
-  if (!includeGlob || includeGlob.length === 0 || !includeGlob[0]) {
+  const {globIncludePatterns} = args;
+  if (!globIncludePatterns || globIncludePatterns.length === 0 ||
+      !globIncludePatterns[0]) {
     throw new UsageError('ERROR: No glob has been specified.');
   }
 
-  for (const glob of includeGlob) {
+  for (const glob of globIncludePatterns) {
     if (glob[0] === '!') {
       throw new UsageError('ERROR: Only include glob syntax are supported.');
     }

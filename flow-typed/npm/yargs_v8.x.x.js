@@ -5,7 +5,7 @@ declare module "yargs" {
   declare type Argv = {
     _: Array<string>,
     $0: string,
-    [key: string]: any
+    [key: string]: mixed
   };
 
   declare type Options = $Shape<{
@@ -13,7 +13,7 @@ declare module "yargs" {
     array: boolean,
     boolean: boolean,
     choices: Array<mixed>,
-    coerce: (arg: any) => mixed,
+    coerce: (arg: mixed) => mixed,
     config: boolean,
     configParser: (configPath: string) => { [key: string]: mixed },
     conflicts: string | { [key: string]: string },

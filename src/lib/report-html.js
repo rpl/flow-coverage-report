@@ -13,7 +13,7 @@ import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';
 
 const baseSemanticAssets = ['themes', 'default', 'assets'];
-const assetsList = [
+const assetsList: Array<string> = [
   'jquery-3.1.0.min.js',
   'semantic.min.js',
   'semantic.min.css',
@@ -36,7 +36,7 @@ const assetsList = [
   ['fonts', 'icons.ttf'],
   ['fonts', 'icons.woff'],
   ['fonts', 'icons.woff2']
-].map(el => {
+].map((el: string | Array<string>): string => {
   return path.join.apply(null, baseSemanticAssets.concat(el));
 }));
 

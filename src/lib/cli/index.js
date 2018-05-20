@@ -1,4 +1,5 @@
 // @flow
+
 import generateFlowCoverageReport from '../../lib';
 import processArgv from './args';
 import {loadConfig, validateConfig, UsageError} from './config';
@@ -18,20 +19,7 @@ exports.run = () => {
     process.exit(255); // eslint-disable-line unicorn/no-process-exit
   }
 
-  generateFlowCoverageReport({
-    concurrentFiles: args.concurrentFiles,
-    flowCommandPath: args.flowCommandPath,
-    globExcludePatterns: args.excludeGlob,
-    globIncludePatterns: args.includeGlob,
-    outputDir: args.outputDir,
-    projectDir: args.projectDir,
-    reportTypes: args.type,
-    threshold: args.threshold,
-    strictCoverage: args.strictCoverage,
-    htmlTemplateOptions: args.htmlTemplateOptions,
-    excludeNonFlow: args.excludeNonFlow,
-    flowCommandTimeout: args.flowCommandTimeout
-  }).then(([coverageSummaryData]) => {
+  generateFlowCoverageReport({...args}).then(([coverageSummaryData]) => {
     const {percent, threshold} = coverageSummaryData;
     if (percent < threshold) {
       console.error(

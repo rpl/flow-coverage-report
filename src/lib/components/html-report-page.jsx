@@ -28,6 +28,7 @@ export type FlowReportMetaProps = {
   coverageGeneratedAt: string,
   htmlTemplateOptions: {
     autoHeightSource?: boolean,
+    showMeterBar?: boolean,
   },
 };
 
