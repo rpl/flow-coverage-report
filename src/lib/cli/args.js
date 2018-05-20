@@ -20,7 +20,7 @@ For more informations:
   https://github.com/rpl/flow-coverage-report
 `;
 
-export default function processArgv(argv: Array<string>) {
+export default function processArgv(argv: Array<string>): any {
   const appName = path.basename(argv[1]).split('.')[0];
 
   return yargs(argv).usage('Usage: $0 COMMAND PROJECTDIR [...globs]')
@@ -32,14 +32,23 @@ export default function processArgv(argv: Array<string>) {
     .option('flow-command-path', {
       alias: 'f',
       type: 'string',
-      coerce: (value: string) => value.slice(0, 2) === './' ? path.resolve(value) : value,
+      coerce: (value: mixed) => {
+        if (value !== 'string') {
+          throw new TypeError('Unexpected non-string value');
+        }
+        return value.slice(0, 2) === './' ? path.resolve(value) : value;
+      },
       describe: `path to the flow executable (defaults to "${defaultConfig.flowCommandPath}")`
+    })
+    .option('flow-command-timeout', {
+      type: 'number',
+      describe: `maximum number of milliseconds to wait for a flow response (defaults to 15 seconds)`
     })
     // --type text
     .option('type', {
-      alias: 't',
+      alias: ['t', 'reportTypes'],
       choices: ['html', 'json', 'text', 'badge'],
-      describe: `format of the generated reports (defaults to "${defaultConfig.type.join(', ')}")`
+      describe: `format of the generated reports (defaults to "${defaultConfig.reportTypes.join(', ')}")`
     })
     // --project-dir "/project/dir/path"
     .option('project-dir', {
@@ -49,15 +58,15 @@ export default function processArgv(argv: Array<string>) {
     })
     // --include-glob "src/**/*.js"
     .option('include-glob', {
-      alias: 'i',
-      type: 'string',
+      alias: ['i', 'globIncludePatterns'],
+      type: 'array',
       describe: 'include the files selected by the specified glob'
     })
     .option('exclude-glob', {
-      alias: 'x',
-      type: 'string',
+      alias: ['x', 'globExcludePatterns'],
+      type: 'array',
       describe: 'exclude the files selected by the specified glob ' +
-        `(defaults to "${defaultConfig.excludeGlob}")`
+        `(defaults to "${JSON.stringify(defaultConfig.globExcludePatterns)}")`
     })
     .options('threshold', {
       type: 'number',

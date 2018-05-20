@@ -68,15 +68,15 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
 
   // Apply validation checks.
   if (!projectDir) {
-    return Promise.reject(new Error('projectDir option is mandatory'));
+    return Promise.reject(new TypeError('projectDir option is mandatory'));
   }
 
   if (opts.globIncludePatterns.length === 0) {
-    return Promise.reject(new Error('empty globIncludePatterns option'));
+    return Promise.reject(new TypeError('empty globIncludePatterns option'));
   }
 
   if (!opts.threshold) {
-    return Promise.reject(new Error('threshold option is mandatory'));
+    return Promise.reject(new TypeError('threshold option is mandatory'));
   }
 
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(

@@ -81,7 +81,8 @@ export async function checkFlowStatus(
   let tmpFilePath: ?string;
 
   if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
-    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+    tmpFilePath = temp.path(tmpDirPath ?
+      {suffix: '.json', dir: tmpDirPath} : {suffix: '.json'});
   }
 
   const res = await exec(`${flowCommandPath} status --json`,
@@ -163,7 +164,8 @@ export async function collectFlowCoverageForFile(
   let tmpFilePath: ?string;
 
   if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
-    tmpFilePath = temp.path({suffix: '.json', dir: tmpDirPath});
+    tmpFilePath = temp.path(tmpDirPath ?
+      {suffix: '.json', dir: tmpDirPath} : {suffix: '.json'});
   }
 
   const emptyCoverageData = {
@@ -360,7 +362,8 @@ export function collectFlowCoverage(
       globIncludePatterns,
       globExcludePatterns,
       concurrentFiles,
-      strictCoverage
+      strictCoverage,
+      excludeNonFlow
     };
 
     // Remove the source attribute from all ucovered_locs entry.
@@ -394,6 +397,17 @@ export function collectFlowCoverage(
               continue;
             }
 
+            if (excludeNonFlow) {
+              // eslint-disable-next-line no-await-in-loop
+              const annotation = await genCheckFlowStatus(flowCommandPath, filename);
+              if (annotation === 'no flow') {
+                if (process.env.VERBOSE) {
+                  console.log(`Skip ${filename}, matched 'no flow' in excludeNonFlow mode.`);
+                }
+                continue;
+              }
+            }
+
             if (process.env.VERBOSE) {
               console.log(`Queue ${filename} flow coverage data collection`);
             }
@@ -401,9 +415,6 @@ export function collectFlowCoverage(
             waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
               flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath, strictCoverage
             ).then(data => {
-              if (excludeNonFlow && data.annotation !== 'flow') {
-                return;
-              }
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
               coverageSummaryData.uncovered_count += data.expressions.uncovered_count;

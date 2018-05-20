@@ -3,7 +3,7 @@
 exports[`Fixed #57 - NaN in text report 1`] = `
 Object {
   "filteredStdout": Array [
-    "│ src/url.js │       flow │     0 % │     7 │       0 │ 7         │",
+    "│ src/url.js │       flow │     0 % │     9 │       0 │ 9         │",
   ],
   "stderr": "Flow Coverage 0% is below the required threshold 80%
 ",
