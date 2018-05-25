@@ -70,7 +70,7 @@
     "eslint-plugin-flowtype": "2.33.0",
     "eslint-plugin-jest": "20.0.2",
     "eslint-plugin-react": "7.1.0",
-    "flow-bin": "0.57.3",
+    "flow-bin": "0.73.0",
     "jest": "22.1.1",
     "react-test-renderer": "15.5.4",
     "rimraf": "2.6.2",
