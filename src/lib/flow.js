@@ -19,7 +19,7 @@ export function escapeFileName(fileName: string): string {
 }
 
 function roundTo2DecimalPlaces(n: number): number {
-  return Math.round(n * 100) / 100
+  return Math.round(n * 100) / 100;
 }
 
 /* eslint-disable camelcase */
