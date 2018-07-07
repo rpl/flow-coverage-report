@@ -4,6 +4,40 @@ import fs from 'fs';
 import parseJSON from 'parse-json';
 import stripJSONComments from 'strip-json-comments';
 
+export type HTMLTemplateOptions = {|
+  autoHeightSource: bool,
+  showMeterBar: bool
+|}
+
+export type ReportType = 'json' | 'text' | 'badge' |'html';
+
+export type ConfigParams = {|
+  reportTypes?: Array<ReportType>,
+  flowCommandPath: string,
+  flowCommandTimeout: number,
+  projectDir: string,
+  globExcludePatterns?: Array<string>,
+  globIncludePatterns: Array<string>,
+  threshold: number,
+  outputDir: string,
+  concurrentFiles?: number,
+  strictCoverage: bool,
+  excludeNonFlow: bool,
+  noConfig: bool,
+  htmlTemplateOptions?: HTMLTemplateOptions,
+
+  // Legacy params.
+  includeGlob?: ?Array<string>,
+  excludeGlob?: ?Array<string>,
+  type?: ?Array<ReportType>,
+|}
+
+export type DefaultConfigParams = {
+  ...ConfigParams,
+  reportTypes: Array<ReportType>,
+  concurrentFiles: number,
+}
+
 export class UsageError extends Error {
   constructor(message: string) {
     super(message);
@@ -13,11 +47,16 @@ export class UsageError extends Error {
 
 const toArray = (value: any): Array<any> => Array.isArray(value) ? value : [value];
 
-export const defaultConfig = {
+// Default timeout for flow coverage commands.
+export const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
+
+export const defaultConfig: DefaultConfigParams = {
   reportTypes: ['text'],
   flowCommandPath: 'flow',
+  flowCommandTimeout: DEFAULT_FLOW_TIMEOUT,
   projectDir: path.resolve(process.cwd()),
   globExcludePatterns: ['node_modules/**'],
+  globIncludePatterns: [],
   threshold: 80,
   outputDir: './flow-coverage',
   concurrentFiles: 1,
@@ -50,20 +89,20 @@ const getProjectDir = (config: Object): string => {
  *
  * @param {object} config
  */
-function normalizedConfig(config: Object): Object {
-  if (config.includeGlobs) {
-    console.warn('WARN: includeGlobs config file property has been renamed to globIncludePatterns');
-    config.globIncludePatterns = config.includeGlobs;
+function normalizedConfig(config: ConfigParams): ConfigParams {
+  if (typeof config.includeGlob !== 'undefined') {
+    console.warn('WARN: "includeGlob" config file property has been renamed to "globIncludePatterns"');
+    config.globIncludePatterns = toArray(config.includeGlob);
   }
 
-  if (config.excludeGlobs) {
-    console.warn('WARN: excludeGlobs config file property has been renamed to globExcludePatterns');
-    config.globExcludePatterns = config.excludeGlobs;
+  if (typeof config.excludeGlob !== 'undefined') {
+    console.warn('WARN: "excludeGlob" config file property has been renamed to "globExcludePatterns"');
+    config.globExcludePatterns = toArray(config.excludeGlob);
   }
 
-  if (config.type) {
-    console.warn('WARN: type config file property has been renamed to reportTypes');
-    config.reportTypes = config.type;
+  if (typeof config.type !== 'undefined') {
+    console.warn('WARN: "type" config file property has been renamed to "reportTypes"');
+    config.reportTypes = toArray(config.type);
   }
 
   return config;

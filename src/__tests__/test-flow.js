@@ -2,7 +2,7 @@
 
 import minimatch from 'minimatch';
 
-import {DEFAULT_FLOW_TIMEOUT} from '../lib/index';
+import {DEFAULT_FLOW_TIMEOUT} from '../lib/cli/config';
 import {isFlowAnnotation} from '../lib/flow';
 
 const LIB_FLOW = '../lib/flow';
