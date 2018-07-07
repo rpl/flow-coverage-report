@@ -216,7 +216,7 @@ export async function collectFlowCoverageForFile(
     {dontReject: true});
 
   if (res.err) {
-    console.error(`ERROR Collecting coverage data from ${filename} `, filename, res.err, res.stderr);
+    console.error('ERROR Collecting coverage data from', filename, res.err, res.stderr);
 
     if (process.env.VERBOSE) {
       if (tmpFilePath) {
