@@ -1,0 +1,12 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Legacy config warnings should log warning messages for legacy config names 1`] = `
+Object {
+  "error": null,
+  "exitCode": 0,
+  "stderr": "WARN: \\"includeGlob\\" config file property has been renamed to \\"globIncludePatterns\\"
+WARN: \\"excludeGlob\\" config file property has been renamed to \\"globExcludePatterns\\"
+WARN: \\"type\\" config file property has been renamed to \\"reportTypes\\"
+",
+}
+`;

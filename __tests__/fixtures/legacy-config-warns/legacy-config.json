@@ -1,0 +1,9 @@
+{
+  "excludeGlob": [
+    "node_modules/**"
+  ],
+  "includeGlob": [
+    "src/**/*.js"
+  ],
+  "type": "text"
+}

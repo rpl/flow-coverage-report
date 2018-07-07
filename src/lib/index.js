@@ -4,6 +4,7 @@
 
 import path from 'path';
 
+import {DEFAULT_FLOW_TIMEOUT} from './cli/config';
 import {collectFlowCoverage} from './flow';
 import {withTmpDir} from './promisified';
 import reportHTML from './report-html';
@@ -11,28 +12,17 @@ import reportBadge from './report-badge';
 import reportJSON from './report-json';
 import reportText from './report-text';
 
-import type {FlowCoverageSummaryData} from './flow'; // eslint-disable-line no-duplicate-imports
+// eslint-disable-next-line no-duplicate-imports
+import type {ConfigParams, ReportType} from './cli/config';
+// eslint-disable-next-line no-duplicate-imports
+import type {FlowCoverageSummaryData} from './flow';
 
-export type FlowCoverageReportType = 'json' | 'text' | 'badge' |'html';
+export type FlowCoverageReportType = ReportType;
 
 export type FlowCoverageReportOptions = {
-  projectDir: string,
-  flowCommandPath: string,
-  flowCommandTimeout: number,
-  globIncludePatterns: Array<string>,
-  globExcludePatterns: Array<string>,
-  outputDir: string,
-  reportTypes?: Array<FlowCoverageReportType>,
-  htmlTemplateOptions?: Object,
-  threshold: number,
-  strictCoverage: boolean,
-  excludeNonFlow: boolean,
-  concurrentFiles?: number,
+  ...ConfigParams,
   log?: Function
 };
-
-// Default timeout for flow coverage commands.
-export const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
 // User Scenarios
 // 1. generate text report from a project dir
