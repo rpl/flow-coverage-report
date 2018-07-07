@@ -18,6 +18,10 @@ export function escapeFileName(fileName: string): string {
   return fileName.replace(/(["\s'$`\\])/g, '\\$1');
 }
 
+function roundTo2DecimalPlaces(n: number): number {
+  return Math.round(n * 100) / 100;
+}
+
 /* eslint-disable camelcase */
 export function getCoveredPercent(
   {
@@ -32,7 +36,7 @@ export function getCoveredPercent(
     return 100;
   }
 
-  return Math.floor(covered_count / total * 100);
+  return roundTo2DecimalPlaces(covered_count / total * 100);
 }
 /* eslint-disable-line camelcase */
 
