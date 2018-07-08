@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`--percent-decimals option should round percent values using the requested precision 1`] = `
+Object {
+  "error": [Error: Command failed: flow-coverage-report.js --percent-decimals 2 -i "src/**.js"
+Flow Coverage 16.67% is below the required threshold 80%
+],
+  "exitCode": 2,
+  "filteredStdout": Array [
+    "│ src/main.js │       flow │ 16.67 % │     6 │       1 │ 5         │",
+    "│ project-decimal-coverage │ 16.67 % │     6 │       1 │         5 │",
+  ],
+  "stderr": "Flow Coverage 16.67% is below the required threshold 80%
+",
+}
+`;
