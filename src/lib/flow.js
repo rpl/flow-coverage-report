@@ -185,14 +185,25 @@ export type FlowCoverageJSONData = {
   flowCoverageStderr?: string|Buffer
 }
 
-export async function collectFlowCoverageForFile(
+type CollectFlowCoverageForFileOptions = {
   flowCommandPath: string,
   flowCommandTimeout: number,
   projectDir: string,
+  strictCoverage: bool,
+};
+
+export async function collectFlowCoverageForFile(
+  opts: CollectFlowCoverageForFileOptions,
   filename: string,
   tmpDirPath: ?string,
-  strictCoverage: ?boolean,
 ): Promise<FlowCoverageJSONData> {
+  const {
+    flowCommandPath,
+    flowCommandTimeout,
+    projectDir,
+    strictCoverage
+  } = opts;
+
   let tmpFilePath: ?string;
 
   if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
@@ -372,7 +383,6 @@ export function collectFlowCoverage(
 ): Promise<FlowCoverageSummaryData> {
   const {
     flowCommandPath,
-    flowCommandTimeout,
     projectDir,
     globIncludePatterns,
     globExcludePatterns = [],
@@ -456,9 +466,7 @@ export function collectFlowCoverage(
               console.log(`Queue ${filename} flow coverage data collection`);
             }
 
-            waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(
-              flowCommandPath, flowCommandTimeout, projectDir, filename, tmpDirPath, strictCoverage
-            ).then(data => {
+            waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(opts, filename, tmpDirPath).then(data => {
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
               coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
