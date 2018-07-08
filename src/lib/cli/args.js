@@ -73,6 +73,11 @@ export default function processArgv(argv: Array<string>): any {
       type: 'number',
       describe: `the minimum coverage percent requested (defaults to ${defaultConfig.threshold})`
     })
+    .options('percent-decimals', {
+      alias: ['percentDecimanls'],
+      type: 'number',
+      describe: 'the number of decimals used for the computed percent values'
+    })
     // --output-dir "/var/public_html/flow-coverage"
     .option('output-dir', {
       alias: 'o',

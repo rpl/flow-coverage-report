@@ -423,12 +423,17 @@ const testCollectFlowCoverage = async ({
     'test/**'
   ];
 
-  const res = await flow.collectFlowCoverage(
-    'flow', DEFAULT_FLOW_TIMEOUT, '/projectDir',
-    globIncludePatterns, globExcludePatterns,
-    80, 5, '/tmp/fakeTmpDir',
-    strictCoverage, excludeNonFlow
-  );
+  const res = await flow.collectFlowCoverage({
+    flowCommandPath: 'flow',
+    flowCommandTimeout: DEFAULT_FLOW_TIMEOUT,
+    projectDir: '/projectDir',
+    globIncludePatterns,
+    globExcludePatterns,
+    threshold: 80,
+    concurrentFiles: 5,
+    strictCoverage,
+    excludeNonFlow
+  }, '/tmp/fakeTmpDir');
 
   expect(typeof res.generatedAt).toBe('string');
   delete res.generatedAt;
@@ -551,4 +556,13 @@ it('getCoveredPercent', () => {
   expect(flow.getCoveredPercent({covered_count: 0, uncovered_count: 10})).toBe(0);
   expect(flow.getCoveredPercent({covered_count: 3, uncovered_count: 11})).toBe(21);
   /* eslint-enable camelcase */
+});
+
+it('roundNumber', () => {
+  const flow = require(LIB_FLOW);
+
+  const originalNumber = 3 * 100 / (11 + 3);
+  expect(flow.roundNumber(originalNumber)).toBe(21);
+  expect(flow.roundNumber(originalNumber, 2)).toBe(21.43);
+  expect(flow.roundNumber(originalNumber, 4)).toBe(21.4286);
 });

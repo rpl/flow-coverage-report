@@ -51,6 +51,7 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
   opts.globIncludePatterns = opts.globIncludePatterns || [];
   opts.globExcludePatterns = opts.globExcludePatterns || [];
+  opts.concurrentFiles = opts.concurrentFiles || 1;
 
   if (!Array.isArray(opts.globExcludePatterns)) {
     opts.globExcludePatterns = [opts.globExcludePatterns];
@@ -70,13 +71,7 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
   }
 
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
-    opts.flowCommandPath, opts.flowCommandTimeout,
-    opts.projectDir, opts.globIncludePatterns, opts.globExcludePatterns,
-    opts.threshold, opts.concurrentFiles || 1,
-    tmpDirPath,
-    opts.strictCoverage,
-    opts.excludeNonFlow
-  );
+    opts, tmpDirPath);
 
   const reportResults = [];
   const reportTypes = opts.reportTypes || ['text'];

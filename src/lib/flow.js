@@ -7,6 +7,8 @@ import temp from 'temp';
 import {genCheckFlowStatus} from 'flow-annotation-check';
 import {exec, glob, writeFile} from './promisified';
 
+import type {FlowCoverageReportOptions} from './index';
+
 // Load the Array.prototype.find polyfill if needed (e.g. nodejs 0.12).
 /* istanbul ignore if  */
 if (!Array.prototype.find) {
@@ -18,8 +20,12 @@ export function escapeFileName(fileName: string): string {
   return fileName.replace(/(["\s'$`\\])/g, '\\$1');
 }
 
-function roundTo2DecimalPlaces(n: number): number {
-  return Math.round(n * 100) / 100;
+export function roundNumber(n: number, numDecimals: number = 0): number {
+  if (numDecimals > 0) {
+    const fact = Math.pow(10, Math.floor(numDecimals));
+    return Math.round(n * fact) / fact;
+  }
+  return Math.floor(n);
 }
 
 /* eslint-disable camelcase */
@@ -29,7 +35,7 @@ export function getCoveredPercent(
   }: {
     covered_count: number, uncovered_count: number
   },
-  withDecimals: boolean = false
+  numDecimals: number = 0
 ) {
   const total = covered_count + uncovered_count;
 
@@ -37,11 +43,7 @@ export function getCoveredPercent(
     return 100;
   }
 
-  if (!withDecimals) {
-    return Math.floor(covered_count / total * 100);
-  }
-
-  return roundTo2DecimalPlaces(covered_count / total * 100);
+  return roundNumber(covered_count / total * 100, numDecimals);
 }
 /* eslint-disable-line camelcase */
 
@@ -365,17 +367,22 @@ export function summarizeAnnotations(
 }
 
 export function collectFlowCoverage(
-  flowCommandPath: string,
-  flowCommandTimeout: number,
-  projectDir: string,
-  globIncludePatterns: Array<string>,
-  globExcludePatterns: Array<string>,
-  threshold: number,
-  concurrentFiles: number,
+  opts: FlowCoverageReportOptions,
   tmpDirPath: ?string,
-  strictCoverage: ?boolean,
-  excludeNonFlow: boolean
 ): Promise<FlowCoverageSummaryData> {
+  const {
+    flowCommandPath,
+    flowCommandTimeout,
+    projectDir,
+    globIncludePatterns,
+    globExcludePatterns = [],
+    threshold,
+    percentDecimals,
+    concurrentFiles = 1,
+    strictCoverage,
+    excludeNonFlow
+  } = opts;
+
   return checkFlowStatus(flowCommandPath, projectDir, tmpDirPath).then(flowStatus => {
     const now = new Date();
     const coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
@@ -427,7 +434,7 @@ export function collectFlowCoverage(
         .then(async files => {
           for (const filename of files) {
             // Skip files that match any of the exclude patterns.
-            if (globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
+            if (globExcludePatterns && globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
               if (process.env.VERBOSE) {
                 console.log(`Skip ${filename}, matched excluded pattern.`);
               }
@@ -455,7 +462,7 @@ export function collectFlowCoverage(
               /* eslint-disable camelcase */
               coverageSummaryData.covered_count += data.expressions.covered_count;
               coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-              data.percent = getCoveredPercent(data.expressions);
+              data.percent = getCoveredPercent(data.expressions, percentDecimals);
 
               if (!data.filename) {
                 throw new Error('Unxepected missing filename from collected coverage data');
@@ -487,7 +494,7 @@ export function collectFlowCoverage(
     return Promise
       .all(globIncludePatterns.map(collectCoverageAndGenerateReportForGlob))
       .then(() => {
-        coverageSummaryData.percent = getCoveredPercent(coverageSummaryData);
+        coverageSummaryData.percent = getCoveredPercent(coverageSummaryData, percentDecimals);
         coverageSummaryData.flowAnnotations = summarizeAnnotations(
           coverageSummaryData
         );
