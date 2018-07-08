@@ -172,7 +172,7 @@ it(
     const filename = 'src/fakeFilename.js';
 
     const collectData = await flow.collectFlowCoverageForFile(
-        'flow', '/fake/projectDir/', filename, tmpDirPath
+        {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
       );
 
     // Expect a flow coverage exception in the collected data.
@@ -214,7 +214,7 @@ it('collectFlowCoverageForFile collects parsing errors', async () => {
   const filename = 'src/fakeFilename.js';
 
   const collectData = await flow.collectFlowCoverageForFile(
-      'flow', '/fake/projectDir/', filename, tmpDirPath
+      {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
     );
 
   let expectedParsingError;
@@ -262,7 +262,7 @@ it('collectFlowCoverageForFile collects coverage errors', async () => {
   const filename = 'src/fakeFilename.js';
 
   const collectData = await flow.collectFlowCoverageForFile(
-      'flow', '/fake/projectDir/', filename, tmpDirPath
+      {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
     );
 
   // Expect a flow coverage exception in the collected data.
@@ -316,7 +316,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   const flow = require(LIB_FLOW);
 
   const res = await flow.collectFlowCoverageForFile(
-    'flow', DEFAULT_FLOW_TIMEOUT, '/fake/projectDir', filename
+    {flowCommandPath: 'flow', flowCommandTimeout: DEFAULT_FLOW_TIMEOUT, projectDir: '/fake/projectDir'}, filename
   );
 
   expect(mockWriteFile.mock.calls.length).toBe(0);
