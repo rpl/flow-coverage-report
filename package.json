@@ -74,7 +74,7 @@
     "flow-bin": "0.72.0",
     "flow-typed": "2.4.0",
     "jest": "22.1.1",
-    "react-test-renderer": "15.5.4",
+    "react-test-renderer": "16.4.2",
     "rimraf": "2.6.2",
     "svgson": "2.1.0",
     "tempy": "0.2.1",
