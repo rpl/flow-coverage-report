@@ -129,6 +129,26 @@ You have just found it ;-)
 
 ## Changelog
 
+### [0.6.0](https://github.com/rpl/flow-coverage-report/compare/v0.5.0...v0.6.0)
+
+Bug Fixes:
+
+* Added support for the new flow annotations (strict and strict-local) (#150, #155)
+* Added warning on deprecated config names and improve cli/config type checks
+
+Features:
+
+* Added --percent-decimals cli options (#148, #157, #161)
+* Added -exclude-non-flow cli option (#144, #154)
+
+This new release fixes the issues with the new flow annotations (e.g. strict and strict-local) and
+introduces two new command line options:
+* `--exclude-non-flow` to automatically ignore any file that match the patterns but do not have any flow annotation
+* `--percent-decimals N` to include `N` decimals digits in the coverage percent values
+
+Thanks to Ville Saukkonen and Ben Styles for contributing the new --exclude-non-flow and
+--percent-deciments options, and Xandor Schiefer for adding support to the new flow annotations.
+
 ### 0.5.0
 
 Features:
