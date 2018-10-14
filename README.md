@@ -14,7 +14,6 @@ the coverage of the flow types checks.
 
 ![Screenshot flow coverage report sourcefile][screenshot-sourcefile]
 
-
 ## How to generate flow coverage reports for your project
 
 Install the command line tool (globally or as a dev dependency of your project)
@@ -51,20 +50,16 @@ flow-coverage-report -o my-custom-flow-coverage-dir/
 The `--config` flag allows specifying a path to a config file. The config file
 is a JSON file with the following structure:
 
-``` json
+```json
 {
   "concurrentFiles": 1,
-  "excludeGlob": [
-    "node_modules/**"
-  ],
+  "globExcludePatterns": ["node_modules/**"],
   "flowCommandPath": "path/to/flow/bin",
-  "includeGlob": [
-    "src/**/*.js"
-  ],
+  "globIncludePatterns": ["src/**/*.js"],
   "outputDir": "path/to/output",
   "projectDir": "path/to/project",
   "threshold": 90,
-  "type": "text"
+  "reportTypes": "text"
 }
 ```
 
@@ -85,11 +80,11 @@ For an npm package, the default options can also be configured by including them
   },
   ...
   "flow-coverage-report": {
-    "includeGlob": [
+    "globIncludePatterns": [
       "src/lib/**/*.js",
       "src/lib/**/*.jsx"
     ],
-    "type": [
+    "reportTypes": [
       "text",
       "html",
       "json"
@@ -105,7 +100,7 @@ parts of your JavaScript code by:
 
 - supporting syntaxes to annotate your code with types;
 - supporting syntaxes to declare, export and import new types implicitly and explicitly;
-- inferencing the type of the identifier used in your code as much as possible;  
+- inferencing the type of the identifier used in your code as much as possible;
 
 Unfortunately, even with a good amount of powerful inferencing strategies,
 sometimes flow is not able to inference the types in some chunks of our code.
@@ -133,18 +128,19 @@ You have just found it ;-)
 
 Bug Fixes:
 
-* Added support for the new flow annotations (strict and strict-local) (#150, #155)
-* Added warning on deprecated config names and improve cli/config type checks
+- Added support for the new flow annotations (strict and strict-local) (#150, #155)
+- Added warning on deprecated config names and improve cli/config type checks
 
 Features:
 
-* Added --percent-decimals cli options (#148, #157, #161)
-* Added -exclude-non-flow cli option (#144, #154)
+- Added --percent-decimals cli options (#148, #157, #161)
+- Added -exclude-non-flow cli option (#144, #154)
 
 This new release fixes the issues with the new flow annotations (e.g. strict and strict-local) and
 introduces two new command line options:
-* `--exclude-non-flow` to automatically ignore any file that match the patterns but do not have any flow annotation
-* `--percent-decimals N` to include `N` decimals digits in the coverage percent values
+
+- `--exclude-non-flow` to automatically ignore any file that match the patterns but do not have any flow annotation
+- `--percent-decimals N` to include `N` decimals digits in the coverage percent values
 
 Thanks to Ville Saukkonen and Ben Styles for contributing the new --exclude-non-flow and
 --percent-deciments options, and Xandor Schiefer for adding support to the new flow annotations.
@@ -193,6 +189,7 @@ Thanks to Ryan Albrecht, Boris Egorov, Julien Wajsberg for their help on this ne
 ### 0.3.0
 
 Introduces the new command line options:
+
 - submit more then 1 concurrent file to flow using `-c numManConcurentFilesSubmitted` (defaults to 1)
 - load options from a specific config file using `--config filepath`
   and disable config loading using `--no-config`
@@ -222,6 +219,7 @@ new release.
 ### 0.2.0
 
 Introduces the new command line options:
+
 - excluded file patterns using `-x "pattern"`
 - customize the output dir using `-o reportDirPath`
 
