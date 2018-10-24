@@ -7,10 +7,17 @@ Object {
 }
 `;
 
+exports[`CLI exit value should exit with code 0 when uncovered_count <= thresholdUncovered 1`] = `
+Object {
+  "error": null,
+  "exitCode": 0,
+}
+`;
+
 exports[`CLI exit value should exit with code 2 when total coverage is lower than the custom threshold 1`] = `
 Object {
   "error": [Error: Command failed: flow-coverage-report.js -i "src/*.js" --threshold 22
-Flow Coverage 16% is below the required threshold 22%
+Flow Coverage: 16% is below the required threshold 22%
 ],
   "exitCode": 2,
 }
@@ -19,7 +26,16 @@ Flow Coverage 16% is below the required threshold 22%
 exports[`CLI exit value should exit with code 2 when total coverage is lower than the default threshold 1`] = `
 Object {
   "error": [Error: Command failed: flow-coverage-report.js -i "src/*.js"
-Flow Coverage 16% is below the required threshold 80%
+Flow Coverage: 16% is below the required threshold 80%
+],
+  "exitCode": 2,
+}
+`;
+
+exports[`CLI exit value should exit with code 2 when uncovered_count > thresholdUncovered 1`] = `
+Object {
+  "error": [Error: Command failed: flow-coverage-report.js -i "src/*.js" --threshold-uncovered 3
+Flow Coverage: uncovered count is higher than the uncoveredThreshold
 ],
   "exitCode": 2,
 }

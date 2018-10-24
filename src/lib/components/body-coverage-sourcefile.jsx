@@ -70,7 +70,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
   }
   const {percent} = coverageData;
 
-  const threshold = coverageSummaryData.threshold;
+  const {threshold, thresholdUncovered} = coverageSummaryData;
 
   if (!threshold) {
     throw new Error('Missing threshold in coverageSummaryData');
@@ -84,9 +84,11 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
 
   let meterBar;
 
+  /* eslint-disable camelcase */
   if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
-    meterBar = <FlowCoverageMeterBar percent={percent} threshold={threshold}/>;
+    meterBar = <FlowCoverageMeterBar percent={percent} threshold={threshold} thresholdUncovered={thresholdUncovered} uncoveredCount={uncovered_count}/>;
   }
+  /* eslint-enable camelcase */
 
   return (
     <body>
@@ -117,6 +119,7 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
                   isFlow: coverageData.isFlow,
                   percent,
                   threshold,
+                  thresholdUncovered,
                   /* eslint-disable camelcase */
                   covered_count,
                   uncovered_count

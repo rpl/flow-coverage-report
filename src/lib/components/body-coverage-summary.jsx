@@ -44,6 +44,7 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
               flowCoverageStderr: fileSummary.flowCoverageStderr,
               disableLink: false,
               threshold: summary.threshold,
+              thresholdUncovered: summary.thresholdUncovered,
               annotation: fileSummary.annotation,
               percent: fileSummary.percent,
               /* eslint-disable camelcase */
@@ -61,7 +62,14 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
   let meterBar;
 
   if (props.htmlTemplateOptions && props.htmlTemplateOptions.showMeterBar) {
-    meterBar = <FlowCoverageMeterBar percent={percent} threshold={summary.threshold}/>;
+    meterBar = (
+      <FlowCoverageMeterBar
+        percent={percent}
+        threshold={summary.threshold}
+        thresholdUncovered={summary.thresholdUncovered}
+        uncoveredCount={summary.uncovered_count}
+        />
+    );
   }
 
   return (

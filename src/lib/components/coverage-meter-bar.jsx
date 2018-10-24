@@ -5,10 +5,27 @@
 import React from 'react';
 
 export default function FlowCoverageMeterBar(
-  props: {percent: number, threshold: number}
+  props: {
+    percent: number,
+    threshold: number,
+    thresholdUncovered: number,
+    uncoveredCount: number
+  }
 ) {
-  const threshold = props.threshold;
-  const color = props.percent >= threshold ? 'green' : 'red';
+  const {
+    threshold,
+    thresholdUncovered,
+    uncoveredCount,
+    percent
+  } = props;
+
+  let color;
+  if (thresholdUncovered) {
+    color = uncoveredCount <= thresholdUncovered ? 'green' : 'red';
+  } else {
+    color = percent >= threshold ? 'green' : 'red';
+  }
+
   const style = {
     padding: 0, height: 12
   };

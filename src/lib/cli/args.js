@@ -73,6 +73,10 @@ export default function processArgv(argv: Array<string>): any {
       type: 'number',
       describe: `the minimum coverage percent requested (defaults to ${defaultConfig.threshold})`
     })
+    .options('threshold-uncovered', {
+      type: 'number',
+      describe: `the maximum number of uncovered lines`
+    })
     .options('percent-decimals', {
       alias: ['percentDecimanls'],
       type: 'number',

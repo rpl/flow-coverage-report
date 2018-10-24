@@ -83,3 +83,45 @@ exports[`<FlowCoverageSummaryTable /> 2`] = `
   </tbody>
 </table>
 `;
+
+exports[`<FlowCoverageSummaryTable /> 3`] = `
+<table
+  className="ui small celled table"
+>
+  <thead>
+    <tr>
+      <th>
+        Percent
+      </th>
+      <th>
+        Total
+      </th>
+      <th>
+        Covered
+      </th>
+      <th>
+        Uncovered
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      className="positive"
+    >
+      <td>
+        50
+         %
+      </td>
+      <td>
+        10
+      </td>
+      <td>
+        5
+      </td>
+      <td>
+        5
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;

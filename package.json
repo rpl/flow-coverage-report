@@ -15,6 +15,7 @@
   "scripts": {
     "ava": "nyc ava --verbose",
     "build": "rimraf dist && babel -d dist src --only src/lib --source-maps",
+    "dev": "babel -d dist src --only src/lib --source-maps --watch",
     "update-flow-typed": "rimraf flow-typed && flow-typed install -s -i dev",
     "flow-coverage": "bin/flow-coverage-report.js",
     "flow-check": "flow check",
@@ -185,7 +186,7 @@
       "\\.jsx$": "babel-jest"
     },
     "transformIgnorePatterns": [
-      "node_modules/(?!(svgo)/)"
+      "node_modules/(?!(svgo|badge-up)/)"
     ],
     "testEnvironment": "node",
     "testMatch": [

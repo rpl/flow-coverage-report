@@ -66,10 +66,6 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     return Promise.reject(new TypeError('empty globIncludePatterns option'));
   }
 
-  if (!opts.threshold) {
-    return Promise.reject(new TypeError('threshold option is mandatory'));
-  }
-
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
     opts, tmpDirPath);
 

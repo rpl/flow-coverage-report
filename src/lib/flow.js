@@ -328,6 +328,7 @@ export type FlowCoverageSummaryData = {
   uncovered_count: number,
   percent: number,
   threshold: number,
+  thresholdUncovered: number,
   strictCoverage: boolean,
   generatedAt: string,
   flowStatus: FlowStatus,
@@ -387,6 +388,7 @@ export function collectFlowCoverage(
     globIncludePatterns,
     globExcludePatterns = [],
     threshold,
+    thresholdUncovered,
     percentDecimals,
     concurrentFiles = 1,
     strictCoverage,
@@ -407,6 +409,7 @@ export function collectFlowCoverage(
 
     const coverageSummaryData: FlowCoverageSummaryData = {
       threshold,
+      thresholdUncovered,
       covered_count: 0, uncovered_count: 0, // eslint-disable-line camelcase
       percent: 0,
       generatedAt: coverageGeneratedAt,
