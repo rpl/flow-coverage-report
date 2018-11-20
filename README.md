@@ -122,7 +122,7 @@ uncoverage parts of our sources for our entire project?
 
 You have just found it ;-)
 
-[flow]: https://flowtypes.org
+[flow]: https://flow.org
 [screenshot-text]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-text.png
 [screenshot-summary]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-summary.png
 [screenshot-sourcefile]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-sourcefile.png
