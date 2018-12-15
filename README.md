@@ -129,6 +129,14 @@ You have just found it ;-)
 
 ## Changelog
 
+### [0.6.1](https://github.com/rpl/flow-coverage-report/compare/v0.6.0...v0.6.1)
+
+Fixes:
+
+* npm audit: changed the badge-up npm dependency to @rpl/badge-up, forked from the original (currently unmantained) package
+  to update its svgo dependency, as it is detected by npm audit as the source of a moderate security vulnerability
+  (#178, See #177 for a rationale).
+
 ### [0.6.0](https://github.com/rpl/flow-coverage-report/compare/v0.5.0...v0.6.0)
 
 Bug Fixes:
