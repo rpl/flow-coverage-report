@@ -24,6 +24,7 @@ branches:
   only:
   - master
   - /^greenkeeper/.*$/
+  - /^v.*$/
 
 ### cache node_modules/ dir between builds on travis
 # Issues with node 4
