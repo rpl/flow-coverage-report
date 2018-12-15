@@ -4,7 +4,7 @@
 
 import path from 'path';
 
-import badge from 'badge-up';
+import badge from '@rpl/badge-up';
 
 import {mkdirp, writeFile} from './promisified';
 
