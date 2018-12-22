@@ -81,7 +81,7 @@ exports[`<HTMLReportSummaryPage/> 1`] = `
           <thead>
             <tr>
               <th
-                className="sorted ascending"
+                data-sort-default={true}
               >
                 Filename
               </th>

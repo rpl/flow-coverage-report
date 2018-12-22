@@ -17,7 +17,9 @@ const assetsList: Array<string> = [
   'jquery-3.1.0.min.js',
   'semantic.min.js',
   'semantic.min.css',
-  'semantic-tablesort.js',
+  'tablesort.css',
+  'tablesort.js',
+  'tablesort.number.js',
   'index.js',
   'codemirror.js',
   'codemirror.css',
@@ -91,12 +93,14 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
           assets: {
             css: [
               'semantic.min.css',
+              'tablesort.css',
               'flow-coverage-report.css'
             ].map(prefixAssets).map(toRelative),
             js: [
               'jquery-3.1.0.min.js',
               'semantic.min.js',
-              'semantic-tablesort.js',
+              'tablesort.js',
+              'tablesort.number.js',
               'index.js'
             ].map(prefixAssets).map(toRelative)
           }
@@ -130,6 +134,7 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
                   assets: {
                     css: [
                       'semantic.min.css',
+                      'tablesort.css',
                       'codemirror.css',
                       'flow-highlight-source.css',
                       'flow-coverage-report.css',
@@ -138,7 +143,8 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
                     js: [
                       'jquery-3.1.0.min.js',
                       'semantic.min.js',
-                      'semantic-tablesort.js',
+                      'tablesort.js',
+                      'tablesort.number.js',
                       'codemirror.js',
                       'codemirror-javascript-mode.js',
                       'codemirror-annotatescrollbar-addon.js',
