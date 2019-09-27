@@ -48,7 +48,7 @@
     "minimatch": "3.0.4",
     "mkdirp": "0.5.1",
     "parse-json": "2.2.0",
-    "react": "15.5.4",
+    "react": "16.10.0",
     "react-dom": "15.5.4",
     "strip-json-comments": "2.0.1",
     "temp": "0.8.3",
