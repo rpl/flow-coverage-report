@@ -44,7 +44,7 @@
     "babel-runtime": "6.23.0",
     "@rpl/badge-up": "2.2.0",
     "flow-annotation-check": "1.8.1",
-    "glob": "7.1.1",
+    "glob": "7.1.6",
     "minimatch": "3.0.4",
     "mkdirp": "0.5.1",
     "parse-json": "2.2.0",
