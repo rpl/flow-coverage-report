@@ -34,11 +34,13 @@ branches:
 
 deploy:
   provider: npm
+  # Travis dpl v2 (See https://docs.travis-ci.com/user/deployment-v2/providers/npm/)
+  edge: true
   email: lgreco@mozilla.com
-  skip_cleanup: true
+  cleanup: false
   on:
     tags: true
     repo: rpl/flow-coverage-report
     branch: master
-  api_key:
+  api_token:
     secure: oFBnDw2G7j8b+9sWdF74eLJU2zNkb42Vyslss7dbJ7x0UMO8rZ9T1Irz0cxgXtsJY52a+wa+8DyZ58HmOfY0ko0INqFFgMsdas0DJSpXoQxCVoi47xdTXqHerz6Ri8Sm7z//7lff0llieDIykYS9duUic8KhmQUb5kI+kiHWFWlEg123nOo902wA3/n5aL1QPKqGgxJn1WwjGcVkHmuWxXZLaHswDZlThHZj45RbFvvtIe8D4Fr7dyKEIEfFy/OhwYgfkGDxuyJgqq+GAR7gmUtYrPIHoG4xfdAWIoYOsI3ZbsljTvgxoniruF/5JRCfxJRZd88Knb/oMcSa7EaICx+P3WAesh96L7xw24DK6TGIcj84woQQCFbW7vU751H5Uxwh93SuIBCzKJY3zU1e85WEMhT1L1rG+4aJNTaoZyVzP+NCeTEIo+q2h196GSUWIpvt8ASWk8G6ELbcHI8qUXx7JHeSVPmPsMFp4kbXQSDAwJEdi9PyH9OR4AQaD1v95otWMOAgfFqLWNOiGa52sxk9NeMhXuDFN0rla/9LKqyOFyyCIypHQsinmiB5IFF1V5Iq+Y+xcuTmpnZBqTr7K/X8uDSFgjwu8tWlKl0C/jOaTiOuQ3iGwnC15IzYqkCLWFz1F9jFgdxqrJwQNd2PikCnlYpxf71pZfTDU+BUsTE=
