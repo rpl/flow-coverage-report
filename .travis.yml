@@ -1,40 +1,23 @@
 language: node_js
 sudo: false
-
 node_js:
 - '6'
-
 os:
 - linux
-
-## Disable because it seems to be often slow (and sometimes errored)
-## on Travis CI
-# - osx
-
 matrix:
   fast_finish: true
   exclude:
   - os: osx
     node_js: '4'
-
 script:
 - npm test
-
 branches:
   only:
   - master
-  - /^greenkeeper/.*$/
-  - /^v.*$/
-
-### cache node_modules/ dir between builds on travis
-# Issues with node 4
-#cache:
-#  directories:
-#    - node_modules
-
+  - "/^greenkeeper/.*$/"
+  - "/^v.*$/"
 deploy:
   provider: npm
-  # Travis dpl v2 (See https://docs.travis-ci.com/user/deployment-v2/providers/npm/)
   edge: true
   email: lgreco@mozilla.com
   cleanup: false
@@ -43,4 +26,4 @@ deploy:
     repo: rpl/flow-coverage-report
     branch: master
   api_token:
-    secure: oFBnDw2G7j8b+9sWdF74eLJU2zNkb42Vyslss7dbJ7x0UMO8rZ9T1Irz0cxgXtsJY52a+wa+8DyZ58HmOfY0ko0INqFFgMsdas0DJSpXoQxCVoi47xdTXqHerz6Ri8Sm7z//7lff0llieDIykYS9duUic8KhmQUb5kI+kiHWFWlEg123nOo902wA3/n5aL1QPKqGgxJn1WwjGcVkHmuWxXZLaHswDZlThHZj45RbFvvtIe8D4Fr7dyKEIEfFy/OhwYgfkGDxuyJgqq+GAR7gmUtYrPIHoG4xfdAWIoYOsI3ZbsljTvgxoniruF/5JRCfxJRZd88Knb/oMcSa7EaICx+P3WAesh96L7xw24DK6TGIcj84woQQCFbW7vU751H5Uxwh93SuIBCzKJY3zU1e85WEMhT1L1rG+4aJNTaoZyVzP+NCeTEIo+q2h196GSUWIpvt8ASWk8G6ELbcHI8qUXx7JHeSVPmPsMFp4kbXQSDAwJEdi9PyH9OR4AQaD1v95otWMOAgfFqLWNOiGa52sxk9NeMhXuDFN0rla/9LKqyOFyyCIypHQsinmiB5IFF1V5Iq+Y+xcuTmpnZBqTr7K/X8uDSFgjwu8tWlKl0C/jOaTiOuQ3iGwnC15IzYqkCLWFz1F9jFgdxqrJwQNd2PikCnlYpxf71pZfTDU+BUsTE=
+    secure: aVewjQT9RfNL+49Wj1gwdA+x6GHGhNQvzCPHCTEn/kVdxQgl+uy6klLOEfSNiVeADXjzD4U9/q7RMfxPXCt7aMYbPxE6MFmbiOSWQ0g7jPi4x4pgkhxEjyeIH1z/+mYcob4IKFVse0F016woo+14LpKD75vljeNrgSqeyy+VJOH8aw+3dKWOFHKqq29HbKxe/CImtnU6SCpLO4/3kx27qzI1qYVTHBSV6+qwgGOX9OxoC5wyjFNMHlaci0v1gNinTDZPUOgsKk5GTVttCwbQGT17SWAoHacMFrDBPkXSiET68GLbzsdO2ncx243dw/pAaoOHU/fUoqO6nYyJGXbnXwWuvQSk312ImNGct0elQfAy0EQTpPnyvOom/ctNRlOv24b32djJPcefeWG9HB0tGvWRKWUzOXoRIy5vPV8QOnoIQ8hJb0DcxQQKPlT869hINUiq1pNqhEVp5X7aMiLF1ozxeJMWXld6ezQPtOtTTBx5t/YlSsoVgqg1y+Ls+ESJIPJXxT8Lh3IVwX8wPaRJJ/oIax3QZONdFH7m9HjXByi1h0zS3cbkbjggFe2KmM5TEFEg1gQdL3I5pVoiFknoy7fTzw6GC8S1DKnKBJFViuAycTFZxa5/OX151cOs6qfOMJyJ6fLnNorl8o3s8cgBOM+wv5Dmjz1fc9KZnhGD7ns=
