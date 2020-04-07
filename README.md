@@ -129,6 +129,10 @@ You have just found it ;-)
 
 ## Changelog
 
+### [0.6.2](https://github.com/rpl/flow-coverage-report/compare/v0.6.1...v0.6.2)
+
+* npm audit: updated mkdirp dependency to version ^0.5.5
+
 ### [0.6.1](https://github.com/rpl/flow-coverage-report/compare/v0.6.0...v0.6.1)
 
 Fixes:
