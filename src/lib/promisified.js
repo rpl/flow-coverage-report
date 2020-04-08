@@ -5,7 +5,6 @@
 import {exec as nodeExec} from 'child_process';
 import fs from 'fs';
 import npmGlob from 'glob';
-import npmMkdirp from 'mkdirp';
 import temp from 'temp';
 
 // Automatically cleanup temp file on process.exit
@@ -32,18 +31,6 @@ export function exec(
         }
       } else {
         resolve({stdout, stderr});
-      }
-    });
-  });
-}
-
-export function mkdirp(path: string): Promise<void> {
-  return new Promise((resolve, reject) => {
-    npmMkdirp(path, err => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
       }
     });
   });

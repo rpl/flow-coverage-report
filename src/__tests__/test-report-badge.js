@@ -14,9 +14,9 @@ beforeEach(() => {
 
 function getPromisifiedMocks() {
   const mockMkdirp = jest.fn();
+  jest.mock('mkdirp', () => mockMkdirp);
   const mockWriteFile = jest.fn();
   jest.mock(LIB_PROMISIFIED, () => ({
-    mkdirp: mockMkdirp,
     writeFile: mockWriteFile
   }));
 
