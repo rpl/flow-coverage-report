@@ -1,5 +1,5 @@
-// flow-typed signature: 82aa0feffc2bbd64dce3bec492f5d601
-// flow-typed version: 3315d89a00/mkdirp_v0.5.x/flow_>=v0.25.0
+// flow-typed signature: 9c00839fc21beedd52e40f15ef3343f2
+// flow-typed version: <<STUB>>/mkdirp_v^1.0.4/flow_v0.72.0
 
 declare module 'mkdirp' {
   declare type Options = number | { mode?: number; fs?: mixed };
@@ -7,7 +7,7 @@ declare module 'mkdirp' {
   declare type Callback = (err: ?Error, path: ?string) => void;
 
   declare module.exports: {
-    (path: string, options?: Options | Callback, callback?: Callback): void;
+    (path: string, options?: Options): Promise<?string>;
     sync(path: string, options?: Options): void;
   };
 }

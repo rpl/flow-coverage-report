@@ -18,10 +18,10 @@ beforeEach(() => {
 
 it('generate HTML report', async () => {
   const mockMkdirp = jest.fn();
+  jest.mock('mkdirp', () => mockMkdirp);
   const mockReadFile = jest.fn();
   const mockWriteFile = jest.fn();
   jest.mock(LIB_PROMISIFIED, () => ({
-    mkdirp: mockMkdirp,
     readFile: mockReadFile,
     writeFile: mockWriteFile
   }));

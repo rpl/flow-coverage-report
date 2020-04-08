@@ -9,6 +9,7 @@ beforeEach(() => {
 
 it('generate JSON report', async () => {
   const mockMkdirp = jest.fn();
+  jest.mock('mkdirp', () => mockMkdirp);
   const mockWriteFile = jest.fn();
 
   jest.mock(LIB_PROMISIFIED, () => ({
