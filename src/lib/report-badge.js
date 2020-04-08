@@ -5,8 +5,9 @@
 import path from 'path';
 
 import badge from '@rpl/badge-up';
+import mkdirp from 'mkdirp';
 
-import {mkdirp, writeFile} from './promisified';
+import {writeFile} from './promisified';
 
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from './index';

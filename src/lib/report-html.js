@@ -5,8 +5,9 @@
 import path from 'path';
 import React from 'react';
 import react from 'react-dom/server';
+import mkdirp from 'mkdirp';
 
-import {mkdirp, readFile, writeFile} from './promisified';
+import {readFile, writeFile} from './promisified';
 import {HTMLReportSummaryPage, HTMLReportSourceFilePage} from './components/html-report-page'; // eslint-disable-line import/no-unresolved
 
 import type {FlowCoverageSummaryData} from './flow';
