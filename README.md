@@ -127,7 +127,19 @@ You have just found it ;-)
 [screenshot-summary]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-summary.png
 [screenshot-sourcefile]: https://raw.githubusercontent.com/rpl/flow-coverage-report/master/doc/screenshot-sourcefile.png
 
+
 ## Changelog
+
+### [0.7.0](https://github.com/rpl/flow-coverage-report/compare/v0.6.2...v0.7.0)
+
+⚠ BREAKING CHANGES ⚠
+
+- Dropped support for node.js <= 10
+
+Fixes:
+
+* npm audit: updated mkdirp dependency to version ^1.0.4 (removes minimist dependency and fixes npm audit failure due to
+  [CVE-2020-7598](https://github.com/advisories/GHSA-vh95-rmgr-6w4m)
 
 ### [0.6.2](https://github.com/rpl/flow-coverage-report/compare/v0.6.1...v0.6.2)
 
