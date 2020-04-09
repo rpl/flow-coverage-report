@@ -12,6 +12,10 @@
     "bin/*",
     "assets/**/*"
   ],
+  "engines": {
+    "node": ">=10.0.0",
+    "npm": ">=6.13.4"
+  },
   "scripts": {
     "ava": "nyc ava --verbose",
     "build": "rimraf dist && babel -d dist src --only src/lib --source-maps",
