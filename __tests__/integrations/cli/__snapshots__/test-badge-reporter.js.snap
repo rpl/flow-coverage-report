@@ -2,588 +2,796 @@
 
 exports[`badge reporter should generate green badges on full covered project: flow-badge green 1`] = `
 Object {
-  "attrs": Object {
+  "attributes": Object {
     "height": "20",
     "width": "88",
     "xmlns": "http://www.w3.org/2000/svg",
   },
-  "childs": Array [
+  "children": Array [
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "b",
         "x2": "0",
         "y2": "100%",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "0",
             "stopColor": "#bbb",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "1",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "linearGradient",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "a",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#fff",
             "height": "20",
             "rx": "3",
             "width": "88",
           },
+          "children": Array [],
           "name": "rect",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "mask",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "mask": "url(#a)",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h34v20H0z",
             "fill": "#555",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M34 0h54v20H34z",
             "fill": "#4C1",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h88v20H0z",
             "fill": "url(#b)",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "fill": "#fff",
         "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
         "fontSize": "11",
         "textAnchor": "middle",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "17",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "17",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "60",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "passing",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "passing",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "60",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "passing",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "passing",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
   ],
   "name": "svg",
+  "type": "element",
+  "value": "",
 }
 `;
 
 exports[`badge reporter should generate green badges on full covered project: flow-coverage-badge green 1`] = `
 Object {
-  "attrs": Object {
+  "attributes": Object {
     "height": "20",
     "width": "132",
     "xmlns": "http://www.w3.org/2000/svg",
   },
-  "childs": Array [
+  "children": Array [
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "b",
         "x2": "0",
         "y2": "100%",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "0",
             "stopColor": "#bbb",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "1",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "linearGradient",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "a",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#fff",
             "height": "20",
             "rx": "3",
             "width": "132",
           },
+          "children": Array [],
           "name": "rect",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "mask",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "mask": "url(#a)",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h91v20H0z",
             "fill": "#555",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M91 0h41v20H91z",
             "fill": "#4C1",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h132v20H0z",
             "fill": "url(#b)",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "fill": "#fff",
         "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
         "fontSize": "11",
         "textAnchor": "middle",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "45.5",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow-coverage",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow-coverage",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "45.5",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow-coverage",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow-coverage",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "110.5",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "100%",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "100%",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "110.5",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "100%",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "100%",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
   ],
   "name": "svg",
+  "type": "element",
+  "value": "",
 }
 `;
 
 exports[`badge reporter should generate red badges on project-low-coverage-with-error: flow-badge red 1`] = `
 Object {
-  "attrs": Object {
+  "attributes": Object {
     "height": "20",
     "width": "81",
     "xmlns": "http://www.w3.org/2000/svg",
   },
-  "childs": Array [
+  "children": Array [
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "b",
         "x2": "0",
         "y2": "100%",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "0",
             "stopColor": "#bbb",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "1",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "linearGradient",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "a",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#fff",
             "height": "20",
             "rx": "3",
             "width": "81",
           },
+          "children": Array [],
           "name": "rect",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "mask",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "mask": "url(#a)",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h34v20H0z",
             "fill": "#555",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M34 0h47v20H34z",
             "fill": "#E05D44",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h81v20H0z",
             "fill": "url(#b)",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "fill": "#fff",
         "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
         "fontSize": "11",
         "textAnchor": "middle",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "17",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "17",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "56.5",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "failing",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "failing",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "56.5",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "failing",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "failing",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
   ],
   "name": "svg",
+  "type": "element",
+  "value": "",
 }
 `;
 
 exports[`badge reporter should generate red badges on project-low-coverage-with-error: flow-coverage-badge red 1`] = `
 Object {
-  "attrs": Object {
+  "attributes": Object {
     "height": "20",
     "width": "125",
     "xmlns": "http://www.w3.org/2000/svg",
   },
-  "childs": Array [
+  "children": Array [
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "b",
         "x2": "0",
         "y2": "100%",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "0",
             "stopColor": "#bbb",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "offset": "1",
             "stopOpacity": ".1",
           },
+          "children": Array [],
           "name": "stop",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "linearGradient",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "id": "a",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#fff",
             "height": "20",
             "rx": "3",
             "width": "125",
           },
+          "children": Array [],
           "name": "rect",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "mask",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "mask": "url(#a)",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h91v20H0z",
             "fill": "#555",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M91 0h34v20H91z",
             "fill": "#E05D44",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "d": "M0 0h125v20H0z",
             "fill": "url(#b)",
           },
+          "children": Array [],
           "name": "path",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
     Object {
-      "attrs": Object {
+      "attributes": Object {
         "fill": "#fff",
         "fontFamily": "Verdana,DejaVu Sans,Geneva,sans-serif",
         "fontSize": "11",
         "textAnchor": "middle",
       },
-      "childs": Array [
+      "children": Array [
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "45.5",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow-coverage",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow-coverage",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "45.5",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "flow-coverage",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "flow-coverage",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "fill": "#010101",
             "fillOpacity": ".3",
             "x": "107",
             "y": "15",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "37%",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "37%",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
         Object {
-          "attrs": Object {
+          "attributes": Object {
             "x": "107",
             "y": "14",
           },
-          "childs": Array [
+          "children": Array [
             Object {
-              "text": "37%",
+              "attributes": Object {},
+              "children": Array [],
+              "name": "",
+              "type": "text",
+              "value": "37%",
             },
           ],
           "name": "text",
+          "type": "element",
+          "value": "",
         },
       ],
       "name": "g",
+      "type": "element",
+      "value": "",
     },
   ],
   "name": "svg",
+  "type": "element",
+  "value": "",
 }
 `;

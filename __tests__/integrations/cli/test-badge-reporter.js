@@ -4,7 +4,7 @@ import path from 'path';
 
 import rimraf from 'rimraf';
 import tempy from 'tempy';
-import svgson from 'svgson';
+import * as svgson from 'svgson';
 
 import {
   FIXTURE_PATH,
@@ -15,11 +15,9 @@ import {readFile} from '../../../src/lib/promisified';
 const testLowCoverageDir = path.join(FIXTURE_PATH, 'project-low-coverage-with-error');
 const testFullCoverageDir = path.join(FIXTURE_PATH, 'project-full-coverage');
 
-function svg2json(filePath) {
-  return new Promise(async resolve => {
-    const svgData = await readFile(filePath);
-    svgson(svgData.toString(), {}, resolve);
-  });
+async function svg2json(filePath) {
+  const svgData = await readFile(filePath);
+  return svgson.parse(svgData.toString(), {camelcase: true});
 }
 
 describe('badge reporter', () => {
