@@ -430,6 +430,7 @@ const testCollectFlowCoverage = async ({
     globIncludePatterns,
     globExcludePatterns,
     threshold: 80,
+    thresholdUncovered: 3,
     concurrentFiles: 5,
     strictCoverage,
     excludeNonFlow
@@ -462,6 +463,7 @@ const testCollectFlowCoverage = async ({
     concurrentFiles: 5,
     percent: 50,
     threshold: 80,
+    thresholdUncovered: 3,
     /* eslint-disable camelcase */
     covered_count: excludeNonFlow ? 4 : 5,
     uncovered_count: excludeNonFlow ? 4 : 5,

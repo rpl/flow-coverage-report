@@ -35,4 +35,22 @@ describe('CLI exit value', async () => {
 
     expect({exitCode, error}).toMatchSnapshot();
   });
+
+  it('should exit with code 2 when uncovered_count > thresholdUncovered', async () => {
+    const {exitCode, error} = await runFlowCoverageReport([
+      '-i', `"src/*.js"`,
+      '--threshold-uncovered', '3'
+    ], {cwd: testProjectDir});
+
+    expect({exitCode, error}).toMatchSnapshot();
+  });
+
+  it('should exit with code 0 when uncovered_count <= thresholdUncovered', async () => {
+    const {exitCode, error} = await runFlowCoverageReport([
+      '-i', `"src/*.js"`,
+      '--threshold-uncovered', '10'
+    ], {cwd: testProjectDir});
+
+    expect({exitCode, error}).toMatchSnapshot();
+  });
 });

@@ -73,6 +73,10 @@ function renderTextReport(
     borderStyle: 2
   });
 
+  const thresholdValue = coverageData.thresholdUncovered ?
+    ['thresholdUncovered', coverageData.thresholdUncovered] :
+    ['threshold', coverageData.threshold];
+
   summaryTablePre.push([
     'included glob patterns:',
     coverageData.globIncludePatterns.join(', ')
@@ -81,10 +85,7 @@ function renderTextReport(
     'excluded glob patterns:',
     (coverageData.globExcludePatterns || []).join(', ')
   ]);
-  summaryTablePre.push([
-    'threshold:',
-    coverageData.threshold
-  ]);
+  summaryTablePre.push(thresholdValue);
   summaryTablePre.push([
     'concurrent files:',
     coverageData.concurrentFiles
@@ -117,8 +118,15 @@ function renderTextReport(
   const summaryTotal = coverageData.covered_count + coverageData.uncovered_count;
   const summaryPercent = coverageData.percent;
 
+  let withinThreshold;
+  if (opts.thresholdUncovered) {
+    withinThreshold = coverageData.uncovered_count <= opts.thresholdUncovered;
+  } else {
+    withinThreshold = summaryPercent >= opts.threshold;
+  }
+
   let summaryColor;
-  if (summaryPercent >= (opts.threshold || 80)) {
+  if (withinThreshold) {
     summaryColor = 'green';
   } else {
     summaryColor = 'red';

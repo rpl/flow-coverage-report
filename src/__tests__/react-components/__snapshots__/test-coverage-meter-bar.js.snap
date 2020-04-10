@@ -1,8 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<FlowCoverageMeterBar /> 1`] = `
+exports[`<FlowCoverageMeterBar /> percent <= threshold 1`] = `
 <div
   className="row red"
+  style={
+    Object {
+      "height": 12,
+      "padding": 0,
+    }
+  }
+/>
+`;
+
+exports[`<FlowCoverageMeterBar /> uncoveredCount <= thresholdUncovered 1`] = `
+<div
+  className="row green"
   style={
     Object {
       "height": 12,

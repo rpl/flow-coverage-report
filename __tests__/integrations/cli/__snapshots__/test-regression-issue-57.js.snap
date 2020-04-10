@@ -5,7 +5,7 @@ Object {
   "filteredStdout": Array [
     "│ src/url.js │       flow │     0 % │     9 │       0 │ 9         │",
   ],
-  "stderr": "Flow Coverage 0% is below the required threshold 80%
+  "stderr": "Flow Coverage: 0% is below the required threshold 80%
 ",
 }
 `;

@@ -12,7 +12,14 @@ export default function FlowCoverageSummaryTable(props: FlowCoverageSummaryRepor
   }
   const summary = props.coverageSummaryData;
   const percent = summary.percent;
-  const className = percent >= summary.threshold ? 'positive' : 'negative';
+  const threshold = summary.thresholdUncovered || summary.threshold;
+  let className;
+
+  if (summary.thresholdUncovered) {
+    className = summary.uncovered_count <= threshold ? 'positive' : 'negative';
+  } else {
+    className = percent >= threshold ? 'positive' : 'negative';
+  }
 
   return (
     <table className="ui small celled table">
