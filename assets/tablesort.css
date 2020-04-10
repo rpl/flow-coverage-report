@@ -1,0 +1,19 @@
+.ui.sortable.table thead th[role=columnheader]:after {
+  display: inline-block;
+	-ms-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	user-select: none;
+}
+
+.ui.sortable.table thead th[role=columnheader][aria-sort=ascending]:after {
+  content: '\f0d8';
+}
+
+.ui.sortable.table thead th[role=columnheader][aria-sort=descending]:after {
+  content: '\f0d7';
+}
+
+.ui.sortable.table thead th[role=columnheader][aria-sort] {
+  background: #0000000d;
+}

@@ -75,7 +75,7 @@ exports[`<HTMLReportBodySummary /> 1`] = `
         <thead>
           <tr>
             <th
-              className="sorted ascending"
+              data-sort-default={true}
             >
               Filename
             </th>
@@ -403,7 +403,7 @@ exports[`<HTMLReportBodySummary /> 2`] = `
         <thead>
           <tr>
             <th
-              className="sorted ascending"
+              data-sort-default={true}
             >
               Filename
             </th>
