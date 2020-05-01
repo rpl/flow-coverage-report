@@ -80,7 +80,7 @@
     "jest": "22.1.1",
     "react-test-renderer": "15.5.4",
     "rimraf": "2.6.2",
-    "svgson": "4.0.0",
+    "svgson": "4.1.0",
     "tempy": "0.2.1",
     "xo": "0.18.1",
     "yaml-jest": "1.0.5"
