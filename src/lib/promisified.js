@@ -60,14 +60,9 @@ export function writeFile(path: string, data: string|Buffer): Promise<void> {
   });
 }
 
-export type GlobOptions = {
-  cwd?: string,
-  root?: string,
-};
-
 export type GlobFilelist = Array<string>;
 
-export function glob(pattern: string, options: GlobOptions): Promise<GlobFilelist> {
+export function glob(pattern: string, options: *): Promise<GlobFilelist> {
   return new Promise((resolve, reject) => {
     npmGlob(pattern, options, (err, files) => {
       if (err) {

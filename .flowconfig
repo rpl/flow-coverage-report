@@ -1,5 +1,6 @@
 [ignore]
 .*/node_modules/fbjs/.*
+.*/node_modules/yargs/.*
 .*/dist/.*
 .*/__tests__/fixtures/.*
 
