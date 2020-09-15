@@ -74,9 +74,9 @@ export function glob(pattern: string, options: *): Promise<GlobFilelist> {
   });
 }
 
-export function withTmpDir(tempFileId: string): Promise<string> {
+export function withTmpDir(temporaryFileId: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    temp.mkdir(tempFileId, (err, dirPath) => {
+    temp.mkdir(temporaryFileId, (err, dirPath) => {
       if (err) {
         reject(err);
       } else {

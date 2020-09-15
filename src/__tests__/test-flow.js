@@ -10,8 +10,8 @@ const LIB_PROMISIFIED = '../lib/promisified';
 const NPM_FLOW_ANNOTATION_CHECK = 'flow-annotation-check';
 const NPM_TEMP = 'temp';
 
-const tmpDirPath = '/tmp/fake-tmp-path';
-const tmpFilePath = `${tmpDirPath}/fake-tmp-file.json`;
+const temporaryDirPath = '/tmp/fake-tmp-path';
+const temporaryFilePath = `${temporaryDirPath}/fake-tmp-file.json`;
 
 beforeEach(() => {
   jest.resetModules();
@@ -20,37 +20,38 @@ beforeEach(() => {
 it('checkFlowStatus does not catch arbitrary errors', async () => {
   const mockExec = jest.fn();
   const mockWriteFile = jest.fn();
-  const mockTempPath = jest.fn();
+  const mockTemporaryPath = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
-    path: mockTempPath
+    path: mockTemporaryPath
   }));
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
     writeFile: mockWriteFile
   }));
 
-  mockTempPath.mockReturnValueOnce(tmpFilePath);
+  mockTemporaryPath.mockReturnValueOnce(temporaryFilePath);
   mockExec.mockReturnValueOnce(Promise.resolve({
     err: new Error('Fake flow status error')
   }));
 
   const flow = require(LIB_FLOW);
 
-  expect(mockTempPath.mock.calls.length).toBe(0);
+  expect(mockTemporaryPath.mock.calls.length).toBe(0);
 
   let exception;
 
   try {
-    await flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath);
-  } catch (err) {
-    exception = err;
+    await flow.checkFlowStatus('flow', '/fake/projectDir/', temporaryDirPath);
+  } catch (error) {
+    exception = error;
   }
+
   expect(exception && exception.message).toMatch(
     'Fake flow status error'
   );
   expect(mockExec.mock.calls.length).toBe(1);
-  expect(mockExec.mock.calls[0][0]).toBe(`flow status --json`);
+  expect(mockExec.mock.calls[0][0]).toBe('flow status --json');
   expect(mockExec.mock.calls[0][1]).toEqual({
     cwd: '/fake/projectDir/',
     maxBuffer: Infinity
@@ -59,7 +60,7 @@ it('checkFlowStatus does not catch arbitrary errors', async () => {
 
   // No file should be created if the VERBOSE and
   // DEBUG_DUMP_JSON env var are not set
-  expect(mockTempPath.mock.calls.length).toBe(0);
+  expect(mockTemporaryPath.mock.calls.length).toBe(0);
   expect(mockWriteFile.mock.calls.length).toBe(0);
 });
 
@@ -68,10 +69,10 @@ it(
   async () => {
     const mockExec = jest.fn();
     const mockWriteFile = jest.fn();
-    const mockTempPath = jest.fn();
+    const mockTemporaryPath = jest.fn();
 
     jest.mock(NPM_TEMP, () => ({
-      path: mockTempPath
+      path: mockTemporaryPath
     }));
     jest.mock(LIB_PROMISIFIED, () => ({
       exec: mockExec,
@@ -84,7 +85,7 @@ it(
       errors: []
     };
 
-    mockTempPath.mockReturnValueOnce(tmpFilePath);
+    mockTemporaryPath.mockReturnValueOnce(temporaryFilePath);
     mockExec.mockReturnValueOnce(Promise.resolve({
       err: {code: 2},
       stdout: JSON.stringify(fakeJSONStatusReply)
@@ -93,16 +94,17 @@ it(
 
     const flow = require(LIB_FLOW);
 
-    const res = await flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath);
+    const res = await flow.checkFlowStatus('flow', '/fake/projectDir/', temporaryDirPath);
 
     expect(res).toEqual(fakeJSONStatusReply);
 
     let exception;
     try {
-      await flow.checkFlowStatus('flow', '/fake/projectDir/', tmpDirPath);
-    } catch (err) {
-      exception = err;
+      await flow.checkFlowStatus('flow', '/fake/projectDir/', temporaryDirPath);
+    } catch (error) {
+      exception = error;
     }
+
     expect(exception && exception.message).toMatch(
       /Parsing error on Flow status JSON result: SyntaxError: Unexpected end/
     );
@@ -113,10 +115,10 @@ it(
   'checkFlowStatus rejects on invalid flow status json format',
   async () => {
     const mockExec = jest.fn();
-    const mockTempPath = jest.fn();
+    const mockTemporaryPath = jest.fn();
 
     jest.mock(NPM_TEMP, () => ({
-      path: mockTempPath
+      path: mockTemporaryPath
     }));
     jest.mock(LIB_PROMISIFIED, () => ({
       exec: mockExec
@@ -134,9 +136,10 @@ it(
     let exception;
     try {
       await flow.checkFlowStatus('flow', '/fake/projectDir/');
-    } catch (err) {
-      exception = err;
+    } catch (error) {
+      exception = error;
     }
+
     expect(exception && exception.message).toMatch(
       'Invalid Flow status JSON format'
     );
@@ -147,11 +150,11 @@ it(
   'collectFlowCoverageForFile collects flow command exit errors',
   async () => {
     const mockExec = jest.fn();
-    const mockTempPath = jest.fn();
+    const mockTemporaryPath = jest.fn();
     const mockWriteFile = jest.fn();
 
     jest.mock(NPM_TEMP, () => ({
-      path: mockTempPath
+      path: mockTemporaryPath
     }));
     jest.mock(LIB_PROMISIFIED, () => ({
       exec: mockExec,
@@ -172,8 +175,8 @@ it(
     const filename = 'src/fakeFilename.js';
 
     const collectData = await flow.collectFlowCoverageForFile(
-        {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
-      );
+      {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, temporaryDirPath
+    );
 
     // Expect a flow coverage exception in the collected data.
     expect(collectData.isError).toBe(true);
@@ -195,11 +198,11 @@ it(
 
 it('collectFlowCoverageForFile collects parsing errors', async () => {
   const mockExec = jest.fn();
-  const mockTempPath = jest.fn();
+  const mockTemporaryPath = jest.fn();
   const mockWriteFile = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
-    path: mockTempPath
+    path: mockTemporaryPath
   }));
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
@@ -214,14 +217,14 @@ it('collectFlowCoverageForFile collects parsing errors', async () => {
   const filename = 'src/fakeFilename.js';
 
   const collectData = await flow.collectFlowCoverageForFile(
-      {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
-    );
+    {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, temporaryDirPath
+  );
 
   let expectedParsingError;
   try {
     JSON.parse('{');
-  } catch (err) {
-    expectedParsingError = err;
+  } catch (error) {
+    expectedParsingError = error;
   }
 
   // Expect a flow coverage exception in the collected data.
@@ -243,11 +246,11 @@ it('collectFlowCoverageForFile collects parsing errors', async () => {
 
 it('collectFlowCoverageForFile collects coverage errors', async () => {
   const mockExec = jest.fn();
-  const mockTempPath = jest.fn();
+  const mockTemporaryPath = jest.fn();
   const mockWriteFile = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
-    path: mockTempPath
+    path: mockTemporaryPath
   }));
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
@@ -262,8 +265,8 @@ it('collectFlowCoverageForFile collects coverage errors', async () => {
   const filename = 'src/fakeFilename.js';
 
   const collectData = await flow.collectFlowCoverageForFile(
-      {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, tmpDirPath
-    );
+    {flowCommandPath: 'flow', projectDir: '/fake/projectDir/'}, filename, temporaryDirPath
+  );
 
   // Expect a flow coverage exception in the collected data.
   expect(collectData.isError).toBe(true);
@@ -285,11 +288,11 @@ it('collectFlowCoverageForFile collects coverage errors', async () => {
 it('collectFlowCoverageForFile resolve coverage data', async () => {
   const mockExec = jest.fn();
   const mockWriteFile = jest.fn();
-  const mockTempPath = jest.fn();
+  const mockTemporaryPath = jest.fn();
   const mockGenCheckFlowStatus = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
-    path: mockTempPath
+    path: mockTemporaryPath
   }));
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
@@ -307,7 +310,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
     }
   };
 
-  mockTempPath.mockReturnValueOnce(tmpFilePath);
+  mockTemporaryPath.mockReturnValueOnce(temporaryFilePath);
   mockExec.mockReturnValueOnce(Promise.resolve({
     stdout: Buffer.from(JSON.stringify(fakeFlowCoverageData))
   }));
@@ -337,12 +340,12 @@ const testCollectFlowCoverage = async ({
 } = {}) => {
   const mockExec = jest.fn();
   const mockWriteFile = jest.fn();
-  const mockTempPath = jest.fn();
+  const mockTemporaryPath = jest.fn();
   const mockGlob = jest.fn();
   const mockGenCheckFlowStatus = jest.fn();
 
   jest.mock(NPM_TEMP, () => ({
-    path: mockTempPath
+    path: mockTemporaryPath
   }));
   jest.mock(LIB_PROMISIFIED, () => ({
     exec: mockExec,
@@ -483,6 +486,7 @@ const testCollectFlowCoverage = async ({
         expectedFlowAnnotations[filename] === 'no flow') {
       continue;
     }
+
     expect(resFiles[filename].expressions.uncovered_locs).toEqual([{
       start: {
         line: 1,
@@ -502,7 +506,7 @@ const testCollectFlowCoverage = async ({
       'flow',
       'flow strict',
       'flow strict-local'
-    ].indexOf(expectedFlowAnnotations[filename]) !== -1);
+    ].includes(expectedFlowAnnotations[filename]));
 
     if (excludeNonFlow && expectedFlowAnnotations[filename] === 'no flow') {
       expect(resFiles[filename]).toEqual(undefined);

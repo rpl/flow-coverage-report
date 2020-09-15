@@ -11,7 +11,7 @@ import {readFile, writeFile} from './promisified';
 import {HTMLReportSummaryPage, HTMLReportSourceFilePage} from './components/html-report-page'; // eslint-disable-line import/no-unresolved
 
 import type {FlowCoverageSummaryData} from './flow';
-import type {FlowCoverageReportOptions} from './index';
+import type {FlowCoverageReportOptions} from '.';
 
 const baseSemanticAssets = ['themes', 'default', 'assets'];
 const assetsList: Array<string> = [
@@ -37,8 +37,8 @@ const assetsList: Array<string> = [
   ['fonts', 'icons.ttf'],
   ['fonts', 'icons.woff'],
   ['fonts', 'icons.woff2']
-].map((el: string | Array<string>): string => {
-  return path.join.apply(null, baseSemanticAssets.concat(el));
+].map((element: string | Array<string>): string => {
+  return path.join.apply(null, baseSemanticAssets.concat(element));
 }));
 
 function copyAsset(outputDir, assetName) {
@@ -64,7 +64,7 @@ function copyAssets(outputDir/* : string */) {
 
 function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
   if (opt.filename &&
-      opt.filename.indexOf('..') >= 0) {
+      opt.filename.includes('..')) {
     return Promise.reject(new Error(
       'filename is not relative to the projectDir: ' +
         [opt.projectDir, opt.filename].join(' - ')
@@ -174,8 +174,8 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
   }
 
   return waitForReportContent.then(res => {
-    const reportFilePath = res.reportFilePath;
-    const reportFileContent = res.reportFileContent;
+    const {reportFilePath} = res;
+    const {reportFileContent} = res;
 
     return mkdirp(path.dirname(reportFilePath)).then(() => {
       return writeFile(reportFilePath, Buffer.from(reportFileContent));
@@ -185,10 +185,10 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
 
 function generateFlowCoverageReportHTML(
   coverageSummaryData: FlowCoverageSummaryData,
-  opts: FlowCoverageReportOptions
+  options: FlowCoverageReportOptions
 ) {
-  const projectDir = opts.projectDir;
-  const outputDir = opts.outputDir;
+  const {projectDir} = options;
+  const {outputDir} = options;
 
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
@@ -198,7 +198,7 @@ function generateFlowCoverageReportHTML(
   const generateSummary = renderHTMLReport({
     type: 'summary',
     filename: null,
-    htmlTemplateOptions: opts.htmlTemplateOptions,
+    htmlTemplateOptions: options.htmlTemplateOptions,
     coverageSummaryData,
     coverageGeneratedAt,
     projectDir,
@@ -207,19 +207,19 @@ function generateFlowCoverageReportHTML(
 
   const waitForCopyAssets = copyAssets(outputDir);
   const generateSourceFiles = Object.keys(coverageSummaryData.files)
-        .map(filename => {
-          const coverageData = coverageSummaryData.files[filename];
-          return renderHTMLReport({
-            type: 'sourcefile',
-            coverageGeneratedAt,
-            htmlTemplateOptions: opts.htmlTemplateOptions,
-            coverageSummaryData,
-            projectDir,
-            filename,
-            coverageData,
-            outputDir
-          });
-        });
+    .map(filename => {
+      const coverageData = coverageSummaryData.files[filename];
+      return renderHTMLReport({
+        type: 'sourcefile',
+        coverageGeneratedAt,
+        htmlTemplateOptions: options.htmlTemplateOptions,
+        coverageSummaryData,
+        projectDir,
+        filename,
+        coverageData,
+        outputDir
+      });
+    });
   return Promise.all(
     [
       waitForCopyAssets,

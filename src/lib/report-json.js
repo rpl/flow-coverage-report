@@ -8,16 +8,16 @@ import mkdirp from 'mkdirp';
 import {writeFile} from './promisified';
 
 import type {FlowCoverageSummaryData} from './flow';
-import type {FlowCoverageReportOptions} from './index';
+import type {FlowCoverageReportOptions} from '.';
 
 function saveFlowCoverageReportJSON(
   coverageSummaryData: FlowCoverageSummaryData,
-  opts: FlowCoverageReportOptions
+  options: FlowCoverageReportOptions
 ) {
-  const projectDir = opts.projectDir;
-  const outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+  const {projectDir} = options;
+  const outputDir = options.outputDir || path.join(projectDir, 'flow-coverage');
 
-  coverageSummaryData.globIncludePatterns = opts.globIncludePatterns;
+  coverageSummaryData.globIncludePatterns = options.globIncludePatterns;
 
   return mkdirp(outputDir).then(() =>
     writeFile(
@@ -25,7 +25,7 @@ function saveFlowCoverageReportJSON(
       Buffer.from(JSON.stringify(coverageSummaryData))
     )
   ).then(() => {
-    return [coverageSummaryData, opts];
+    return [coverageSummaryData, options];
   });
 }
 

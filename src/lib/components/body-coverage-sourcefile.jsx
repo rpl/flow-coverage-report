@@ -16,8 +16,8 @@ import type {
 } from './html-report-page';
 /* eslint-enable */
 
-function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
-  const uncovered_locs = props.uncovered_locs; // eslint-disable-line camelcase
+const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps) => {
+  const {uncovered_locs} = props; // eslint-disable-line camelcase
 
   return (
     <div className="ui form">
@@ -56,7 +56,7 @@ function FlowCoverageLocsForm(props: FlowUncoveredLocsProps) {
       </div>
     </div>
   );
-}
+};
 
 export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileReportProps) {
   const {fileName, fileContent} = props;
@@ -68,9 +68,10 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
   if (!coverageData || !coverageSummaryData) {
     throw new Error('Missing coverage data props');
   }
+
   const {percent} = coverageData;
 
-  const threshold = coverageSummaryData.threshold;
+  const {threshold} = coverageSummaryData;
 
   if (!threshold) {
     throw new Error('Missing threshold in coverageSummaryData');
@@ -122,21 +123,18 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
                   uncovered_count
                   /* eslint-enable camelcase */
                 }}
-                />
+              />
             </tbody>
           </table>
         </div>
-        {
-          meterBar
-        }
+        {meterBar}
         <div className="row ui one column centered grid">
           <div className="column" style={{textAlign: 'left'}}>
             <div className="row">
               <FlowCoverageLocsForm
-                uncovered_locs={
-                  uncovered_locs // eslint-disable-line camelcase
+                uncovered_locs={uncovered_locs // eslint-disable-line camelcase
                 }
-                />
+              />
             </div>
             <textarea readOnly id="file-content" value={String(fileContent)}/>
           </div>

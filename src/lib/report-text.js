@@ -6,13 +6,13 @@ import path from 'path';
 import Table from 'terminal-table';
 
 import type {FlowCoverageSummaryData} from './flow';
-import type {FlowCoverageReportOptions} from './index';
+import type {FlowCoverageReportOptions} from '.';
 
 function renderTextReport(
   coverageData: FlowCoverageSummaryData,
-  opts: FlowCoverageReportOptions
+  options: FlowCoverageReportOptions
 ): Promise<void> {
-  const print = opts.log || console.log.bind(console);
+  const print = options.log || console.log.bind(console);
 
   const filesTable = new Table({
     leftPadding: 1,
@@ -48,7 +48,7 @@ function renderTextReport(
     ]);
 
     let rowColor;
-    if (data.isFlow && percent >= (opts.threshold || 80)) {
+    if (data.isFlow && percent >= (options.threshold || 80)) {
       rowColor = 'green';
     } else {
       rowColor = 'red';
@@ -118,14 +118,14 @@ function renderTextReport(
   const summaryPercent = coverageData.percent;
 
   let summaryColor;
-  if (summaryPercent >= (opts.threshold || 80)) {
+  if (summaryPercent >= (options.threshold || 80)) {
     summaryColor = 'green';
   } else {
     summaryColor = 'red';
   }
 
   summaryTable.push([
-    path.basename(opts.projectDir),
+    path.basename(options.projectDir),
     summaryPercent + ' %',
     summaryTotal,
     coverageData.covered_count,
@@ -143,7 +143,7 @@ function renderTextReport(
 
     const flushed = process.stdout.write('');
 
-    if (flushed || opts.log) {
+    if (flushed || options.log) {
       resolve();
     }
   });
@@ -157,9 +157,9 @@ function renderTextReport(
 
 function generateFlowCoverageReportText(
   coverageData: FlowCoverageSummaryData,
-  opts: Object
+  options: Object
 ): Promise<void> {
-  return renderTextReport(coverageData, opts);
+  return renderTextReport(coverageData, options);
 }
 
 export default {

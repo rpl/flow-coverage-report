@@ -10,14 +10,14 @@ import mkdirp from 'mkdirp';
 import {writeFile} from './promisified';
 
 import type {FlowCoverageSummaryData} from './flow';
-import type {FlowCoverageReportOptions} from './index';
+import type {FlowCoverageReportOptions} from '.';
 
 async function saveBadgeReport(
   coverageData: FlowCoverageSummaryData,
-  opts: FlowCoverageReportOptions
+  options: FlowCoverageReportOptions
 ): Promise<void> {
-  const percent = coverageData.percent;
-  const threshold = opts.threshold || 80;
+  const {percent} = coverageData;
+  const threshold = options.threshold || 80;
   const hasFlowErrors = !coverageData.flowStatus.passed;
 
   const generateFlowCoverageBadge = () => new Promise((resolve, reject) => {
@@ -59,8 +59,8 @@ async function saveBadgeReport(
     });
   });
 
-  const projectDir = opts.projectDir;
-  const outputDir = opts.outputDir || path.join(projectDir, 'flow-coverage');
+  const {projectDir} = options;
+  const outputDir = options.outputDir || path.join(projectDir, 'flow-coverage');
 
   await mkdirp(outputDir);
   const flowCoverageSVG = await generateFlowCoverageBadge();

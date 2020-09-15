@@ -48,9 +48,10 @@ test('promisified exec throws', async () => {
   let exception;
   try {
     await promisified.exec('fake-executable --fake', {cwd: '/fake/dir'});
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
+
   expect({message: exception.message}).toMatchObject({message: mockErrorMessage});
 });
 

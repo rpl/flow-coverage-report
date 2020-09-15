@@ -33,28 +33,28 @@ export type FlowCoverageReportOptions = {
 // 6. set a custom output dir
 // 7. usa a saved json file to compute coverage trend (and fail on negative trends)
 
-export default async function generateFlowCoverageReport(opts: FlowCoverageReportOptions) {
+export default async function generateFlowCoverageReport(options: FlowCoverageReportOptions) {
   // Apply defaults to options.
-  const projectDir = opts.projectDir;
+  const {projectDir} = options;
 
-  let tmpDirPath: ?string;
+  let temporaryDirPath: ?string;
 
   if (process.env.VERBOSE && process.env.VERBOSE === 'DUMP_JSON') {
-    tmpDirPath = await withTmpDir('flow-coverage-report');
-    console.log(`Verbose DUMP_JSON mode enabled (${tmpDirPath})`);
+    temporaryDirPath = await withTmpDir('flow-coverage-report');
+    console.log(`Verbose DUMP_JSON mode enabled (${temporaryDirPath})`);
   }
 
-  opts.flowCommandPath = opts.flowCommandPath || 'flow';
-  opts.flowCommandTimeout = opts.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // Defaults to 15s
-  opts.outputDir = opts.outputDir || './flow-coverage';
-  opts.outputDir = path.isAbsolute(opts.outputDir) ?
-    opts.outputDir : path.resolve(path.join(projectDir, opts.outputDir));
-  opts.globIncludePatterns = opts.globIncludePatterns || [];
-  opts.globExcludePatterns = opts.globExcludePatterns || [];
-  opts.concurrentFiles = opts.concurrentFiles || 1;
+  options.flowCommandPath = options.flowCommandPath || 'flow';
+  options.flowCommandTimeout = options.flowCommandTimeout || DEFAULT_FLOW_TIMEOUT; // Defaults to 15s
+  options.outputDir = options.outputDir || './flow-coverage';
+  options.outputDir = path.isAbsolute(options.outputDir) ?
+    options.outputDir : path.resolve(path.join(projectDir, options.outputDir));
+  options.globIncludePatterns = options.globIncludePatterns || [];
+  options.globExcludePatterns = options.globExcludePatterns || [];
+  options.concurrentFiles = options.concurrentFiles || 1;
 
-  if (!Array.isArray(opts.globExcludePatterns)) {
-    opts.globExcludePatterns = [opts.globExcludePatterns];
+  if (!Array.isArray(options.globExcludePatterns)) {
+    options.globExcludePatterns = [options.globExcludePatterns];
   }
 
   // Apply validation checks.
@@ -62,40 +62,40 @@ export default async function generateFlowCoverageReport(opts: FlowCoverageRepor
     return Promise.reject(new TypeError('projectDir option is mandatory'));
   }
 
-  if (opts.globIncludePatterns.length === 0) {
+  if (options.globIncludePatterns.length === 0) {
     return Promise.reject(new TypeError('empty globIncludePatterns option'));
   }
 
-  if (!opts.threshold) {
+  if (!options.threshold) {
     return Promise.reject(new TypeError('threshold option is mandatory'));
   }
 
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
-    opts, tmpDirPath);
+    options, temporaryDirPath);
 
   const reportResults = [];
-  const reportTypes = opts.reportTypes || ['text'];
+  const reportTypes = options.reportTypes || ['text'];
 
-  if (reportTypes.indexOf('json') >= 0) {
-    reportResults.push(reportJSON.generate(coverageData, opts));
+  if (reportTypes.includes('json')) {
+    reportResults.push(reportJSON.generate(coverageData, options));
   }
 
-  if (reportTypes.indexOf('text') >= 0) {
-    reportResults.push(reportText.generate(coverageData, opts));
+  if (reportTypes.includes('text')) {
+    reportResults.push(reportText.generate(coverageData, options));
   }
 
   // Run the badge reporter implicitly if the html report has been included.
-  if (reportTypes.indexOf('badge') >= 0 || reportTypes.indexOf('html') >= 0) {
-    reportResults.push(reportBadge.generate(coverageData, opts));
+  if (reportTypes.includes('badge') || reportTypes.includes('html')) {
+    reportResults.push(reportBadge.generate(coverageData, options));
   }
 
-  if (reportTypes.indexOf('html') >= 0) {
-    reportResults.push(reportHTML.generate(coverageData, opts).then(() => {
-      console.log(`View generated HTML Report at file://${opts.outputDir}/index.html`);
+  if (reportTypes.includes('html')) {
+    reportResults.push(reportHTML.generate(coverageData, options).then(() => {
+      console.log(`View generated HTML Report at file://${options.outputDir}/index.html`);
     }));
   }
 
   return Promise.all(reportResults).then(() => {
-    return [coverageData, opts];
+    return [coverageData, options];
   });
 }

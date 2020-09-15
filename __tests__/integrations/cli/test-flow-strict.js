@@ -13,11 +13,11 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
 
 test('Accept \'@flow strict\' and \'@flow strict-local\' pragmas', async () => {
   const {stdout, stderr} = await runFlowCoverageReport([
-    '-i', `"src/*.js"`
+    '-i', '"src/*.js"'
   ], {cwd: testProjectDir});
 
-  const filteredStdoutMain = stdout.split('\n').filter(line => line.indexOf('src/main') >= 0);
-  const filteredStdoutLocal = stdout.split('\n').filter(line => line.indexOf('src/local') >= 0);
+  const filteredStdoutMain = stdout.split('\n').filter(line => line.includes('src/main'));
+  const filteredStdoutLocal = stdout.split('\n').filter(line => line.includes('src/local'));
 
   expect({filteredStdoutMain, filteredStdoutLocal, stderr}).toMatchSnapshot();
 });

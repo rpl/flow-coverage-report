@@ -21,53 +21,57 @@ export type FlowUncoveredLocsProps = {
 };
 
 export type FlowReportMetaProps = {
-  assets: {
+  +assets: {
     css?: Array<string>,
     js?: Array<string>
   },
-  coverageGeneratedAt: string,
-  htmlTemplateOptions: {
+  +coverageGeneratedAt: string,
+  +htmlTemplateOptions: {
     autoHeightSource?: boolean,
     showMeterBar?: boolean,
   },
 };
 
 export type FlowCoverageSummaryReportProps = FlowReportMetaProps & {
-  coverageSummaryData: FlowCoverageSummaryData,
+  +coverageSummaryData: FlowCoverageSummaryData,
 };
 
 export type FlowCoverageSourceFileReportProps = FlowReportMetaProps & {
-  coverageSummaryData: FlowCoverageSummaryData,
-  coverageData: FlowCoverageJSONData,
-  fileName: string,
-  fileContent: string|Buffer,
-  summaryRelLink: string,
+  +coverageSummaryData: FlowCoverageSummaryData,
+  +coverageData: FlowCoverageJSONData,
+  +fileName: string,
+  +fileContent: string|Buffer,
+  +summaryRelLink: string,
 };
 
-export function HTMLReportSummaryPage(props: FlowCoverageSummaryReportProps) {
-  return (<html>
-    <HTMLReportHead {...props}/>
-    <HTMLReportBodySummary
-      assets={props.assets}
-      coverageGeneratedAt={props.coverageGeneratedAt}
-      htmlTemplateOptions={props.htmlTemplateOptions}
-      coverageSummaryData={props.coverageSummaryData}
+export var HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => {
+  return (
+    <html>
+      <HTMLReportHead {...props}/>
+      <HTMLReportBodySummary
+        assets={props.assets}
+        coverageGeneratedAt={props.coverageGeneratedAt}
+        htmlTemplateOptions={props.htmlTemplateOptions}
+        coverageSummaryData={props.coverageSummaryData}
       />
-  </html>);
-}
+    </html>
+  );
+};
 
-export function HTMLReportSourceFilePage(props: FlowCoverageSourceFileReportProps) {
-  return (<html>
-    <HTMLReportHead {...props}/>
-    <HTMLReportBodySourceFile
-      assets={props.assets}
-      coverageGeneratedAt={props.coverageGeneratedAt}
-      htmlTemplateOptions={props.htmlTemplateOptions}
-      coverageSummaryData={props.coverageSummaryData}
-      coverageData={props.coverageData}
-      fileName={props.fileName}
-      fileContent={props.fileContent}
-      summaryRelLink={props.summaryRelLink}
+export var HTMLReportSourceFilePage = (props: FlowCoverageSourceFileReportProps) => {
+  return (
+    <html>
+      <HTMLReportHead {...props}/>
+      <HTMLReportBodySourceFile
+        assets={props.assets}
+        coverageGeneratedAt={props.coverageGeneratedAt}
+        htmlTemplateOptions={props.htmlTemplateOptions}
+        coverageSummaryData={props.coverageSummaryData}
+        coverageData={props.coverageData}
+        fileName={props.fileName}
+        fileContent={props.fileContent}
+        summaryRelLink={props.summaryRelLink}
       />
-  </html>);
-}
+    </html>
+  );
+};

@@ -19,8 +19,9 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');
   }
+
   const filenames = Object.keys(summary.files).sort();
-  const percent = summary.percent;
+  const {percent} = summary;
 
   const filesSummaryTableProps = {
     id: 'files',
@@ -77,11 +78,9 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
             coverageGeneratedAt={props.coverageGeneratedAt}
             htmlTemplateOptions={props.htmlTemplateOptions}
             coverageSummaryData={props.coverageSummaryData}
-            />
+          />
         </div>
-        {
-          meterBar
-        }
+        {meterBar}
         <div className="row">
           <h4 className="ui header">Files</h4>
           {filesSummaryTable}

@@ -13,11 +13,11 @@ jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
 
 test('Fixed #92 - Escape special chars in filenames', async () => {
   const {stdout, stderr} = await runFlowCoverageReport([
-    '-i', `"src/*.js"`
+    '-i', '"src/*.js"'
   ], {cwd: testProjectDir});
 
   const filteredStdout = stdout.split('\n').filter(
-    line => line.indexOf('src/file-with-a') >= 0
+    line => line.includes('src/file-with-a')
   );
 
   expect({filteredStdout, stderr}).toMatchSnapshot();

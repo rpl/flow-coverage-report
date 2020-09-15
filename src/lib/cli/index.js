@@ -10,12 +10,13 @@ exports.run = () => {
   try {
     args = loadConfig(args);
     validateConfig(args);
-  } catch (err) {
-    if (err instanceof UsageError) {
-      console.error('Configuration error:', err.message);
+  } catch (error) {
+    if (error instanceof UsageError) {
+      console.error('Configuration error:', error.message);
     } else {
-      console.error('Unexpected exception: ' + err + ' ' + err.stack);
+      console.error('Unexpected exception: ' + error + ' ' + error.stack);
     }
+
     process.exit(255); // eslint-disable-line unicorn/no-process-exit
   }
 
@@ -27,8 +28,8 @@ exports.run = () => {
       );
       process.exit(2); // eslint-disable-line unicorn/no-process-exit
     }
-  }).catch(err => {
-    console.error('Error while generating Flow Coverage Report: ' + err + ' ' + err.stack);
+  }).catch(error => {
+    console.error('Error while generating Flow Coverage Report: ' + error + ' ' + error.stack);
     process.exit(255); // eslint-disable-line unicorn/no-process-exit
   });
 };
