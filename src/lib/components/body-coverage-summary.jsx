@@ -4,7 +4,6 @@
 
 import React from 'react';
 
-/* eslint-disable import/no-unresolved */
 import HTMLReportFooter from './footer';
 import FlowCoverageSummaryTable from './coverage-summary-table';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
@@ -12,9 +11,8 @@ import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {FlowCoverageSummaryReportProps} from './html-report-page';
-/* eslint-enable */
 
-export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportProps) {
+const HTMLReportBodySummary = (props: FlowCoverageSummaryReportProps) => {
   const summary = props.coverageSummaryData;
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');
@@ -91,4 +89,6 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
       </div>
     </body>
   );
-}
+};
+
+export default HTMLReportBodySummary;

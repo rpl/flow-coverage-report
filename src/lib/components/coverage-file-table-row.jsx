@@ -10,7 +10,7 @@ const LinkToSourceFileReport = (props: {+targetFilename: string}) => {
   return <a href={href}>{filename}</a>;
 };
 
-export default function FlowCoverageFileTableRow(
+const FlowCoverageFileTableRow = (
   props: {
     +filename: string,
     +annotation: string,
@@ -26,7 +26,7 @@ export default function FlowCoverageFileTableRow(
     +flowCoverageException: ?string,
     +flowCoverageStderr: ?string|?Buffer,
   }
-) {
+) => {
   /* eslint-disable camelcase */
   const {
     filename,
@@ -102,4 +102,6 @@ export default function FlowCoverageFileTableRow(
     </tr>
   );
   /* eslint-enable camelcase */
-}
+};
+
+export default FlowCoverageFileTableRow;

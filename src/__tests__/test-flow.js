@@ -94,9 +94,9 @@ it(
 
     const flow = require(LIB_FLOW);
 
-    const res = await flow.checkFlowStatus('flow', '/fake/projectDir/', temporaryDirPath);
+    const result = await flow.checkFlowStatus('flow', '/fake/projectDir/', temporaryDirPath);
 
-    expect(res).toEqual(fakeJSONStatusReply);
+    expect(result).toEqual(fakeJSONStatusReply);
 
     let exception;
     try {
@@ -318,7 +318,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
 
   const flow = require(LIB_FLOW);
 
-  const res = await flow.collectFlowCoverageForFile(
+  const result = await flow.collectFlowCoverageForFile(
     {flowCommandPath: 'flow', flowCommandTimeout: DEFAULT_FLOW_TIMEOUT, projectDir: '/fake/projectDir'}, filename
   );
 
@@ -328,7 +328,7 @@ it('collectFlowCoverageForFile resolve coverage data', async () => {
   expect(mockExec.mock.calls[0][1]).toEqual({
     cwd: '/fake/projectDir', maxBuffer: Infinity, timeout: DEFAULT_FLOW_TIMEOUT
   });
-  expect(res).toEqual({
+  expect(result).toEqual({
     ...fakeFlowCoverageData,
     annotation: 'flow',
     isFlow: true
@@ -426,7 +426,7 @@ const testCollectFlowCoverage = async ({
     'test/**'
   ];
 
-  const res = await flow.collectFlowCoverage({
+  const result = await flow.collectFlowCoverage({
     flowCommandPath: 'flow',
     flowCommandTimeout: DEFAULT_FLOW_TIMEOUT,
     projectDir: '/projectDir',
@@ -438,17 +438,17 @@ const testCollectFlowCoverage = async ({
     excludeNonFlow
   }, '/tmp/fakeTmpDir');
 
-  expect(typeof res.generatedAt).toBe('string');
-  delete res.generatedAt;
+  expect(typeof result.generatedAt).toBe('string');
+  delete result.generatedAt;
 
-  const resFiles = res.files;
-  delete res.files;
+  const resultFiles = result.files;
+  delete result.files;
 
   const filteredFiles = allFiles.filter(file => {
     return !minimatch(file, globExcludePatterns[0]);
   }).sort();
 
-  expect(res).toEqual({
+  expect(result).toEqual({
     flowStatus: {...fakeFlowStatus},
     flowAnnotations: {
       passed: false,
@@ -476,9 +476,9 @@ const testCollectFlowCoverage = async ({
     const flowFilteredFiles = filteredFiles.filter(file => {
       return expectedFlowAnnotations[file] !== 'no flow';
     });
-    expect(Object.keys(resFiles).sort()).toEqual(flowFilteredFiles);
+    expect(Object.keys(resultFiles).sort()).toEqual(flowFilteredFiles);
   } else {
-    expect(Object.keys(resFiles).sort()).toEqual(filteredFiles);
+    expect(Object.keys(resultFiles).sort()).toEqual(filteredFiles);
   }
 
   for (const filename of filteredFiles) {
@@ -487,7 +487,7 @@ const testCollectFlowCoverage = async ({
       continue;
     }
 
-    expect(resFiles[filename].expressions.uncovered_locs).toEqual([{
+    expect(resultFiles[filename].expressions.uncovered_locs).toEqual([{
       start: {
         line: 1,
         column: 1,
@@ -499,7 +499,7 @@ const testCollectFlowCoverage = async ({
         offset: 30
       }
     }]);
-    delete resFiles[filename].expressions.uncovered_locs;
+    delete resultFiles[filename].expressions.uncovered_locs;
 
     // Detect if the single file coverage is expected to be 0.
     const forceNoCoverage = !(!strictCoverage || [
@@ -509,9 +509,9 @@ const testCollectFlowCoverage = async ({
     ].includes(expectedFlowAnnotations[filename]));
 
     if (excludeNonFlow && expectedFlowAnnotations[filename] === 'no flow') {
-      expect(resFiles[filename]).toEqual(undefined);
+      expect(resultFiles[filename]).toEqual(undefined);
     } else {
-      expect(resFiles[filename]).toEqual({
+      expect(resultFiles[filename]).toEqual({
         percent: forceNoCoverage ? 0 : 50,
         filename,
         annotation: expectedFlowAnnotations[filename],

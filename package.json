@@ -114,7 +114,8 @@
       "flowtype/space-after-type-colon": [
         1,
         "always"
-      ]
+      ],
+      "unicorn/no-fn-reference-in-iterator": 0
     },
     "overrides": [
       {

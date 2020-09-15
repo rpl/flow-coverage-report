@@ -46,7 +46,7 @@ export function getCoveredPercent(
 
   return roundNumber(covered_count / total * 100, numberDecimals);
 }
-/* eslint-disable-line camelcase */
+/* eslint-enable camelcase */
 
 export function isFlowAnnotation(
   annotation: string, strict: boolean = false
@@ -111,27 +111,27 @@ export async function checkFlowStatus(
       {suffix: '.json', dir: temporaryDirPath} : {suffix: '.json'});
   }
 
-  const res = await exec(`${flowCommandPath} status --json`,
+  const result = await exec(`${flowCommandPath} status --json`,
     {cwd: projectDir, maxBuffer: Infinity},
     {dontReject: true});
 
-  if (res.err && res.err.code !== 2) {
+  if (result.err && result.err.code !== 2) {
     if (process.env.VERBOSE) {
-      console.error('Flow status error', res.err, res.stderr, res.stdout);
+      console.error('Flow status error', result.err, result.stderr, result.stdout);
     }
 
-    throw res.err;
+    throw result.err;
   }
 
   let statusData: ?FlowStatus;
 
   if (temporaryFilePath) {
-    await writeFile(temporaryFilePath, res.stdout || '');
+    await writeFile(temporaryFilePath, result.stdout || '');
     console.log('Flow status result saved to', temporaryFilePath);
   }
 
   try {
-    statusData = JSON.parse(String(res.stdout));
+    statusData = JSON.parse(String(result.stdout));
   } catch (error) {
     const unexpectedException: ?SyntaxError = error;
 
@@ -217,9 +217,11 @@ export async function collectFlowCoverageForFile(
     annotation: 'no flow',
     isFlow: false,
     expressions: {
+      /* eslint-disable camelcase */
       covered_count: 0,
       uncovered_count: 0,
       uncovered_locs: []
+      /* eslint-enable */
     }
   };
 
@@ -227,7 +229,7 @@ export async function collectFlowCoverageForFile(
     console.log(`Collecting coverage data from ${filename} (timeouts in ${flowCommandTimeout})...`);
   }
 
-  const res = await exec(
+  const result = await exec(
     `${flowCommandPath} coverage --json ${escapeFileName(filename)}`,
     // NOTE: set a default timeouts and maxButter to Infinity to prevent,
     // misconfigured projects and source files that should raises errors
@@ -238,12 +240,12 @@ export async function collectFlowCoverageForFile(
     {cwd: projectDir, timeout: flowCommandTimeout, maxBuffer: Infinity},
     {dontReject: true});
 
-  if (res.err) {
-    console.error('ERROR Collecting coverage data from', filename, res.err, res.stderr);
+  if (result.err) {
+    console.error('ERROR Collecting coverage data from', filename, result.err, result.stderr);
 
     if (process.env.VERBOSE) {
       if (temporaryFilePath) {
-        await writeFile(temporaryFilePath, res.stdout || '');
+        await writeFile(temporaryFilePath, result.stdout || '');
       }
     }
 
@@ -254,8 +256,8 @@ export async function collectFlowCoverageForFile(
       percent: Number.NaN,
       isError: true,
       flowCoverageError: undefined,
-      flowCoverageException: res.err && res.err.message,
-      flowCoverageStderr: res.stderr,
+      flowCoverageException: result.err && result.err.message,
+      flowCoverageStderr: result.stderr,
       flowCoverageParsingError: undefined
     };
   }
@@ -263,7 +265,7 @@ export async function collectFlowCoverageForFile(
   if (process.env.VERBOSE) {
     console.log(`Collecting coverage data from ${filename} completed.`);
     if (temporaryFilePath) {
-      await writeFile(temporaryFilePath, res.stdout || '');
+      await writeFile(temporaryFilePath, result.stdout || '');
       console.log(`Saved json dump of collected coverage data from ${filename} to ${temporaryFilePath}.`);
     }
   }
@@ -271,19 +273,21 @@ export async function collectFlowCoverageForFile(
   let parsedData: ?FlowCoverageJSONData;
   let flowCoverageParsingError: string;
 
-  if (res.stdout) {
+  if (result.stdout) {
     try {
-      parsedData = JSON.parse(String(res.stdout));
+      parsedData = JSON.parse(String(result.stdout));
     } catch (error) {
       flowCoverageParsingError = error.message;
     }
   }
 
-  if (res.stderr) {
+  if (result.stderr) {
     try {
-      parsedData = JSON.parse(String(res.stderr));
-      delete res.stderr;
-    } catch {
+      parsedData = JSON.parse(String(result.stderr));
+      delete result.stderr;
+      // Because our old Flow version doesn't like the optional catch:
+      // eslint-disable-next-line unicorn/prefer-optional-catch-binding
+    } catch (_) {
     }
   }
 
@@ -296,8 +300,10 @@ export async function collectFlowCoverageForFile(
     // (e.g. non annotated and flow weak files) are considered
     // as completely uncovered.
     if (strictCoverage && !parsedData.isFlow) {
+      /* eslint-disable camelcase */
       parsedData.expressions.uncovered_count += parsedData.expressions.covered_count;
       parsedData.expressions.covered_count = 0;
+      /* eslint-enable */
     }
 
     return parsedData;
@@ -311,7 +317,7 @@ export async function collectFlowCoverageForFile(
     flowCoverageError: parsedData && parsedData.error,
     flowCoverageException: undefined,
     flowCoverageParsingError,
-    flowCoverageStderr: res.stderr
+    flowCoverageStderr: result.stderr
   };
 }
 
@@ -380,7 +386,7 @@ export function summarizeAnnotations(
   };
 }
 
-export function collectFlowCoverage(
+export async function collectFlowCoverage(
   options: FlowCoverageReportOptions,
   temporaryDirPath: ?string
 ): Promise<FlowCoverageSummaryData> {
@@ -396,124 +402,121 @@ export function collectFlowCoverage(
     excludeNonFlow
   } = options;
 
-  return checkFlowStatus(flowCommandPath, projectDir, temporaryDirPath).then(flowStatus => {
-    const now = new Date();
-    const coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
+  const flowStatus = await checkFlowStatus(flowCommandPath, projectDir, temporaryDirPath);
+  const now = new Date();
+  const coverageGeneratedAt = now.toDateString() + ' ' + now.toTimeString();
 
-    const annotationSummary = {
-      passed: false,
-      flowFiles: 0,
-      flowWeakFiles: 0,
-      noFlowFiles: 0,
-      totalFiles: 0
-    };
+  const annotationSummary = {
+    passed: false,
+    flowFiles: 0,
+    flowWeakFiles: 0,
+    noFlowFiles: 0,
+    totalFiles: 0
+  };
 
-    const coverageSummaryData: FlowCoverageSummaryData = {
-      threshold,
-      covered_count: 0, uncovered_count: 0, // eslint-disable-line camelcase
-      percent: 0,
-      generatedAt: coverageGeneratedAt,
-      flowStatus,
-      flowAnnotations: annotationSummary,
-      files: {},
-      globIncludePatterns,
-      globExcludePatterns,
-      concurrentFiles,
-      strictCoverage: Boolean(strictCoverage),
-      excludeNonFlow
-    };
+  const coverageSummaryData: FlowCoverageSummaryData = {
+    threshold,
+    covered_count: 0, uncovered_count: 0, // eslint-disable-line camelcase
+    percent: 0,
+    generatedAt: coverageGeneratedAt,
+    flowStatus,
+    flowAnnotations: annotationSummary,
+    files: {},
+    globIncludePatterns,
+    globExcludePatterns,
+    concurrentFiles,
+    strictCoverage: Boolean(strictCoverage),
+    excludeNonFlow
+  };
 
-    // Remove the source attribute from all ucovered_locs entry.
-    function cleanupUncoveredLoc(loc) {
-      delete loc.start.source;
-      delete loc.end.source;
-      return loc;
+  // Remove the source attribute from all ucovered_locs entry.
+  function cleanupUncoveredLoc(loc) {
+    delete loc.start.source;
+    delete loc.end.source;
+    return loc;
+  }
+
+  let waitForCollectedDataFromFiles = [];
+
+  async function drainQueue() {
+    if (process.env.VERBOSE) {
+      console.log(`Wait for ${waitForCollectedDataFromFiles.length} queued files.`);
     }
 
-    let waitForCollectedDataFromFiles = [];
+    // Wait the queued files.
+    await Promise.all(waitForCollectedDataFromFiles);
+    // Empty the collected Data From files queue.
+    waitForCollectedDataFromFiles = [];
+  }
 
-    async function drainQueue() {
-      if (process.env.VERBOSE) {
-        console.log(`Wait for ${waitForCollectedDataFromFiles.length} queued files.`);
+  async function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
+    const files = await glob(globIncludePattern, {cwd: projectDir, root: projectDir});
+    for (const filename of files) {
+      // Skip files that match any of the exclude patterns.
+      if (globExcludePatterns && globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
+        if (process.env.VERBOSE) {
+          console.log(`Skip ${filename}, matched excluded pattern.`);
+        }
+
+        continue;
       }
 
-      // Wait the queued files.
-      await Promise.all(waitForCollectedDataFromFiles);
-      // Empty the collected Data From files queue.
-      waitForCollectedDataFromFiles = [];
-    }
-
-    function collectCoverageAndGenerateReportForGlob(globIncludePattern) {
-      return glob(globIncludePattern, {cwd: projectDir, root: projectDir})
-        .then(async files => {
-          for (const filename of files) {
-            // Skip files that match any of the exclude patterns.
-            if (globExcludePatterns && globExcludePatterns.find(pattern => minimatch(filename, pattern)) !== undefined) {
-              if (process.env.VERBOSE) {
-                console.log(`Skip ${filename}, matched excluded pattern.`);
-              }
-
-              continue;
-            }
-
-            if (excludeNonFlow) {
-              // eslint-disable-next-line no-await-in-loop
-              const annotation = await genCheckFlowStatus(flowCommandPath, filename);
-              if (annotation === 'no flow') {
-                if (process.env.VERBOSE) {
-                  console.log(`Skip ${filename}, matched 'no flow' in excludeNonFlow mode.`);
-                }
-
-                continue;
-              }
-            }
-
-            if (process.env.VERBOSE) {
-              console.log(`Queue ${filename} flow coverage data collection`);
-            }
-
-            waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(options, filename, temporaryDirPath).then(data => {
-              /* eslint-disable camelcase */
-              coverageSummaryData.covered_count += data.expressions.covered_count;
-              coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
-              data.percent = getCoveredPercent(data.expressions, percentDecimals);
-
-              if (!data.filename) {
-                throw new Error('Unxepected missing filename from collected coverage data');
-              }
-
-              coverageSummaryData.files[data.filename] = data;
-
-              data.expressions.uncovered_locs =
-                data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
-              /* eslint-enable camelcase */
-            }));
-
-            // If we have collected at least `concurrentFiles` number of files,
-            // wait the queue to be drained.
-            if (waitForCollectedDataFromFiles.length >= concurrentFiles) {
-              await drainQueue(); // eslint-disable-line no-await-in-loop
-            }
+      if (excludeNonFlow) {
+        // eslint-disable-next-line no-await-in-loop
+        const annotation = await genCheckFlowStatus(flowCommandPath, filename);
+        if (annotation === 'no flow') {
+          if (process.env.VERBOSE) {
+            console.log(`Skip ${filename}, matched 'no flow' in excludeNonFlow mode.`);
           }
 
-          // Wait for any remaining queued file.
-          if (waitForCollectedDataFromFiles.length > 0) {
-            await drainQueue();
-          }
+          continue;
+        }
+      }
 
-          return files;
-        });
+      if (process.env.VERBOSE) {
+        console.log(`Queue ${filename} flow coverage data collection`);
+      }
+
+      // eslint-disable-next-line promise/prefer-await-to-then
+      waitForCollectedDataFromFiles.push(collectFlowCoverageForFile(options, filename, temporaryDirPath).then(data => {
+        /* eslint-disable camelcase */
+        coverageSummaryData.covered_count += data.expressions.covered_count;
+        coverageSummaryData.uncovered_count += data.expressions.uncovered_count;
+        data.percent = getCoveredPercent(data.expressions, percentDecimals);
+
+        if (!data.filename) {
+          throw new Error('Unxepected missing filename from collected coverage data');
+        }
+
+        coverageSummaryData.files[data.filename] = data;
+
+        data.expressions.uncovered_locs =
+          data.expressions.uncovered_locs.map(cleanupUncoveredLoc);
+        /* eslint-enable camelcase */
+      }));
+
+      // If we have collected at least `concurrentFiles` number of files,
+      // wait the queue to be drained.
+      if (waitForCollectedDataFromFiles.length >= concurrentFiles) {
+        await drainQueue(); // eslint-disable-line no-await-in-loop
+      }
     }
 
-    return Promise
-      .all(globIncludePatterns.map(collectCoverageAndGenerateReportForGlob))
-      .then(() => {
-        coverageSummaryData.percent = getCoveredPercent(coverageSummaryData, percentDecimals);
-        coverageSummaryData.flowAnnotations = summarizeAnnotations(
-          coverageSummaryData
-        );
+    // Wait for any remaining queued file.
+    if (waitForCollectedDataFromFiles.length > 0) {
+      await drainQueue();
+    }
 
-        return coverageSummaryData;
-      });
-  });
+    return files;
+  }
+
+  await Promise
+    .all(globIncludePatterns.map(collectCoverageAndGenerateReportForGlob));
+
+  coverageSummaryData.percent = getCoveredPercent(coverageSummaryData, percentDecimals);
+  coverageSummaryData.flowAnnotations = summarizeAnnotations(
+    coverageSummaryData
+  );
+
+  return coverageSummaryData;
 }

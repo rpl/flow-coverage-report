@@ -9,7 +9,7 @@ import {
 
 const testProjectDir = path.join(FIXTURE_PATH, 'file-special-chars-escape');
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
+jest.setTimeout(10000); // 10 second timeout
 
 test('Fixed #92 - Escape special chars in filenames', async () => {
   const {stdout, stderr} = await runFlowCoverageReport([

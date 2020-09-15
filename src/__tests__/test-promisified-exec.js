@@ -1,7 +1,5 @@
 'use babel';
 
-import {Buffer} from 'buffer';
-
 const LIB_PROMISIFIED = '../lib/promisified';
 
 beforeEach(() => {

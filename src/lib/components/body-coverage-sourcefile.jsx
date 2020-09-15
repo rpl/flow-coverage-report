@@ -1,10 +1,8 @@
 'use strict';
-
 // @flow
 
 import React from 'react';
 
-/* eslint-disable import/no-unresolved */
 import HTMLReportFooter from './footer';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
 import FlowCoverageFileTableRow from './coverage-file-table-row';
@@ -14,7 +12,6 @@ import type {
   FlowCoverageSourceFileReportProps,
   FlowUncoveredLocsProps
 } from './html-report-page';
-/* eslint-enable */
 
 const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps) => {
   const {uncovered_locs} = props; // eslint-disable-line camelcase
@@ -58,7 +55,7 @@ const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps) => {
   );
 };
 
-export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileReportProps) {
+const HTMLReportBodySourceFile = (props: FlowCoverageSourceFileReportProps) => {
   const {fileName, fileContent} = props;
   if (!fileName) {
     throw new Error('Missing fileName in props');
@@ -131,10 +128,11 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
         <div className="row ui one column centered grid">
           <div className="column" style={{textAlign: 'left'}}>
             <div className="row">
+              {/* eslint-disable camelcase */}
               <FlowCoverageLocsForm
-                uncovered_locs={uncovered_locs // eslint-disable-line camelcase
-                }
+                uncovered_locs={uncovered_locs}
               />
+              {/* eslint-enable */}
             </div>
             <textarea readOnly id="file-content" value={String(fileContent)}/>
           </div>
@@ -149,4 +147,6 @@ export default function HTMLReportBodySourceFile(props: FlowCoverageSourceFileRe
       </pre>
     </body>
   );
-}
+};
+
+export default HTMLReportBodySourceFile;

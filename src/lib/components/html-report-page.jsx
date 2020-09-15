@@ -10,11 +10,9 @@ import type {
   FlowUncoveredLoc
 } from '../flow';
 
-/* eslint-disable import/no-unresolved */
 import HTMLReportHead from './head';
 import HTMLReportBodySummary from './body-coverage-summary';
 import HTMLReportBodySourceFile from './body-coverage-sourcefile';
-/* eslint-enable */
 
 export type FlowUncoveredLocsProps = {
   uncovered_locs: Array<FlowUncoveredLoc>
@@ -44,7 +42,7 @@ export type FlowCoverageSourceFileReportProps = FlowReportMetaProps & {
   +summaryRelLink: string,
 };
 
-export var HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => {
+export const HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => {
   return (
     <html>
       <HTMLReportHead {...props}/>
@@ -58,7 +56,7 @@ export var HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => {
   );
 };
 
-export var HTMLReportSourceFilePage = (props: FlowCoverageSourceFileReportProps) => {
+export const HTMLReportSourceFilePage = (props: FlowCoverageSourceFileReportProps) => {
   return (
     <html>
       <HTMLReportHead {...props}/>

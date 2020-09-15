@@ -35,7 +35,7 @@ const FLOW_COVERAGE_SUMMARY_DATA = {
   threshold: 40,
   percent: 50,
   globIncludePatterns: [firstGlob, secondGlob],
-  files: allFiles.reduce((acc, filename) => {
+  files: allFiles.reduce((acc, filename) => { // eslint-disable-line unicorn/no-reduce
     acc[filename] = {
       percent: 50,
       annotation: fakeTypeAnnotations[filename] || 'flow',

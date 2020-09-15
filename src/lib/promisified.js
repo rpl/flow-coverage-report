@@ -74,6 +74,7 @@ export function glob(pattern: string, options: *): Promise<GlobFilelist> {
   });
 }
 
+// eslint-disable-next-line unicorn/prevent-abbreviations
 export function withTmpDir(temporaryFileId: string): Promise<string> {
   return new Promise((resolve, reject) => {
     temp.mkdir(temporaryFileId, (err, dirPath) => {

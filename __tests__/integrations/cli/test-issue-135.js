@@ -9,7 +9,7 @@ import {
 
 const testProjectDir = path.join(FIXTURE_PATH, 'issue-135');
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000; // 10 second timeout
+jest.setTimeout(10000); // 10 second timeout
 
 test('Fixed #135 - Annotation wrong on multiple pragma on the same line', async () => {
   const {stdout, stderr} = await runFlowCoverageReport([

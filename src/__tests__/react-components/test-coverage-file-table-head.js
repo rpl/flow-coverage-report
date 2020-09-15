@@ -1,7 +1,5 @@
 'use babel';
 
-/* eslint-disable react/jsx-filename-extension, import/no-dynamic-require */
-
 import React from 'react';
 import renderer from 'react-test-renderer';
 

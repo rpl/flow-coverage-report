@@ -12,15 +12,13 @@ import reportBadge from './report-badge';
 import reportJSON from './report-json';
 import reportText from './report-text';
 
-// eslint-disable-next-line no-duplicate-imports
-import type {ConfigParams, ReportType} from './cli/config';
-// eslint-disable-next-line no-duplicate-imports
+import type {ConfigParameters, ReportType} from './cli/config';
 import type {FlowCoverageSummaryData} from './flow';
 
 export type FlowCoverageReportType = ReportType;
 
 export type FlowCoverageReportOptions = {
-  ...ConfigParams,
+  ...ConfigParameters,
   log?: Function
 };
 
@@ -59,15 +57,15 @@ export default async function generateFlowCoverageReport(options: FlowCoverageRe
 
   // Apply validation checks.
   if (!projectDir) {
-    return Promise.reject(new TypeError('projectDir option is mandatory'));
+    throw new TypeError('projectDir option is mandatory');
   }
 
   if (options.globIncludePatterns.length === 0) {
-    return Promise.reject(new TypeError('empty globIncludePatterns option'));
+    throw new TypeError('empty globIncludePatterns option');
   }
 
   if (!options.threshold) {
-    return Promise.reject(new TypeError('threshold option is mandatory'));
+    throw new TypeError('threshold option is mandatory');
   }
 
   const coverageData: FlowCoverageSummaryData = await collectFlowCoverage(
@@ -90,12 +88,12 @@ export default async function generateFlowCoverageReport(options: FlowCoverageRe
   }
 
   if (reportTypes.includes('html')) {
+    // eslint-disable-next-line promise/prefer-await-to-then
     reportResults.push(reportHTML.generate(coverageData, options).then(() => {
       console.log(`View generated HTML Report at file://${options.outputDir}/index.html`);
     }));
   }
 
-  return Promise.all(reportResults).then(() => {
-    return [coverageData, options];
-  });
+  await Promise.all(reportResults);
+  return [coverageData, options];
 }

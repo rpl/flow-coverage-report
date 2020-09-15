@@ -50,9 +50,9 @@ it('generateFlowCoverageReport', async () => {
     threshold: 80
   };
 
-  const res = await generateFlowCoverageReport(options);
+  const result = await generateFlowCoverageReport(options);
 
-  expect(res).toEqual([fakeData, options]);
+  expect(result).toEqual([fakeData, options]);
   expect(mockCollectFlowCoverage.mock.calls.length).toBe(1);
   expect(mockGenerateText.mock.calls.length).toBe(1);
   expect(mockGenerateHTML.mock.calls.length).toBe(0);

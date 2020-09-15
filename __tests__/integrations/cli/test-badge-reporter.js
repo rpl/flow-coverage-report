@@ -37,7 +37,9 @@ describe('badge reporter', () => {
     expect(flowBadge).toMatchSnapshot('flow-badge red');
     expect(flowCoverageBadge).toMatchSnapshot('flow-coverage-badge red');
 
-    await new Promise(resolve => rimraf(path.join(temporaryDir, '*.svg'), resolve));
+    await new Promise(resolve => {
+      rimraf(path.join(temporaryDir, '*.svg'), resolve);
+    });
   });
 
   it('should generate green badges on full covered project', async () => {
@@ -55,6 +57,8 @@ describe('badge reporter', () => {
     expect(flowBadge).toMatchSnapshot('flow-badge green');
     expect(flowCoverageBadge).toMatchSnapshot('flow-coverage-badge green');
 
-    await new Promise(resolve => rimraf(path.join(temporaryDir, '*.svg'), resolve));
+    await new Promise(resolve => {
+      rimraf(path.join(temporaryDir, '*.svg'), resolve);
+    });
   });
 });

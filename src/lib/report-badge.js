@@ -70,6 +70,8 @@ async function saveBadgeReport(
   await writeFile(path.join(outputDir, 'flow-badge.svg'), flowSVG);
 }
 
-export default {
+const ReportBadge = {
   generate: saveBadgeReport
 };
+
+export default ReportBadge;

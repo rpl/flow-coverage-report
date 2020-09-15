@@ -10,7 +10,7 @@ import {writeFile} from './promisified';
 import type {FlowCoverageSummaryData} from './flow';
 import type {FlowCoverageReportOptions} from '.';
 
-function saveFlowCoverageReportJSON(
+async function saveFlowCoverageReportJSON(
   coverageSummaryData: FlowCoverageSummaryData,
   options: FlowCoverageReportOptions
 ) {
@@ -19,16 +19,16 @@ function saveFlowCoverageReportJSON(
 
   coverageSummaryData.globIncludePatterns = options.globIncludePatterns;
 
-  return mkdirp(outputDir).then(() =>
-    writeFile(
-      path.join(outputDir, 'flow-coverage.json'),
-      Buffer.from(JSON.stringify(coverageSummaryData))
-    )
-  ).then(() => {
-    return [coverageSummaryData, options];
-  });
+  await mkdirp(outputDir);
+  await writeFile(
+    path.join(outputDir, 'flow-coverage.json'),
+    Buffer.from(JSON.stringify(coverageSummaryData))
+  );
+  return [coverageSummaryData, options];
 }
 
-export default {
+const ReportJson = {
   generate: saveFlowCoverageReportJSON
 };
+
+export default ReportJson;

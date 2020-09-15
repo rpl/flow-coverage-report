@@ -162,7 +162,9 @@ function generateFlowCoverageReportText(
   return renderTextReport(coverageData, options);
 }
 
-export default {
+const ReportText = {
   render: renderTextReport,
   generate: generateFlowCoverageReportText
 };
+
+export default ReportText;
