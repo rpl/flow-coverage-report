@@ -3,10 +3,11 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 import type {FlowCoverageSummaryReportProps} from './html-report-page';
 
-const FlowCoverageSummaryTable = (props: FlowCoverageSummaryReportProps) => {
+const FlowCoverageSummaryTable = (props: FlowCoverageSummaryReportProps): Node => {
   if (!props.coverageSummaryData) {
     throw new Error('Missing coverageSummaryData in props');
   }

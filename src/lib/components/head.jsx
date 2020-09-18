@@ -3,6 +3,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 import type {FlowReportMetaProps} from './html-report-page';
 
@@ -13,7 +14,7 @@ const AUTO_HEIGHT_SOURCE = `
 }
 `;
 
-const HTMLReportHead = (props: FlowReportMetaProps) => {
+const HTMLReportHead = (props: FlowReportMetaProps): Node => {
   const links = !props.assets || !props.assets.css ? [] :
     props.assets.css.map(
       css => <link key={css} rel="stylesheet" href={css}/>

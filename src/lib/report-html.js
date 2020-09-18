@@ -56,7 +56,7 @@ async function copyAsset(outputDir, assetName) {
   return destFileWritten(srcFileData);
 }
 
-function copyAssets(outputDir/* : string */) {
+function copyAssets(outputDir/* : string */): Promise<*> {
   return Promise.all(assetsList.map(copyAsset.bind(null, outputDir)));
 }
 
@@ -175,7 +175,7 @@ async function renderHTMLReport(opt/* : Object */)/* : Promise<void> */ {
 function generateFlowCoverageReportHTML(
   coverageSummaryData: FlowCoverageSummaryData,
   options: FlowCoverageReportOptions
-) {
+): Promise<*> {
   const {projectDir} = options;
   const {outputDir} = options;
 
@@ -219,7 +219,6 @@ function generateFlowCoverageReportHTML(
 
 const ReportHtml = {
   assetsList,
-  copyAssets,
   render: renderHTMLReport,
   generate: generateFlowCoverageReportHTML
 };

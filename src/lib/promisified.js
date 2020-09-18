@@ -11,7 +11,7 @@ import temp from 'temp';
 temp.track();
 
 export type ExecError = Error & {
-  code: number,
+  code: number | string | null,
 };
 export type ExecResult = {err?: ExecError, stdout?: string|Buffer, stderr?: string|Buffer};
 export type ExecOptions = child_process$execOpts; // eslint-disable-line camelcase

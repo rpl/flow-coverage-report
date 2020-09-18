@@ -13,7 +13,7 @@ import type {FlowCoverageReportOptions} from '.';
 async function saveFlowCoverageReportJSON(
   coverageSummaryData: FlowCoverageSummaryData,
   options: FlowCoverageReportOptions
-) {
+): Promise<[FlowCoverageSummaryData, FlowCoverageReportOptions]> {
   const {projectDir} = options;
   const outputDir = options.outputDir || path.join(projectDir, 'flow-coverage');
 

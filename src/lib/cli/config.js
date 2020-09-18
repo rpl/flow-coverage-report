@@ -160,7 +160,7 @@ export function loadConfig(args: Object): Object {
 
   try {
     packageJSONPath = path.resolve(path.join(getProjectDir(args), 'package.json'));
-    // $FlowIgnoreMe: the following dynamic require loads only the package.json file.
+    // $FlowIgnore: the following dynamic require loads only the package.json file.
     const pkg = require(packageJSONPath);
     if (pkg['flow-coverage-report']) {
       if (process.env.VERBOSE) {
