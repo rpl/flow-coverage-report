@@ -42,4 +42,4 @@ it('generate Text report', async () => {
     .toBe(1 + Object.keys(FLOW_COVERAGE_SUMMARY_DATA.files).length);
 });
 
-test.skip('generate Text report failures');
+test.todo('generate Text report failures');

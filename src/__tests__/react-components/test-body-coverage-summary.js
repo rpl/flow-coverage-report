@@ -27,4 +27,4 @@ test('<HTMLReportBodySummary />', () => {
   expect(negativeTree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportBodySummary /> with missing props');
+test.todo('<HTMLReportBodySummary /> with missing props');

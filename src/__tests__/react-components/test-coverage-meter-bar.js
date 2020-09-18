@@ -17,4 +17,4 @@ test('<FlowCoverageMeterBar />', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<FlowCoverageMeterBar /> with missing props');
+test.todo('<FlowCoverageMeterBar /> with missing props');

@@ -41,4 +41,4 @@ it('generate HTML report', async () => {
   expect(true).toBe(true);
 });
 
-test.skip('generate HTML report failures');
+test.todo('generate HTML report failures');

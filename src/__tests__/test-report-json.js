@@ -34,4 +34,4 @@ it('generate JSON report', async () => {
   expect(mockWriteFile.mock.calls.length).toBe(1);
 });
 
-test.skip('generate JSON report failures');
+test.todo('generate JSON report failures');

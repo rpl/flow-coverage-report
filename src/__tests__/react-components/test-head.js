@@ -23,4 +23,4 @@ test('<HTMLReportHead />', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportPage /> with missing assets');
+test.todo('<HTMLReportPage /> with missing assets');

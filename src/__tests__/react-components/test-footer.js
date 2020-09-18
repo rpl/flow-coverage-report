@@ -16,4 +16,4 @@ test('<HTMLReportFooter />', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportFooter /> with missing props');
+test.todo('<HTMLReportFooter /> with missing props');

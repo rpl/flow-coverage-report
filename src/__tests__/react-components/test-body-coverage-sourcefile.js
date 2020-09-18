@@ -23,4 +23,4 @@ test('<HTMLReportBodySourceFile />', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportBodySourceFile /> with missing props');
+test.todo('<HTMLReportBodySourceFile /> with missing props');

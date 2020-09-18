@@ -1,3 +1,3 @@
 'use babel';
 
-test.skip('flow-coverage-reporter package entrypoint');
+test.todo('flow-coverage-reporter package entrypoint');
