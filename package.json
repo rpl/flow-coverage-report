@@ -80,7 +80,7 @@
     "flow-typed": "^2.4.0",
     "jest": "^26.4.2",
     "react-test-renderer": "^16.13.1",
-    "rimraf": "^2.6.2",
+    "rimraf": "^3.0.2",
     "svgson": "^4.0.0",
     "tempy": "^0.2.1",
     "xo": "^0.33.1",
