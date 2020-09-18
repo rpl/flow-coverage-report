@@ -66,4 +66,4 @@ test('<FlowCoverageFileTableRow /> with errors', () => {
   testErrorProp(flowCoverageUnrecognizedErrorProps);
 });
 
-test.skip('<FlowCoverageFileTableRow /> with missing props');
+test.todo('<FlowCoverageFileTableRow /> with missing props');

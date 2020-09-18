@@ -18,4 +18,4 @@ test('<HTMLReportSummaryPage/>', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<HTMLReportSourceFilePage/>');
+test.todo('<HTMLReportSourceFilePage/>');

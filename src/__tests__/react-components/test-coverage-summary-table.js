@@ -27,4 +27,4 @@ test('<FlowCoverageSummaryTable />', () => {
   expect(negativeSummaryTree).toMatchSnapshot();
 });
 
-test.skip('<FlowCoverageSummaryTable /> with missing props');
+test.todo('<FlowCoverageSummaryTable /> with missing props');

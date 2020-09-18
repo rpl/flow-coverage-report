@@ -9,7 +9,7 @@ import {
 
 const testProjectDir = path.join(FIXTURE_PATH, 'project-low-coverage');
 
-describe('CLI exit value', async () => {
+describe('CLI exit value', () => {
   it('should exit with code 2 when total coverage is lower than the default threshold', async () => {
     const {exitCode, error} = await runFlowCoverageReport([
       '-i', '"src/*.js"'

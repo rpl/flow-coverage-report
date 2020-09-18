@@ -13,4 +13,4 @@ test('<FlowCoverageFileTableHead />', () => {
   expect(tree).toMatchSnapshot();
 });
 
-test.skip('<FlowCoverageFileTableHead /> with missing props');
+test.todo('<FlowCoverageFileTableHead /> with missing props');
