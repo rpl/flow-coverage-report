@@ -1,7 +1,9 @@
 'use strict';
+
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 import HTMLReportFooter from './footer';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
@@ -13,7 +15,7 @@ import type {
   FlowUncoveredLocsProps
 } from './html-report-page';
 
-const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps) => {
+const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps): Node => {
   const {uncovered_locs} = props; // eslint-disable-line camelcase
 
   return (
@@ -55,7 +57,7 @@ const FlowCoverageLocsForm = (props: FlowUncoveredLocsProps) => {
   );
 };
 
-const HTMLReportBodySourceFile = (props: FlowCoverageSourceFileReportProps) => {
+const HTMLReportBodySourceFile = (props: FlowCoverageSourceFileReportProps): Node => {
   const {fileName, fileContent} = props;
   if (!fileName) {
     throw new Error('Missing fileName in props');

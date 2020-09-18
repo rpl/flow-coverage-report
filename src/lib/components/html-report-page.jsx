@@ -3,6 +3,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 import type {
   FlowCoverageSummaryData,
@@ -42,7 +43,7 @@ export type FlowCoverageSourceFileReportProps = FlowReportMetaProps & {
   +summaryRelLink: string,
 };
 
-export const HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => {
+export const HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps): Node => {
   return (
     <html>
       <HTMLReportHead {...props}/>
@@ -56,7 +57,7 @@ export const HTMLReportSummaryPage = (props: FlowCoverageSummaryReportProps) => 
   );
 };
 
-export const HTMLReportSourceFilePage = (props: FlowCoverageSourceFileReportProps) => {
+export const HTMLReportSourceFilePage = (props: FlowCoverageSourceFileReportProps): Node => {
   return (
     <html>
       <HTMLReportHead {...props}/>

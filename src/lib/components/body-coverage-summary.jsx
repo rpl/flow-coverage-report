@@ -3,6 +3,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 import HTMLReportFooter from './footer';
 import FlowCoverageSummaryTable from './coverage-summary-table';
@@ -12,7 +13,7 @@ import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {FlowCoverageSummaryReportProps} from './html-report-page';
 
-const HTMLReportBodySummary = (props: FlowCoverageSummaryReportProps) => {
+const HTMLReportBodySummary = (props: FlowCoverageSummaryReportProps): Node => {
   const summary = props.coverageSummaryData;
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');

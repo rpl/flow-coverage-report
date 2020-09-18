@@ -31,7 +31,8 @@ export type FlowCoverageReportOptions = {
 // 6. set a custom output dir
 // 7. usa a saved json file to compute coverage trend (and fail on negative trends)
 
-export default async function generateFlowCoverageReport(options: FlowCoverageReportOptions) {
+export default async function generateFlowCoverageReport(options: FlowCoverageReportOptions)
+  : Promise<[FlowCoverageSummaryData, FlowCoverageReportOptions]> {
   // Apply defaults to options.
   const {projectDir} = options;
 

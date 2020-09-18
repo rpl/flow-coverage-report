@@ -37,7 +37,7 @@ export function getCoveredPercent(
     covered_count: number, uncovered_count: number
   },
   numberDecimals: number = 0
-) {
+): number {
   const total = covered_count + uncovered_count;
 
   if (total === 0) {
@@ -154,7 +154,7 @@ export type FlowUncoveredPos = {
   line: number,
   column: number,
   offset: number,
-  source: string
+  source?: string,
 }
 
 export type FlowUncoveredLoc = {
@@ -170,7 +170,7 @@ export type FlowCoverageJSONData = {
   },
   filename?: string,
   // eslint-disable-next-line flowtype/space-after-type-colon
-  annotation?:
+  annotation:
     | 'no flow'
     | 'flow weak'
     | 'flow'
@@ -178,7 +178,7 @@ export type FlowCoverageJSONData = {
     | 'flow strict-local',
   percent: number,
   error?: string,
-  isError?: boolean,
+  isError: boolean,
   isFlow: boolean,
   flowCoverageError?: ?string,
   flowCoverageException?: ?string,

@@ -34,7 +34,7 @@ export default function processArgv(argv: Array<string>): any {
       type: 'string',
       coerce: (value: mixed) => {
         if (typeof value !== 'string') {
-          // $FlowIgnoreMe: allow value to be coerced to a string.
+          // $FlowIgnore: allow value to be coerced to a string.
           throw new TypeError(`Unexpected non-string value: ${value}`);
         }
 
@@ -68,7 +68,7 @@ export default function processArgv(argv: Array<string>): any {
       alias: ['x', 'globExcludePatterns'],
       type: 'array',
       describe: 'exclude the files selected by the specified glob ' +
-        `(defaults to "${JSON.stringify(defaultConfig.globExcludePatterns)}")`
+        `(defaults to "${JSON.stringify(defaultConfig.globExcludePatterns || [])}")`
     })
     .options('threshold', {
       type: 'number',

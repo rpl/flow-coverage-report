@@ -3,10 +3,11 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 const FlowCoverageMeterBar = (
   props: {+percent: number, +threshold: number}
-) => {
+): Node => {
   const {threshold} = props;
   const color = props.percent >= threshold ? 'green' : 'red';
   const style = {

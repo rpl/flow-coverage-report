@@ -3,8 +3,9 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
-export const FlowCoverageFileTableHead = () => {
+export const FlowCoverageFileTableHead = (): Node => {
   return (
     <thead>
       <tr>

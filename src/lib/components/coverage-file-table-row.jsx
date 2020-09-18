@@ -3,6 +3,7 @@
 // @flow
 
 import React from 'react';
+import type {Node} from 'react';
 
 const LinkToSourceFileReport = (props: {+targetFilename: string}) => {
   const filename = props.targetFilename;
@@ -26,7 +27,7 @@ const FlowCoverageFileTableRow = (
     +flowCoverageException: ?string,
     +flowCoverageStderr: ?string|?Buffer,
   }
-) => {
+): Node => {
   /* eslint-disable camelcase */
   const {
     filename,
