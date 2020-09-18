@@ -4,7 +4,6 @@
 
 import React from 'react';
 
-/* eslint-disable import/no-unresolved */
 import HTMLReportFooter from './footer';
 import FlowCoverageSummaryTable from './coverage-summary-table';
 import FlowCoverageFileTableHead from './coverage-file-table-head';
@@ -12,15 +11,15 @@ import FlowCoverageFileTableRow from './coverage-file-table-row';
 import FlowCoverageMeterBar from './coverage-meter-bar';
 
 import type {FlowCoverageSummaryReportProps} from './html-report-page';
-/* eslint-enable */
 
-export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportProps) {
+const HTMLReportBodySummary = (props: FlowCoverageSummaryReportProps) => {
   const summary = props.coverageSummaryData;
   if (!summary) {
     throw new Error('Missing coverageSummaryData from props');
   }
+
   const filenames = Object.keys(summary.files).sort();
-  const percent = summary.percent;
+  const {percent} = summary;
 
   const filesSummaryTableProps = {
     id: 'files',
@@ -77,11 +76,9 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
             coverageGeneratedAt={props.coverageGeneratedAt}
             htmlTemplateOptions={props.htmlTemplateOptions}
             coverageSummaryData={props.coverageSummaryData}
-            />
+          />
         </div>
-        {
-          meterBar
-        }
+        {meterBar}
         <div className="row">
           <h4 className="ui header">Files</h4>
           {filesSummaryTable}
@@ -92,4 +89,6 @@ export default function HTMLReportBodySummary(props: FlowCoverageSummaryReportPr
       </div>
     </body>
   );
-}
+};
+
+export default HTMLReportBodySummary;

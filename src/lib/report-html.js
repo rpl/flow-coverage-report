@@ -8,10 +8,10 @@ import react from 'react-dom/server';
 import mkdirp from 'mkdirp';
 
 import {readFile, writeFile} from './promisified';
-import {HTMLReportSummaryPage, HTMLReportSourceFilePage} from './components/html-report-page'; // eslint-disable-line import/no-unresolved
+import {HTMLReportSummaryPage, HTMLReportSourceFilePage} from './components/html-report-page';
 
 import type {FlowCoverageSummaryData} from './flow';
-import type {FlowCoverageReportOptions} from './index';
+import type {FlowCoverageReportOptions} from '.';
 
 const baseSemanticAssets = ['themes', 'default', 'assets'];
 const assetsList: Array<string> = [
@@ -37,11 +37,11 @@ const assetsList: Array<string> = [
   ['fonts', 'icons.ttf'],
   ['fonts', 'icons.woff'],
   ['fonts', 'icons.woff2']
-].map((el: string | Array<string>): string => {
-  return path.join.apply(null, baseSemanticAssets.concat(el));
+].map((element: string | Array<string>): string => {
+  return path.join.apply(null, baseSemanticAssets.concat(element));
 }));
 
-function copyAsset(outputDir, assetName) {
+async function copyAsset(outputDir, assetName) {
   const srcfileReady = readFile(path.join(__dirname, '..', '..', 'assets', assetName));
   const createDestDir = mkdirp(path.join(outputDir, 'assets', path.dirname(assetName)));
 
@@ -49,26 +49,24 @@ function copyAsset(outputDir, assetName) {
     return writeFile(path.join(outputDir, 'assets', assetName), data);
   }
 
-  return Promise.all([
+  const [srcFileData] = await Promise.all([
     srcfileReady, createDestDir
-  ]).then(res => {
-    const srcFileData = res[0];
+  ]);
 
-    return destFileWritten(srcFileData);
-  });
+  return destFileWritten(srcFileData);
 }
 
 function copyAssets(outputDir/* : string */) {
   return Promise.all(assetsList.map(copyAsset.bind(null, outputDir)));
 }
 
-function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
+async function renderHTMLReport(opt/* : Object */)/* : Promise<void> */ {
   if (opt.filename &&
-      opt.filename.indexOf('..') >= 0) {
-    return Promise.reject(new Error(
+      opt.filename.includes('..')) {
+    throw new Error(
       'filename is not relative to the projectDir: ' +
         [opt.projectDir, opt.filename].join(' - ')
-    ));
+    );
   }
 
   function relativeToFilename(prefixDir, dest) {
@@ -79,85 +77,79 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
     return path.join('assets', filePath);
   }
 
-  function summaryReportContent() {
-    return new Promise(resolve => {
-      const toRelative = relativeToFilename.bind(null, '');
+  async function summaryReportContent() {
+    const toRelative = relativeToFilename.bind(null, '');
 
-      const reportFilePath = path.join(opt.outputDir, 'index.html');
-      const reportFileContent = '<!DOCTYPE html>\n' +
-        react.renderToStaticMarkup(React.createElement(HTMLReportSummaryPage, {
-          htmlTemplateOptions: opt.htmlTemplateOptions,
-          coverageGeneratedAt: opt.coverageGeneratedAt,
-          coverageSummaryData: opt.coverageSummaryData,
-          assets: {
-            css: [
-              'semantic.min.css',
-              'flow-coverage-report.css'
-            ].map(prefixAssets).map(toRelative),
-            js: [
-              'jquery-3.1.0.min.js',
-              'semantic.min.js',
-              'semantic-tablesort.js',
-              'index.js'
-            ].map(prefixAssets).map(toRelative)
-          }
-        }));
+    const reportFilePath = path.join(opt.outputDir, 'index.html');
+    const reportFileContent = '<!DOCTYPE html>\n' +
+      react.renderToStaticMarkup(React.createElement(HTMLReportSummaryPage, {
+        htmlTemplateOptions: opt.htmlTemplateOptions,
+        coverageGeneratedAt: opt.coverageGeneratedAt,
+        coverageSummaryData: opt.coverageSummaryData,
+        assets: {
+          css: [
+            'semantic.min.css',
+            'flow-coverage-report.css'
+          ].map(prefixAssets).map(toRelative),
+          js: [
+            'jquery-3.1.0.min.js',
+            'semantic.min.js',
+            'semantic-tablesort.js',
+            'index.js'
+          ].map(prefixAssets).map(toRelative)
+        }
+      }));
 
-      resolve({
-        reportFilePath,
-        reportFileContent
-      });
-    });
+    return {
+      reportFilePath,
+      reportFileContent
+    };
   }
 
-  function sourceReportContent() {
-    return new Promise((resolve, reject) => {
-      const srcPath = path.join(opt.projectDir, opt.filename);
-      const dirName = path.dirname(opt.filename);
-      const toRelative = relativeToFilename.bind(null, 'sourcefiles');
+  async function sourceReportContent() {
+    const srcPath = path.join(opt.projectDir, opt.filename);
+    const dirName = path.dirname(opt.filename);
+    const toRelative = relativeToFilename.bind(null, 'sourcefiles');
 
-      return mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName)).then(() => {
-        return readFile(srcPath).then(buff => {
-          const reportFileContent = '<!DOCTYPE html>\n' +
-                react.renderToStaticMarkup(React.createElement(HTMLReportSourceFilePage, {
-                  htmlTemplateOptions: opt.htmlTemplateOptions,
-                  coverageGeneratedAt: opt.coverageGeneratedAt,
-                  coverageSummaryData: opt.coverageSummaryData,
-                  coverageData: opt.coverageData,
-                  fileName: opt.filename,
-                  fileContent: buff,
-                  summaryRelLink: toRelative('index.html'),
-                  threshold: opt.threshold,
-                  assets: {
-                    css: [
-                      'semantic.min.css',
-                      'codemirror.css',
-                      'flow-highlight-source.css',
-                      'flow-coverage-report.css',
-                      'codemirror-simplescrollbars-addon.css'
-                    ].map(prefixAssets).map(toRelative),
-                    js: [
-                      'jquery-3.1.0.min.js',
-                      'semantic.min.js',
-                      'semantic-tablesort.js',
-                      'codemirror.js',
-                      'codemirror-javascript-mode.js',
-                      'codemirror-annotatescrollbar-addon.js',
-                      'codemirror-simplescrollbars-addon.js',
-                      'flow-highlight-source.js',
-                      'index.js'
-                    ].map(prefixAssets).map(toRelative)
-                  }
-                }));
+    await mkdirp(path.join(opt.outputDir, 'sourcefiles', dirName));
+    const buff = await readFile(srcPath);
+    const reportFileContent = '<!DOCTYPE html>\n' +
+      react.renderToStaticMarkup(React.createElement(HTMLReportSourceFilePage, {
+        htmlTemplateOptions: opt.htmlTemplateOptions,
+        coverageGeneratedAt: opt.coverageGeneratedAt,
+        coverageSummaryData: opt.coverageSummaryData,
+        coverageData: opt.coverageData,
+        fileName: opt.filename,
+        fileContent: buff,
+        summaryRelLink: toRelative('index.html'),
+        threshold: opt.threshold,
+        assets: {
+          css: [
+            'semantic.min.css',
+            'codemirror.css',
+            'flow-highlight-source.css',
+            'flow-coverage-report.css',
+            'codemirror-simplescrollbars-addon.css'
+          ].map(prefixAssets).map(toRelative),
+          js: [
+            'jquery-3.1.0.min.js',
+            'semantic.min.js',
+            'semantic-tablesort.js',
+            'codemirror.js',
+            'codemirror-javascript-mode.js',
+            'codemirror-annotatescrollbar-addon.js',
+            'codemirror-simplescrollbars-addon.js',
+            'flow-highlight-source.js',
+            'index.js'
+          ].map(prefixAssets).map(toRelative)
+        }
+      }));
 
-          const reportFilePath = path.join(opt.outputDir, 'sourcefiles', opt.filename) + '.html';
-          resolve({
-            reportFilePath,
-            reportFileContent
-          });
-        }, reject);
-      }, reject);
-    });
+    const reportFilePath = path.join(opt.outputDir, 'sourcefiles', opt.filename) + '.html';
+    return {
+      reportFilePath,
+      reportFileContent
+    };
   }
 
   let waitForReportContent;
@@ -170,25 +162,22 @@ function renderHTMLReport(opt/* : Object */)/* : Promise<*> */ {
       waitForReportContent = sourceReportContent();
       break;
     default:
-      return Promise.reject(new Error('Unknown report type: ' + opt.type));
+      throw new Error('Unknown report type: ' + opt.type);
   }
 
-  return waitForReportContent.then(res => {
-    const reportFilePath = res.reportFilePath;
-    const reportFileContent = res.reportFileContent;
+  const result = await waitForReportContent;
+  const {reportFilePath, reportFileContent} = result;
 
-    return mkdirp(path.dirname(reportFilePath)).then(() => {
-      return writeFile(reportFilePath, Buffer.from(reportFileContent));
-    });
-  });
+  await mkdirp(path.dirname(reportFilePath));
+  await writeFile(reportFilePath, Buffer.from(reportFileContent));
 }
 
 function generateFlowCoverageReportHTML(
   coverageSummaryData: FlowCoverageSummaryData,
-  opts: FlowCoverageReportOptions
+  options: FlowCoverageReportOptions
 ) {
-  const projectDir = opts.projectDir;
-  const outputDir = opts.outputDir;
+  const {projectDir} = options;
+  const {outputDir} = options;
 
   if (!outputDir) {
     throw new Error('Unexpected empty outputDir option');
@@ -198,7 +187,7 @@ function generateFlowCoverageReportHTML(
   const generateSummary = renderHTMLReport({
     type: 'summary',
     filename: null,
-    htmlTemplateOptions: opts.htmlTemplateOptions,
+    htmlTemplateOptions: options.htmlTemplateOptions,
     coverageSummaryData,
     coverageGeneratedAt,
     projectDir,
@@ -207,19 +196,19 @@ function generateFlowCoverageReportHTML(
 
   const waitForCopyAssets = copyAssets(outputDir);
   const generateSourceFiles = Object.keys(coverageSummaryData.files)
-        .map(filename => {
-          const coverageData = coverageSummaryData.files[filename];
-          return renderHTMLReport({
-            type: 'sourcefile',
-            coverageGeneratedAt,
-            htmlTemplateOptions: opts.htmlTemplateOptions,
-            coverageSummaryData,
-            projectDir,
-            filename,
-            coverageData,
-            outputDir
-          });
-        });
+    .map(filename => {
+      const coverageData = coverageSummaryData.files[filename];
+      return renderHTMLReport({
+        type: 'sourcefile',
+        coverageGeneratedAt,
+        htmlTemplateOptions: options.htmlTemplateOptions,
+        coverageSummaryData,
+        projectDir,
+        filename,
+        coverageData,
+        outputDir
+      });
+    });
   return Promise.all(
     [
       waitForCopyAssets,
@@ -228,9 +217,11 @@ function generateFlowCoverageReportHTML(
   );
 }
 
-export default {
+const ReportHtml = {
   assetsList,
   copyAssets,
   render: renderHTMLReport,
   generate: generateFlowCoverageReportHTML
 };
+
+export default ReportHtml;

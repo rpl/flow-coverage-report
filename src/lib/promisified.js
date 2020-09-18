@@ -60,14 +60,9 @@ export function writeFile(path: string, data: string|Buffer): Promise<void> {
   });
 }
 
-export type GlobOptions = {
-  cwd?: string,
-  root?: string,
-};
-
 export type GlobFilelist = Array<string>;
 
-export function glob(pattern: string, options: GlobOptions): Promise<GlobFilelist> {
+export function glob(pattern: string, options: *): Promise<GlobFilelist> {
   return new Promise((resolve, reject) => {
     npmGlob(pattern, options, (err, files) => {
       if (err) {
@@ -79,9 +74,10 @@ export function glob(pattern: string, options: GlobOptions): Promise<GlobFilelis
   });
 }
 
-export function withTmpDir(tempFileId: string): Promise<string> {
+// eslint-disable-next-line unicorn/prevent-abbreviations
+export function withTmpDir(temporaryFileId: string): Promise<string> {
   return new Promise((resolve, reject) => {
-    temp.mkdir(tempFileId, (err, dirPath) => {
+    temp.mkdir(temporaryFileId, (err, dirPath) => {
       if (err) {
         reject(err);
       } else {

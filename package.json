@@ -44,46 +44,48 @@
     "url": "git+https://github.com/rpl/flow-coverage-report.git"
   },
   "dependencies": {
-    "array.prototype.find": "2.0.4",
-    "babel-runtime": "6.23.0",
-    "@rpl/badge-up": "2.2.0",
-    "flow-annotation-check": "1.8.1",
-    "glob": "7.1.1",
-    "minimatch": "3.0.4",
+    "@babel/runtime": "^7.11.2",
+    "@rpl/badge-up": "^2.2.0",
+    "array.prototype.find": "^2.0.4",
+    "flow-annotation-check": "^1.8.1",
+    "glob": "^7.1.1",
+    "minimatch": "^3.0.4",
     "mkdirp": "^1.0.4",
-    "parse-json": "2.2.0",
-    "react": "15.5.4",
-    "react-dom": "15.5.4",
-    "strip-json-comments": "2.0.1",
-    "temp": "0.8.3",
-    "terminal-table": "0.0.12",
-    "yargs": "8.0.1"
+    "parse-json": "^5.1.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "strip-json-comments": "^3.1.1",
+    "temp": "^0.9.1",
+    "terminal-table": "^0.0.12",
+    "yargs": "^16.0.3"
   },
   "devDependencies": {
-    "babel-cli": "6.24.1",
-    "babel-core": "6.24.1",
-    "babel-eslint": "7.2.3",
-    "babel-jest": "22.1.0",
-    "babel-plugin-istanbul": "4.1.3",
-    "babel-plugin-transform-flow-strip-types": "6.22.0",
-    "babel-plugin-transform-runtime": "6.23.0",
-    "babel-preset-es2015": "6.24.1",
-    "babel-preset-react": "6.24.1",
-    "babel-preset-stage-2": "6.24.1",
-    "cross-env": "5.0.0",
-    "eslint-config-xo-react": "0.12.0",
-    "eslint-plugin-flowtype": "2.33.0",
-    "eslint-plugin-jest": "20.0.2",
-    "eslint-plugin-react": "7.1.0",
-    "flow-bin": "0.72.0",
-    "flow-typed": "2.4.0",
-    "jest": "22.1.1",
-    "react-test-renderer": "15.5.4",
-    "rimraf": "2.6.2",
-    "svgson": "4.0.0",
-    "tempy": "0.2.1",
-    "xo": "0.18.1",
-    "yaml-jest": "1.0.5"
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/plugin-transform-runtime": "^7.11.5",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-flow": "^7.10.4",
+    "@babel/preset-react": "^7.10.4",
+    "babel-core": "^7.0.0-bridge.0",
+    "babel-eslint": "^10.1.0",
+    "babel-jest": "^22.1.0",
+    "babel-plugin-istanbul": "^6.0.0",
+    "cross-env": "^5.0.0",
+    "eslint": "^7.9.0",
+    "eslint-config-xo-react": "^0.23.0",
+    "eslint-plugin-flowtype": "^5.2.0",
+    "eslint-plugin-jest": "^24.0.1",
+    "eslint-plugin-react": "^7.20.6",
+    "eslint-plugin-react-hooks": "^4.1.2",
+    "flow-bin": "^0.72.0",
+    "flow-typed": "^2.4.0",
+    "jest": "^22.1.1",
+    "react-test-renderer": "^16.13.1",
+    "rimraf": "^2.6.2",
+    "svgson": "^4.0.0",
+    "tempy": "^0.2.1",
+    "xo": "^0.33.1",
+    "yaml-jest": "^1.0.5"
   },
   "xo": {
     "extends": "xo-react",
@@ -112,7 +114,8 @@
       "flowtype/space-after-type-colon": [
         1,
         "always"
-      ]
+      ],
+      "unicorn/no-fn-reference-in-iterator": 0
     },
     "overrides": [
       {
@@ -132,19 +135,12 @@
   "babel": {
     "compact": false,
     "presets": [
-      "es2015",
-      "stage-2",
-      "react"
+      "@babel/env",
+      "@babel/react",
+      "@babel/flow"
     ],
     "plugins": [
-      "transform-flow-strip-types",
-      [
-        "transform-runtime",
-        {
-          "polyfill": false,
-          "regenerator": true
-        }
-      ]
+      "@babel/plugin-transform-runtime"
     ],
     "ignore": [
       "assets/"

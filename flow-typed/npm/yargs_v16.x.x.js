@@ -1,11 +1,8 @@
-// flow-typed signature: 28b06f0a373cccd37c902772cd2b3a57
-// flow-typed version: da30fe6876/yargs_v8.x.x/flow_>=v0.42.x
-
 declare module "yargs" {
   declare type Argv = {
+    [key: string]: any,
     _: Array<string>,
     $0: string,
-    [key: string]: mixed
   };
 
   declare type Options = $Shape<{
@@ -13,10 +10,10 @@ declare module "yargs" {
     array: boolean,
     boolean: boolean,
     choices: Array<mixed>,
-    coerce: (arg: mixed) => mixed,
+    coerce: (arg: {[key: string]: any} | any) => mixed,
     config: boolean,
     configParser: (configPath: string) => { [key: string]: mixed },
-    conflicts: string | { [key: string]: string },
+    conflicts: string | Array<string> | { [key: string]: string },
     count: boolean,
     default: mixed,
     defaultDescription: string,
@@ -30,17 +27,18 @@ declare module "yargs" {
     nargs: number,
     normalize: boolean,
     number: boolean,
+    required: boolean,
     requiresArg: boolean,
     skipValidation: boolean,
     string: boolean,
-    type: "array" | "boolean" | "count" | "number" | "string"
+    type: "array" | "boolean" | "count" | "number" | "string",
   }>;
 
   declare type CommonModuleObject = {|
     command?: string | Array<string>,
     aliases?: Array<string> | string,
     builder?: { [key: string]: Options } | ((yargsInstance: Yargs) => mixed),
-    handler?: (argv: Argv) => void
+    handler?: ((argv: Argv) => void) | ((argv: Argv) => Promise<void>)
   |};
 
   declare type ModuleObjectDesc = {|
@@ -63,6 +61,12 @@ declare module "yargs" {
     | ModuleObjectDescribe
     | ModuleObjectDescription;
 
+  declare type MiddleWareCallback =
+    | (argv: Argv, yargsInstance?: Yargs) => void
+    | (argv: Argv, yargsInstance?: Yargs) => Promise<void>;
+
+  declare type Middleware = MiddleWareCallback | Array<MiddleWareCallback>;
+
   declare class Yargs {
     (args: Array<string>): Yargs;
 
@@ -70,7 +74,7 @@ declare module "yargs" {
     alias(alias: { [key: string]: string | Array<string> }): this;
     argv: Argv;
     array(key: string | Array<string>): this;
-    boolean(paramter: string | Array<string>): this;
+    boolean(parameter: string | Array<string>): this;
     check(fn: (argv: Argv, options: Array<string>) => ?boolean): this;
     choices(key: string, allowed: Array<string>): this;
     choices(allowed: { [key: string]: Array<string> }): this;
@@ -93,13 +97,28 @@ declare module "yargs" {
 
     command(module: ModuleObject): this;
 
+    commandDir(
+      directory: string,
+      options?: {
+        exclude?: string | Function,
+        extensions?: Array<string>,
+        include?: string | Function,
+        recurse?: boolean,
+        visit?: Function,
+      },
+    ): this;
+
     completion(
-      cmd: string,
-      description?: string,
+      cmd?: string,
+      description?: string | false | (
+        current: string,
+        argv: Argv,
+        done: (compeltion: Array<string>) => void
+      ) => ?(Array<string> | Promise<Array<string>>),
       fn?: (
         current: string,
         argv: Argv,
-        done: (competion: Array<string>) => void
+        done: (completion: Array<string>) => void
       ) => ?(Array<string> | Promise<Array<string>>)
     ): this;
 
@@ -114,8 +133,8 @@ declare module "yargs" {
     ): this;
     config(config: { [key: string]: mixed }): this;
 
-    conflicts(keyA: string, keyB: string): this;
-    conflicts(keys: { [key: string]: string }): this;
+    conflicts(key: string, value: string | Array<string>): this;
+    conflicts(keys: { [key: string]: string | Array<string> }): this;
 
     count(name: string): this;
 
@@ -128,6 +147,7 @@ declare module "yargs" {
 
     demandOption(key: string | Array<string>, msg?: string | boolean): this;
 
+    demandCommand(): this;
     demandCommand(min: number, minMsg?: string): this;
     demandCommand(
       min: number,
@@ -146,7 +166,7 @@ declare module "yargs" {
     epilog(text: string): this;
     epilogue(text: string): this;
 
-    example(cmd: string, desc: string): this;
+    example(cmd: string, desc?: string): this;
 
     exitProcess(enable: boolean): this;
 
@@ -158,10 +178,14 @@ declare module "yargs" {
 
     group(key: string | Array<string>, groupName: string): this;
 
+    help(option: boolean): this;
+
     help(option?: string, desc?: string): this;
 
-    implies(keyA: string, keyB: string): this;
-    implies(keys: { [key: string]: string }): this;
+    hide(key: string): this;
+
+    implies(key: string, value: string | Array<string>): this;
+    implies(keys: { [key: string]: string | Array<string> }): this;
 
     locale(
       locale: | "de"
@@ -186,6 +210,11 @@ declare module "yargs" {
     ): this;
     locale(): string;
 
+    middleware(
+      middlewareCallbacks: Middleware,
+      applyBeforeValidation?: boolean,
+    ): this;
+
     nargs(key: string, count: number): this;
 
     normalize(key: string): this;
@@ -199,16 +228,20 @@ declare module "yargs" {
     options(optionMap: { [key: string]: Options }): this;
 
     parse(
-      args: string | Array<string>,
-      context?: { [key: string]: mixed },
+      args?: string | Array<string>,
+      context?: { [key: string]: any },
       parseCallback?: (err: Error, argv: Argv, output?: string) => void
     ): Argv;
     parse(
-      args: string | Array<string>,
+      args?: string | Array<string>,
       parseCallback?: (err: Error, argv: Argv, output?: string) => void
     ): Argv;
 
+    parserConfiguration(configuration: {[key: string]: any}): this;
+
     pkgConf(key: string, cwd?: string): this;
+
+    positional(key: string, opt?: Options): this;
 
     recommendCommands(): this;
 
@@ -220,9 +253,12 @@ declare module "yargs" {
 
     reset(): this;
 
+    scriptName(name: string): this;
+
     showCompletionScript(): this;
 
     showHelp(consoleLevel?: "error" | "warn" | "log"): this;
+    showHelp(printCallback: (usageData: string) => void): this;
 
     showHelpOnFail(enable: boolean, message?: string): this;
 
@@ -234,13 +270,15 @@ declare module "yargs" {
 
     string(key: string | Array<string>): this;
 
+    terminalWidth(): number;
+
     updateLocale(obj: { [key: string]: string }): this;
     updateStrings(obj: { [key: string]: string }): this;
 
     usage(message: string, opts?: { [key: string]: Options }): this;
 
     version(): this;
-    version(version: string): this;
+    version(version: string | false): this;
     version(option: string | (() => string), version: string): this;
     version(
       option: string | (() => string),

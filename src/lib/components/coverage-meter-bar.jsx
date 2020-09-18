@@ -4,10 +4,10 @@
 
 import React from 'react';
 
-export default function FlowCoverageMeterBar(
-  props: {percent: number, threshold: number}
-) {
-  const threshold = props.threshold;
+const FlowCoverageMeterBar = (
+  props: {+percent: number, +threshold: number}
+) => {
+  const {threshold} = props;
   const color = props.percent >= threshold ? 'green' : 'red';
   const style = {
     padding: 0, height: 12
@@ -15,4 +15,6 @@ export default function FlowCoverageMeterBar(
   return (
     <div className={'row ' + color} style={style}/>
   );
-}
+};
+
+export default FlowCoverageMeterBar;

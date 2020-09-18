@@ -50,9 +50,9 @@ it('generateFlowCoverageReport', async () => {
     threshold: 80
   };
 
-  const res = await generateFlowCoverageReport(options);
+  const result = await generateFlowCoverageReport(options);
 
-  expect(res).toEqual([fakeData, options]);
+  expect(result).toEqual([fakeData, options]);
   expect(mockCollectFlowCoverage.mock.calls.length).toBe(1);
   expect(mockGenerateText.mock.calls.length).toBe(1);
   expect(mockGenerateHTML.mock.calls.length).toBe(0);
@@ -89,9 +89,10 @@ it('generateFlowCoverageReport', async () => {
 
   try {
     await generateFlowCoverageReport({...options, projectDir: null});
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
+
   expect(exception && exception.message).toMatch(
     /projectDir option is mandatory/
   );
@@ -100,9 +101,10 @@ it('generateFlowCoverageReport', async () => {
 
   try {
     await generateFlowCoverageReport({...options, globIncludePatterns: null});
-  } catch (err) {
-    exception2 = err;
+  } catch (error) {
+    exception2 = error;
   }
+
   expect(exception2 && exception2.message).toMatch(
     /empty globIncludePatterns option/
   );
@@ -110,9 +112,10 @@ it('generateFlowCoverageReport', async () => {
   let exception3;
   try {
     await generateFlowCoverageReport({...options, globIncludePatterns: []});
-  } catch (err) {
-    exception3 = err;
+  } catch (error) {
+    exception3 = error;
   }
+
   expect(exception3 && exception3.message).toMatch(
     /empty globIncludePatterns option/
   );

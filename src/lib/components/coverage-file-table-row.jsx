@@ -4,29 +4,29 @@
 
 import React from 'react';
 
-function LinkToSourceFileReport(props: {targetFilename: string}) {
+const LinkToSourceFileReport = (props: {+targetFilename: string}) => {
   const filename = props.targetFilename;
   const href = `sourcefiles/${filename}.html`;
   return <a href={href}>{filename}</a>;
-}
+};
 
-export default function FlowCoverageFileTableRow(
+const FlowCoverageFileTableRow = (
   props: {
-    filename: string,
-    annotation: string,
-    covered_count: number,
-    uncovered_count: number,
-    percent: number,
-    disableLink: boolean,
-    threshold: number,
-    isError: boolean,
-    isFlow: boolean,
-    flowCoverageError: ?string,
-    flowCoverageParsingError: ?string,
-    flowCoverageException: ?string,
-    flowCoverageStderr: ?string|?Buffer,
+    +filename: string,
+    +annotation: string,
+    +covered_count: number,
+    +uncovered_count: number,
+    +percent: number,
+    +disableLink: boolean,
+    +threshold: number,
+    +isError: boolean,
+    +isFlow: boolean,
+    +flowCoverageError: ?string,
+    +flowCoverageParsingError: ?string,
+    +flowCoverageException: ?string,
+    +flowCoverageStderr: ?string|?Buffer,
   }
-) {
+) => {
   /* eslint-disable camelcase */
   const {
     filename,
@@ -102,4 +102,6 @@ export default function FlowCoverageFileTableRow(
     </tr>
   );
   /* eslint-enable camelcase */
-}
+};
+
+export default FlowCoverageFileTableRow;

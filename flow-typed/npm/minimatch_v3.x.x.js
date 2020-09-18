@@ -1,5 +1,5 @@
-// flow-typed signature: bc0af4a44bb8631039f713b1afba6988
-// flow-typed version: d42cbef63c/minimatch_v3.x.x/flow_>=v0.25.x
+// flow-typed signature: 372b91a58c99da7bdf7640dc9aa42756
+// flow-typed version: c6154227d1/minimatch_v3.x.x/flow_>=v0.25.x <=v0.103.x
 
 type $npm$minimatch$Options = {
   debug?: boolean,

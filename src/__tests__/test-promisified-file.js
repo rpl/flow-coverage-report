@@ -34,9 +34,10 @@ it('promised readFile', async () => {
 
   try {
     await promisified.readFile('/my/fake/file');
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
+
   expect(exception && exception.message).toMatch(
     'Fake readFile error'
   );
@@ -60,8 +61,8 @@ it('promised writeFile', async () => {
 
   try {
     await promisified.writeFile('/my/fake/dir');
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
 
   expect(exception).toBe(undefined);
@@ -74,8 +75,8 @@ it('promised writeFile', async () => {
   exception = undefined;
   try {
     await promisified.writeFile('/my/fake/file', 'Fake data');
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
 
   expect(`${exception}`).toMatch(/Fake writeFile error/);

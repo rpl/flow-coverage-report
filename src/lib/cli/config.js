@@ -11,7 +11,7 @@ export type HTMLTemplateOptions = {|
 
 export type ReportType = 'json' | 'text' | 'badge' |'html';
 
-export type ConfigParams = {|
+export type ConfigParameters = {|
   reportTypes?: Array<ReportType>,
   flowCommandPath: string,
   flowCommandTimeout: number,
@@ -33,8 +33,8 @@ export type ConfigParams = {|
   type?: ?Array<ReportType>,
 |}
 
-export type DefaultConfigParams = {
-  ...ConfigParams,
+export type DefaultConfigParameters = {
+  ...ConfigParameters,
   reportTypes: Array<ReportType>,
   concurrentFiles: number,
 }
@@ -51,7 +51,7 @@ const toArray = (value: any): Array<any> => Array.isArray(value) ? value : [valu
 // Default timeout for flow coverage commands.
 export const DEFAULT_FLOW_TIMEOUT = 15 * 1000;
 
-export const defaultConfig: DefaultConfigParams = {
+export const defaultConfig: DefaultConfigParameters = {
   reportTypes: ['text'],
   flowCommandPath: 'flow',
   flowCommandTimeout: DEFAULT_FLOW_TIMEOUT,
@@ -91,7 +91,7 @@ const getProjectDir = (config: Object): string => {
  *
  * @param {object} config
  */
-function normalizedConfig(config: ConfigParams): ConfigParams {
+function normalizedConfig(config: ConfigParameters): ConfigParameters {
   if (typeof config.includeGlob !== 'undefined') {
     console.warn('WARN: "includeGlob" config file property has been renamed to "globIncludePatterns"');
     config.globIncludePatterns = toArray(config.includeGlob);
@@ -161,7 +161,7 @@ export function loadConfig(args: Object): Object {
   try {
     packageJSONPath = path.resolve(path.join(getProjectDir(args), 'package.json'));
     // $FlowIgnoreMe: the following dynamic require loads only the package.json file.
-    const pkg = require(packageJSONPath); // eslint-disable-line import/no-dynamic-require
+    const pkg = require(packageJSONPath);
     if (pkg['flow-coverage-report']) {
       if (process.env.VERBOSE) {
         console.log('Loaded config from package.json', pkg['flow-coverage-report']);
@@ -173,9 +173,9 @@ export function loadConfig(args: Object): Object {
         ...args
       };
     }
-  } catch (err) {
+  } catch (error) {
     if (process.env.VERBOSE) {
-      console.error('Unable to load config from project package.json', packageJSONPath, err);
+      console.error('Unable to load config from project package.json', packageJSONPath, error);
     }
   }
 
@@ -195,9 +195,9 @@ export function loadConfig(args: Object): Object {
       ...normalizedConfig(projectConfigData),
       ...args
     };
-  } catch (err) {
+  } catch (error) {
     if (process.env.VERBOSE) {
-      console.error('Unable to load config from file', projectConfigPath, err);
+      console.error('Unable to load config from file', projectConfigPath, error);
     }
   }
 
@@ -214,9 +214,9 @@ export function loadConfig(args: Object): Object {
  */
 
 export function validateConfig(args: Object): Object {
-  function raiseErrorIfArray(value, msg) {
+  function raiseErrorIfArray(value, message) {
     if (Array.isArray(value)) {
-      throw new UsageError(`ERROR: Only one ${msg} can be specified.`);
+      throw new UsageError(`ERROR: Only one ${message} can be specified.`);
     }
   }
 
@@ -229,8 +229,8 @@ export function validateConfig(args: Object): Object {
   };
 
   for (const option of Object.keys(preventDuplicatedOptions)) {
-    const msg = preventDuplicatedOptions[option];
-    raiseErrorIfArray(args[option], msg);
+    const message = preventDuplicatedOptions[option];
+    raiseErrorIfArray(args[option], message);
   }
 
   const {globIncludePatterns} = args;

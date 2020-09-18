@@ -37,13 +37,14 @@ export default function processArgv(argv: Array<string>): any {
           // $FlowIgnoreMe: allow value to be coerced to a string.
           throw new TypeError(`Unexpected non-string value: ${value}`);
         }
+
         return value.slice(0, 2) === './' ? path.resolve(value) : value;
       },
       describe: `path to the flow executable (defaults to "${defaultConfig.flowCommandPath}")`
     })
     .option('flow-command-timeout', {
       type: 'number',
-      describe: `maximum number of milliseconds to wait for a flow response (defaults to 15 seconds)`
+      describe: 'maximum number of milliseconds to wait for a flow response (defaults to 15 seconds)'
     })
     // --type text
     .option('type', {

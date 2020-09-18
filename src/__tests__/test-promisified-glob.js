@@ -27,9 +27,10 @@ it('promisified glob', async () => {
   let exception;
   try {
     await promisified.glob('**/*.js', {});
-  } catch (err) {
-    exception = err;
+  } catch (error) {
+    exception = error;
   }
+
   expect(exception && exception.message).toMatch(
     'Fake glob error'
   );
