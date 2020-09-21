@@ -1,6 +1,6 @@
 {
   "name": "flow-coverage-report",
-  "version": "0.7.0",
+  "version": "0.8.0",
   "description": "Generate an HTML report of the flow coverage data",
   "main": "dist/lib/index.js",
   "bin": {

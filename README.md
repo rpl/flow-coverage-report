@@ -125,6 +125,18 @@ You have just found it ;-)
 
 ## Changelog
 
+### [0.8.0](https://github.com/rpl/flow-coverage-report/compare/v0.7.0...v0.8.0)
+
+Fixes:
+
+- Upgraded production dependencies ([#197](https://github.com/rpl/flow-coverage-report/issues/197)) ([c13aca8](https://github.com/rpl/flow-coverage-report/commit/c13aca80a389e1b4e3ffb5d7078a63e8dba38ef9)):
+  - Unpinned all dependencies (fixes [#122](https://github.com/rpl/flow-coverage-report/issues/122))
+  - Updated babel to v7 
+  - Updated parse-json to v5
+  - Updated react and react-dom to v16
+  - Updated strip-json-comments to v3
+  - Updated yargs to v16
+
 ### [0.7.0](https://github.com/rpl/flow-coverage-report/compare/v0.6.2...v0.7.0)
 
 ⚠ BREAKING CHANGES ⚠
