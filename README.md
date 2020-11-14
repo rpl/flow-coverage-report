@@ -39,10 +39,16 @@ If the **flow** executable is not in your PATH, you can specified it using the
 flow-coverage-report -f /path/to/flow ...
 ```
 
-To customize the output dir (which defaults to `flow-coverage/`). you can use the `-o` option:
+To customize the output dir (which defaults to `flow-coverage/`) you can use the `-o` option. Though by default the output type is `text` meaning that it ouputs to the console. Use `-o` in conjunction with `-t` to save your desired format:
 
 ```
 flow-coverage-report -o my-custom-flow-coverage-dir/
+```
+
+To customize the type you can use `-t` options:
+
+```
+flow-coverage-report -t html
 ```
 
 ### Load default options from a JSON config file
