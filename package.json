@@ -26,7 +26,7 @@
     "jest:integrations": "jest __tests__/integrations -i",
     "jest": "npm run jest:unit && npm run jest:integrations",
     "lint": "xo --reporter=compact",
-    "prepublish": "npm run build",
+    "prepare": "npm run build",
     "test": "cross-env NODE_ENV=test npm run build && npm run lint && npm run flow-check && npm run jest && npm run flow-coverage"
   },
   "keywords": [
