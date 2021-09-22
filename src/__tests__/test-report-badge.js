@@ -2,11 +2,11 @@
 
 import path from 'path';
 
-import badge from '@rpl/badge-up';
+import badge from '@cumulusds/badge-up';
 
 const LIB_REPORT_BADGE = '../lib/report-badge';
 const LIB_PROMISIFIED = '../lib/promisified';
-const NPM_BADGE = '@rpl/badge-up';
+const NPM_BADGE = '@cumulusds/badge-up';
 
 beforeEach(() => {
   jest.resetModules();

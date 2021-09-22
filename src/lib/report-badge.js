@@ -4,7 +4,7 @@
 
 import path from 'path';
 
-import badge from '@rpl/badge-up';
+import badge from '@cumulusds/badge-up';
 import mkdirp from 'mkdirp';
 
 import {writeFile} from './promisified';

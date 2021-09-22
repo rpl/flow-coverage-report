@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "@babel/runtime": "^7.11.2",
-    "@rpl/badge-up": "^2.2.0",
+    "@cumulusds/badge-up": "^2.3.0",
     "array.prototype.find": "^2.0.4",
     "flow-annotation-check": "^1.8.1",
     "glob": "^7.1.1",
