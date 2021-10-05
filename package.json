@@ -47,7 +47,7 @@
     "@babel/runtime": "^7.11.2",
     "@cumulusds/badge-up": "^2.3.0",
     "array.prototype.find": "^2.0.4",
-    "flow-annotation-check": "^1.8.1",
+    "@cumulusds/flow-annotation-check": "^1.11.5",
     "glob": "^7.1.1",
     "minimatch": "^3.0.4",
     "mkdirp": "^1.0.4",
@@ -114,7 +114,10 @@
         1,
         "always"
       ],
-      "unicorn/no-fn-reference-in-iterator": 0
+      "unicorn/no-fn-reference-in-iterator": 0,
+      "react/boolean-prop-naming": 0,
+      "complexit": 0,
+      "no-warning-comments": 0
     },
     "overrides": [
       {

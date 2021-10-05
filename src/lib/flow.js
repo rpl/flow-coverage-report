@@ -4,7 +4,7 @@
 
 import minimatch from 'minimatch';
 import temp from 'temp';
-import {genCheckFlowStatus} from 'flow-annotation-check';
+import {genCheckFlowStatus} from '@cumulusds/flow-annotation-check';
 import {exec, glob, writeFile} from './promisified';
 
 import type {FlowCoverageReportOptions} from '.';

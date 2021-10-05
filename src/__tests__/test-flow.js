@@ -7,7 +7,7 @@ import {isFlowAnnotation} from '../lib/flow';
 
 const LIB_FLOW = '../lib/flow';
 const LIB_PROMISIFIED = '../lib/promisified';
-const NPM_FLOW_ANNOTATION_CHECK = 'flow-annotation-check';
+const NPM_FLOW_ANNOTATION_CHECK = '@cumulusds/flow-annotation-check';
 const NPM_TEMP = 'temp';
 
 const temporaryDirPath = '/tmp/fake-tmp-path';
